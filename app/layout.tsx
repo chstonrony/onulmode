@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Gowun_Batang, Noto_Sans_KR, Crimson_Text } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
+import { LocaleProvider } from "@/context/LocaleContext";
 
 const gowunBatang = Gowun_Batang({
   subsets: ["latin"], weight: ["400","700"],
@@ -52,12 +53,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
       <body>
         {/* 모바일: 하단 탭 / PC: 상단 네비로 전환됨 (BottomNav 내부 처리) */}
-        <div className="app-shell">
-          <main className="main-content">
-            {children}
-          </main>
-        </div>
-        <BottomNav />
+        <LocaleProvider>
+          <div className="app-shell">
+            <main className="main-content">
+              {children}
+            </main>
+          </div>
+          <BottomNav />
+        </LocaleProvider>
       </body>
     </html>
   );

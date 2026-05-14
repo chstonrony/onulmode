@@ -2,19 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale } from "@/context/LocaleContext";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 const ROSE = "#C8607A";
 const INK  = "#2A2520";
 
-const TABS = [
-  { href: "/",        label: "감정버리기", icon: "🗑️" },
-  { href: "/blog",    label: "감정 이야기", icon: "📝" },
-  { href: "/archive", label: "파쇄함",     icon: "📋" },
-  { href: "/about",   label: "소개",       icon: "ℹ️" },
-];
+const TAB_HREFS = ["/", "/blog", "/archive", "/about"] as const;
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useLocale();
+
+  const TABS = [
+    { href: "/",        label: t.nav.dump    },
+    { href: "/blog",    label: t.nav.stories },
+    { href: "/archive", label: t.nav.archive },
+    { href: "/about",   label: t.nav.about   },
+  ];
 
   return (
     <>
@@ -32,19 +37,22 @@ export default function BottomNav() {
           height: 58, width: "100%",
           maxWidth: 480, margin: "0 auto",
         }}>
-          {TABS.map(({ href, label, icon }) => {
-            const active = pathname === href || (pathname.startsWith("/release") && href === "/") || (pathname.startsWith("/blog") && href === "/blog");
+          {TABS.map(({ href, label }) => {
+            const active = pathname === href
+              || (pathname.startsWith("/release") && href === "/")
+              || (pathname.startsWith("/blog") && href === "/blog");
             return (
               <Link key={href} href={href} style={{
                 display: "flex", flexDirection: "column",
                 alignItems: "center", gap: 2, padding: "4px 12px",
                 textDecoration: "none",
               }}>
-                <span style={{ fontSize: active ? 22 : 20 }}>{icon}</span>
                 <span style={{
-                  fontSize: 10, fontFamily: "var(--font-serif)",
+                  fontSize: active ? 10 : 9,
+                  fontFamily: "var(--font-serif)",
                   color: active ? ROSE : "#A89880",
                   fontWeight: active ? 700 : 400,
+                  letterSpacing: "0.02em",
                 }}>
                   {label}
                 </span>
@@ -57,6 +65,8 @@ export default function BottomNav() {
               </Link>
             );
           })}
+          {/* 언어 전환 */}
+          <LanguageSwitcher compact />
         </div>
       </nav>
 
@@ -87,11 +97,11 @@ export default function BottomNav() {
 
           {/* 슬로건 */}
           <p style={{ fontSize: 12, color: "#A89880", fontFamily: "var(--font-en)", fontStyle: "italic" }}>
-            temporary emotional release space
+            {t.nav.slogan}
           </p>
 
-          {/* 네비 */}
-          <nav style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          {/* 네비 + 언어 */}
+          <nav style={{ display: "flex", alignItems: "center", gap: 20 }}>
             {TABS.map(({ href, label }) => {
               const active = pathname === href;
               return (
@@ -113,13 +123,13 @@ export default function BottomNav() {
               textDecoration: "none", fontWeight: 700,
               boxShadow: `0 3px 12px ${ROSE}44`,
             }}>
-              감정 버리러 가기
+              {t.nav.cta}
             </Link>
+            <LanguageSwitcher compact />
           </nav>
         </div>
       </header>
 
-      {/* CSS: PC에서 모바일 숨기고 데스크탑 네비 보임 */}
       <style>{`
         @media (min-width: 768px) {
           .mobile-nav { display: none !important; }

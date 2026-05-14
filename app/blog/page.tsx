@@ -21,7 +21,7 @@ export default function BlogPage() {
     <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "serif" }}>
+        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>
           ← 오늘무드
         </Link>
 
@@ -30,7 +30,7 @@ export default function BlogPage() {
           <p style={{ fontSize: 11, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10 }}>
             EMOTIONAL JOURNAL
           </p>
-          <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: "serif", color: "#2A2520", lineHeight: 1.3, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.3, marginBottom: 12 }}>
             감정 이야기
           </h1>
           <p style={{ fontSize: 15, color: "#7A7260", lineHeight: 1.7, fontWeight: 300 }}>
@@ -47,7 +47,7 @@ export default function BlogPage() {
               background: `${CATEGORY_COLORS[cat] ?? "#A89880"}18`,
               color: CATEGORY_COLORS[cat] ?? "#A89880",
               border: `1px solid ${CATEGORY_COLORS[cat] ?? "#A89880"}44`,
-              borderRadius: 20, fontFamily: "sans-serif",
+              borderRadius: 20, fontFamily: "var(--font-serif)",
             }}>
               {cat}
             </span>
@@ -74,7 +74,7 @@ export default function BlogPage() {
                       background: `${catColor}18`,
                       color: catColor,
                       border: `1px solid ${catColor}44`,
-                      borderRadius: 20, fontFamily: "sans-serif",
+                      borderRadius: 20, fontFamily: "var(--font-serif)",
                     }}>
                       {article.category}
                     </span>
@@ -83,7 +83,7 @@ export default function BlogPage() {
                     </span>
                   </div>
                   <h2 style={{
-                    fontSize: 17, fontWeight: 700, fontFamily: "serif",
+                    fontSize: 17, fontWeight: 700, fontFamily: "var(--font-serif)",
                     color: "#2A2520", lineHeight: 1.4, marginBottom: 8,
                   }}>
                     {article.title}
@@ -105,14 +105,14 @@ export default function BlogPage() {
           marginTop: 48, padding: "28px 32px", textAlign: "center",
           background: "#F5EFE0", border: "1px solid #D8CEC0", borderRadius: 4,
         }}>
-          <p style={{ fontSize: 15, color: "#5A5248", marginBottom: 16, fontFamily: "serif" }}>
+          <p style={{ fontSize: 15, color: "#5A5248", marginBottom: 16, fontFamily: "var(--font-serif)" }}>
             글 읽고 감정이 올라왔다면?
           </p>
           <Link href="/" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
             padding: "12px 28px", borderRadius: 4,
-            fontSize: 15, fontFamily: "serif", fontWeight: 700,
+            fontSize: 15, fontFamily: "var(--font-serif)", fontWeight: 700,
             textDecoration: "none",
           }}>
             감정 버리러 가기 →

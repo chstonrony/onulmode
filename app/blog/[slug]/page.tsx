@@ -45,7 +45,7 @@ export default async function ArticlePage({ params }: Props) {
     <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        <Link href="/blog" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "serif" }}>
+        <Link href="/blog" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>
           ← 감정 이야기
         </Link>
 
@@ -56,7 +56,7 @@ export default async function ArticlePage({ params }: Props) {
               fontSize: 11, padding: "3px 12px",
               background: `${catColor}18`, color: catColor,
               border: `1px solid ${catColor}44`,
-              borderRadius: 20, fontFamily: "sans-serif",
+              borderRadius: 20, fontFamily: "var(--font-serif)",
             }}>
               {article.category}
             </span>
@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: Props) {
             </span>
           </div>
           <h1 style={{
-            fontSize: 28, fontWeight: 700, fontFamily: "serif",
+            fontSize: 28, fontWeight: 700, fontFamily: "var(--font-serif)",
             color: "#2A2520", lineHeight: 1.4, marginBottom: 12,
           }}>
             {article.title}
@@ -87,7 +87,7 @@ export default async function ArticlePage({ params }: Props) {
             if (block.startsWith("**") && block.endsWith("**") && !block.slice(2).includes("**")) {
               return (
                 <h2 key={i} style={{
-                  fontSize: 18, fontWeight: 700, fontFamily: "serif",
+                  fontSize: 18, fontWeight: 700, fontFamily: "var(--font-serif)",
                   color: "#2A2520", margin: "32px 0 12px",
                 }}>
                   {block.slice(2, -2)}
@@ -125,14 +125,14 @@ export default async function ArticlePage({ params }: Props) {
           margin: "40px 0", padding: "24px 28px", textAlign: "center",
           background: "#F5EFE0", border: "1px dashed #D8CEC0", borderRadius: 4,
         }}>
-          <p style={{ fontSize: 14, color: "#5A5248", marginBottom: 14, fontFamily: "serif" }}>
+          <p style={{ fontSize: 14, color: "#5A5248", marginBottom: 14, fontFamily: "var(--font-serif)" }}>
             읽고 나서 감정이 올라왔다면, 여기 버려도 돼요.
           </p>
           <Link href="/" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
             padding: "11px 24px", borderRadius: 4,
-            fontSize: 14, fontFamily: "serif", fontWeight: 700,
+            fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
             textDecoration: "none",
           }}>
             감정 버리러 가기 →
@@ -143,7 +143,7 @@ export default async function ArticlePage({ params }: Props) {
         {related.length > 0 && (
           <section style={{ marginTop: 40 }}>
             <h2 style={{
-              fontSize: 16, fontWeight: 700, fontFamily: "serif",
+              fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)",
               color: "#2A2520", marginBottom: 16,
               borderBottom: "1px solid #D8CEC0", paddingBottom: 10,
             }}>
@@ -156,7 +156,7 @@ export default async function ArticlePage({ params }: Props) {
                     padding: "16px 20px", background: "#F5EFE0",
                     border: "1px solid #D8CEC0", borderRadius: 4,
                   }}>
-                    <p style={{ fontSize: 14, fontWeight: 700, fontFamily: "serif", color: "#2A2520", marginBottom: 4 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 4 }}>
                       {a.title}
                     </p>
                     <p style={{ fontSize: 12, color: "#7A7260", fontWeight: 300 }}>

@@ -11,7 +11,7 @@ export default function AboutPage() {
     <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "serif" }}>
+        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>
           ← 오늘무드
         </Link>
 
@@ -20,10 +20,10 @@ export default function AboutPage() {
           <p style={{ fontSize: 11, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 16 }}>
             EMOTIONAL DISPOSAL MACHINE
           </p>
-          <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "serif", color: "#2A2520", lineHeight: 1.3, marginBottom: 16 }}>
+          <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.3, marginBottom: 16 }}>
             오늘무드
           </h1>
-          <p style={{ fontSize: 18, fontFamily: "serif", color: "#5A5248", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 18, fontFamily: "var(--font-serif)", color: "#5A5248", lineHeight: 1.7 }}>
             오늘의 감정을<br/>
             <strong style={{ color: "#C8607A" }}>여기 넣어 둘게.</strong>
           </p>
@@ -31,7 +31,7 @@ export default function AboutPage() {
 
         {/* 서비스 소개 */}
         <section style={{ marginBottom: 48 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "serif", color: "#2A2520", marginBottom: 16 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 16 }}>
             오늘무드가 뭔가요?
           </h2>
           <p style={{ fontSize: 15, color: "#5A5248", lineHeight: 1.9, fontWeight: 300, marginBottom: 16 }}>
@@ -51,7 +51,7 @@ export default function AboutPage() {
 
         {/* 기능 소개 */}
         <section style={{ marginBottom: 48 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "serif", color: "#2A2520", marginBottom: 20 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 20 }}>
             어떻게 사용하나요?
           </h2>
           <div style={{ display: "grid", gap: 16 }}>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                   {step}
                 </span>
                 <div>
-                  <p style={{ fontSize: 16, fontWeight: 700, fontFamily: "serif", color: "#2A2520", marginBottom: 6 }}>{title}</p>
+                  <p style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 6 }}>{title}</p>
                   <p style={{ fontSize: 14, color: "#7A7260", lineHeight: 1.75, fontWeight: 300 }}>{desc}</p>
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function AboutPage() {
 
         {/* 왜 만들었나 */}
         <section style={{ marginBottom: 48 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "serif", color: "#2A2520", marginBottom: 16 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 16 }}>
             왜 만들었나요?
           </h2>
           <p style={{ fontSize: 15, color: "#5A5248", lineHeight: 1.9, fontWeight: 300, marginBottom: 16 }}>
@@ -112,7 +112,7 @@ export default function AboutPage() {
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
             padding: "14px 32px", borderRadius: 4,
-            fontSize: 16, fontFamily: "serif", fontWeight: 700,
+            fontSize: 16, fontFamily: "var(--font-serif)", fontWeight: 700,
             textDecoration: "none",
             boxShadow: "0 4px 18px rgba(200,96,122,0.4)",
           }}>

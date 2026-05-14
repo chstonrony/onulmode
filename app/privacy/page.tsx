@@ -22,11 +22,11 @@ export default function PrivacyPage() {
     <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "serif" }}>
+        <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>
           ← 오늘무드
         </Link>
 
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#2A2520", fontFamily: "serif", margin: "20px 0 8px" }}>
+        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)", margin: "20px 0 8px" }}>
           개인정보처리방침
         </h1>
         <p style={{ fontSize: 13, color: "#A89880", marginBottom: 40 }}>
