@@ -8,6 +8,7 @@ const INK  = "#2A2520";
 
 const TABS = [
   { href: "/",        label: "감정버리기", icon: "🗑️" },
+  { href: "/blog",    label: "감정 이야기", icon: "📝" },
   { href: "/archive", label: "기록장",     icon: "📓" },
   { href: "/about",   label: "소개",       icon: "ℹ️" },
 ];
@@ -32,7 +33,7 @@ export default function BottomNav() {
           maxWidth: 480, margin: "0 auto",
         }}>
           {TABS.map(({ href, label, icon }) => {
-            const active = pathname === href || (pathname.startsWith("/release") && href === "/");
+            const active = pathname === href || (pathname.startsWith("/release") && href === "/") || (pathname.startsWith("/blog") && href === "/blog");
             return (
               <Link key={href} href={href} style={{
                 display: "flex", flexDirection: "column",
