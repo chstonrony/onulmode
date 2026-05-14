@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-serif: var(--font-serif), "Gowun Batang", serif;
+  --font-sans:  var(--font-sans),  "Noto Sans KR", sans-serif;
+  --font-en:    var(--font-en),    "Crimson Text", "Georgia", serif;
+
+  /* ── 팔레트 ── */
+  --color-cream:  #F4EFE4;
+  --color-paper:  #FAF6EF;
+  --color-paper2: #EDE8DD;
+  --color-ink:    #38332E;
+  --color-soft:   #5A5248;
+  --color-muted:  #8A8278;
+  --color-faint:  #C0B4A8;
+  --color-line:   #D8CEC0;
+
+  /* 시그니처 로즈핑크 */
+  --color-rose:     #C8607A;
+  --color-rose-dim: rgba(200,96,122,0.1);
+
+  /* 감정 스티키 컬러 */
+  --s-butter:   #F5EBCC;
+  --s-pink:     #F0DDD8;
+  --s-blue:     #D8E4EE;
+  --s-sage:     #D8E8DC;
+  --s-lavender: #E4DCED;
+  --s-beige:    #EDE4D4;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 16px; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #F4EFE4;
+  color: #38332E;
+  font-family: "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
+
+/* 종이 그레인 */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.048'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9998; mix-blend-mode: multiply;
+}
+
+.font-serif { font-family: var(--font-serif) !important; }
+.font-en    { font-family: var(--font-en) !important; }
+
+::-webkit-scrollbar { width: 0; }
+:focus-visible { outline: 1.5px solid #C8607A; outline-offset: 3px; border-radius: 2px; }
+
+/* ── 스티키노트 접힘 ── */
+.sticky {
+  position: relative;
+  overflow: hidden;
+}
+.sticky::after {
+  content: "";
+  position: absolute; bottom: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 0 13px 13px;
+  border-color: transparent transparent rgba(44,40,37,0.09) transparent;
+  pointer-events: none;
+}
+
+/* ── 마스킹 테이프 ── */
+.tape {
+  background: rgba(212,192,148,0.52);
+  background-image: repeating-linear-gradient(
+    108deg, transparent, transparent 3px,
+    rgba(175,158,120,0.09) 3px, rgba(175,158,120,0.09) 4px
+  );
+}
+
+/* ── ANIMATIONS ── */
+@keyframes float-paper {
+  0%,100% { transform: translateY(0) rotate(var(--r,0deg)); }
+  45%  { transform: translateY(-6px) rotate(calc(var(--r,0deg) + 1.5deg)); }
+  75%  { transform: translateY(3px)  rotate(calc(var(--r,0deg) - 1deg)); }
+}
+
+@keyframes drift-up {
+  0%   { opacity:1; transform:translateY(0) scale(1); filter:blur(0px); }
+  100% { opacity:0; transform:translateY(-100px) scale(0.88); filter:blur(7px); }
+}
+@keyframes dissolve {
+  0%   { opacity:1; filter:blur(0px) saturate(1); }
+  100% { opacity:0; filter:blur(14px) saturate(0); }
+}
+@keyframes burn-soft {
+  0%   { opacity:1; filter:sepia(0) brightness(1); transform:scaleY(1); }
+  50%  { filter:sepia(0.7) brightness(1.2) hue-rotate(-12deg); }
+  100% { opacity:0; filter:sepia(1) brightness(2) blur(9px); transform:scaleY(0.35) translateY(-22px); }
+}
+@keyframes sink {
+  0%   { opacity:1; transform:translateY(0); filter:blur(0); }
+  100% { opacity:0; transform:translateY(65px); filter:blur(9px) saturate(0.3); }
+}
+
+@keyframes fade-in-up {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.animate-in { animation: fade-in-up 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+@keyframes pulse-soft {
+  0%,100% { opacity:0.28; }
+  50%      { opacity:0.6; }
+}
+.pulse-dot { animation: pulse-soft 1.8s ease-in-out infinite; }
+.pulse-dot:nth-child(2) { animation-delay:.4s; }
+.pulse-dot:nth-child(3) { animation-delay:.8s; }
