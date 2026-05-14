@@ -3,54 +3,60 @@ import { Gowun_Batang, Noto_Sans_KR, Crimson_Text } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
 
-/* 고운바탕 — 따뜻한 한국어 세리프, 에디토리얼 */
 const gowunBatang = Gowun_Batang({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-serif",
-  display: "swap",
-  preload: false,
+  subsets: ["latin"], weight: ["400","700"],
+  variable: "--font-serif", display: "swap", preload: false,
 });
-
-/* 노토 산스 KR — 300 라이트 바디텍스트 */
 const notoSansKR = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  variable: "--font-sans",
-  display: "swap",
-  preload: false,
+  subsets: ["latin"], weight: ["300","400","500"],
+  variable: "--font-sans", display: "swap", preload: false,
 });
-
-/* Crimson Text — 영문 에디토리얼 액센트 */
 const crimsonText = Crimson_Text({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-en",
-  display: "swap",
-  preload: false,
+  subsets: ["latin"], weight: ["400","600"],
+  style: ["normal","italic"],
+  variable: "--font-en", display: "swap", preload: false,
 });
 
 export const metadata: Metadata = {
-  title: "오늘무드 — 마음 임시 보관소",
-  description: "오늘의 감정을 잠깐 여기 두고 가세요.",
+  title: "오늘무드 | 감정 파쇄기 — 오늘의 감정을 여기서 버려요",
+  description: "말 못 한 마음, 짜증, 억울함, 외로움을 감정 파쇄기에 넣고 버려보세요. 기록하지 않아도 괜찮아요. 오늘 마음 조금 정리 완료.",
+  keywords: ["감정일기", "감정파쇄기", "스트레스 해소", "마음정리", "오늘무드", "감정기록", "MZ감성앱"],
+  authors: [{ name: "오늘무드" }],
+  creator: "오늘무드",
+  publisher: "오늘무드",
+  robots: "index, follow",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://onulmode.vercel.app",
+    title: "오늘무드 | 감정 파쇄기",
+    description: "말 못 한 마음도, 짜증도, 억울함도 그냥 던져버려. 오늘 감정 임시보관소.",
+    siteName: "오늘무드",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "오늘무드 | 감정 파쇄기",
+    description: "말 못 한 마음도, 짜증도, 억울함도 그냥 던져버려.",
+  },
   appleWebApp: { capable: true, statusBarStyle: "default", title: "오늘무드" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#F6F1E9",
+  themeColor: "#EDE4D0",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
       <body>
-        <main className="min-h-screen pb-24 max-w-lg mx-auto">
-          {children}
-        </main>
+        {/* 모바일: 하단 탭 / PC: 상단 네비로 전환됨 (BottomNav 내부 처리) */}
+        <div className="app-shell">
+          <main className="main-content">
+            {children}
+          </main>
+        </div>
         <BottomNav />
       </body>
     </html>

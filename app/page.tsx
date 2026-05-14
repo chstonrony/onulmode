@@ -160,7 +160,7 @@ export default function MainPage() {
   const quickDump = useCallback((label:string) => runSequence(label), [runSequence]);
 
   return (
-    <div style={{ background:"#EDE4D0", minHeight:"100vh", overflowX:"hidden" }}>
+    <div style={{ background:"#EDE4D0", minHeight:"100vh", overflowX:"hidden" }} className="page-wrapper">
 
       {/* 배경 블러 감정 워드 */}
       {["지쳐서","외로워","억울","서운해","현타","허무해"].map((w,i)=>(

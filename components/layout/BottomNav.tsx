@@ -4,81 +4,127 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const ROSE = "#C8607A";
+const INK  = "#2A2520";
 
 const TABS = [
-  { href: "/",        label: "오늘무드", dot: true  },
-  { href: "/archive", label: "기록장",   dot: false },
-  { href: "/profile", label: "나",       dot: false },
+  { href: "/",        label: "감정버리기", icon: "🗑️" },
+  { href: "/archive", label: "기록장",     icon: "📓" },
+  { href: "/about",   label: "소개",       icon: "ℹ️" },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
+
   return (
-    <nav style={{
-      position:"fixed", bottom:0, left:0, right:0, zIndex:50,
-      background:"#EEE5D4",
-      borderTop:"1px solid #D8CEC0",
-      paddingBottom:"env(safe-area-inset-bottom, 0px)",
-    }}>
-      <div style={{
-        display:"flex", alignItems:"center", justifyContent:"space-around",
-        height:52, maxWidth:512, margin:"0 auto", padding:"0 16px",
+    <>
+      {/* ── 모바일 하단 탭 ── */}
+      <nav className="mobile-nav" style={{
+        position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50,
+        background: "#EDE4D0",
+        borderTop: "1px solid #D0C6B4",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        display: "flex",
       }}>
-        {/* 왼쪽: 파쇄기 미니 아이콘 */}
-        <Link href="/" style={{ display:"flex", alignItems:"center", gap:6, textDecoration:"none" }}>
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect x="2" y="6" width="18" height="13" rx="1.5" fill="#D4C8A8" stroke="#A89878" strokeWidth="1"/>
-            <rect x="4" y="8" width="14" height="3" rx="1" fill="#141210"/>
-            <rect x="4" y="8" width="14" height="3" rx="1" stroke={ROSE} strokeWidth="0.8"/>
-            <circle cx="8" cy="15" r="2" fill="white" stroke="#2C2825" strokeWidth="1"/>
-            <circle cx="14" cy="15" r="2" fill="white" stroke="#2C2825" strokeWidth="1"/>
-            {[5,8,11,14,17].map((x,i) => (
-              <rect key={i} x={x} y={19} width={1.5} height={3+i%2*2} rx="0.5" fill="#D4C8A8" opacity="0.7"/>
-            ))}
-          </svg>
-          <span style={{
-            fontSize:12, fontFamily:"var(--font-serif)", color:"#38332E",
-            letterSpacing:"0.03em",
-          }}>오늘무드</span>
-        </Link>
-
-        {/* 중앙: 기록장 */}
-        {TABS.slice(1,2).map(({ href, label }) => {
-          const active = pathname === href;
-          return (
-            <Link key={href} href={href} style={{
-              display:"flex", alignItems:"center", gap:4, textDecoration:"none",
-            }}>
-              <span style={{
-                fontSize:13, fontFamily:"var(--font-serif)",
-                color: active ? "#2C2825" : "#A89880",
-                letterSpacing:"0.03em",
-                borderBottom: active ? `1px solid #2C2825` : "none",
-                paddingBottom: active ? 1 : 0,
-              }}>{label}</span>
-              {active && <span style={{ width:4, height:4, borderRadius:"50%", background:ROSE }}/>}
-            </Link>
-          );
-        })}
-
-        {/* 오른쪽: 나 */}
-        {TABS.slice(2).map(({ href, label }) => {
-          const active = pathname === href;
-          return (
-            <Link key={href} href={href} style={{ textDecoration:"none" }}>
-              <span style={{
-                fontSize:13, fontFamily:"var(--font-serif)",
-                color: active ? "#2C2825" : "#A89880",
-                letterSpacing:"0.03em",
-                display:"flex", alignItems:"center", gap:3,
+        <div style={{
+          display: "flex", alignItems: "center",
+          justifyContent: "space-around",
+          height: 58, width: "100%",
+          maxWidth: 480, margin: "0 auto",
+        }}>
+          {TABS.map(({ href, label, icon }) => {
+            const active = pathname === href || (pathname.startsWith("/release") && href === "/");
+            return (
+              <Link key={href} href={href} style={{
+                display: "flex", flexDirection: "column",
+                alignItems: "center", gap: 2, padding: "4px 12px",
+                textDecoration: "none",
               }}>
-                {label}
-                {active && <span style={{ width:4, height:4, borderRadius:"50%", background:ROSE }}/>}
-              </span>
+                <span style={{ fontSize: active ? 22 : 20 }}>{icon}</span>
+                <span style={{
+                  fontSize: 10, fontFamily: "var(--font-serif)",
+                  color: active ? ROSE : "#A89880",
+                  fontWeight: active ? 700 : 400,
+                }}>
+                  {label}
+                </span>
+                {active && (
+                  <span style={{
+                    width: 4, height: 4, borderRadius: "50%",
+                    background: ROSE, display: "block",
+                  }}/>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* ── PC 상단 헤더 ── */}
+      <header className="desktop-nav" style={{
+        position: "sticky", top: 0, zIndex: 50,
+        background: "rgba(237,228,208,0.92)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid #D0C6B4",
+        display: "none",
+      }}>
+        <div style={{
+          maxWidth: 1100, margin: "0 auto",
+          padding: "0 32px",
+          height: 60,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          {/* 로고 */}
+          <Link href="/" style={{ textDecoration:"none", display:"flex", alignItems:"center", gap:6 }}>
+            <span style={{ fontSize: 20, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700 }}>
+              오늘무드
+            </span>
+            <svg width="14" height="14" viewBox="0 0 14 14">
+              <path d="M7 1L8.3 5H12.5L9.2 7.8L10.5 12L7 9.5L3.5 12L4.8 7.8L1.5 5H5.7Z"
+                fill={ROSE} opacity="0.8"/>
+            </svg>
+          </Link>
+
+          {/* 슬로건 */}
+          <p style={{ fontSize: 12, color: "#A89880", fontFamily: "var(--font-en)", fontStyle: "italic" }}>
+            temporary emotional release space
+          </p>
+
+          {/* 네비 */}
+          <nav style={{ display: "flex", alignItems: "center", gap: 24 }}>
+            {TABS.map(({ href, label }) => {
+              const active = pathname === href;
+              return (
+                <Link key={href} href={href} style={{
+                  fontSize: 14, fontFamily: "var(--font-serif)",
+                  color: active ? INK : "#A89880",
+                  textDecoration: "none",
+                  borderBottom: active ? `1.5px solid ${INK}` : "none",
+                  paddingBottom: active ? 2 : 0,
+                }}>
+                  {label}
+                </Link>
+              );
+            })}
+            <Link href="/release" style={{
+              fontSize: 13, fontFamily: "var(--font-serif)",
+              background: ROSE, color: "#F5EFE0",
+              padding: "7px 18px", borderRadius: 4,
+              textDecoration: "none", fontWeight: 700,
+              boxShadow: `0 3px 12px ${ROSE}44`,
+            }}>
+              감정 버리러 가기
             </Link>
-          );
-        })}
-      </div>
-    </nav>
+          </nav>
+        </div>
+      </header>
+
+      {/* CSS: PC에서 모바일 숨기고 데스크탑 네비 보임 */}
+      <style>{`
+        @media (min-width: 768px) {
+          .mobile-nav { display: none !important; }
+          .desktop-nav { display: block !important; }
+        }
+      `}</style>
+    </>
   );
 }
