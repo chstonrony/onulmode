@@ -3,10 +3,12 @@
 import { useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import TrashCan, { TrashState } from "@/components/trash/TrashCan";
 import EmotionSticker, { StickerConfig } from "@/components/trash/EmotionSticker";
 import FeedbackToast, { getRandomMessage } from "@/components/trash/FeedbackToast";
 import { useLocale } from "@/context/LocaleContext";
+import { buildResultUrl } from "@/lib/resultCard";
 
 const ROSE = "#C8607A";
 const INK  = "#2A2520";
@@ -125,35 +127,48 @@ function Particles({ active }: { active:boolean }) {
 }
 
 export default function MainPage() {
-  const trashRef = useRef<HTMLDivElement>(null);
-  const { t } = useLocale();
-  const [state, setState]     = useState<TrashState>("idle");
-  const [toast, setToast]     = useState<string|null>(null);
-  const [particles, setP]     = useState(false);
-  const [count, setCount]     = useState(0);
-  const [phase, setPhase]     = useState<null|"processing"|"done">(null);
-  const [currentLabel, setLabel] = useState("");
+  const trashRef  = useRef<HTMLDivElement>(null);
+  const router    = useRouter();
+  const { t }     = useLocale();
+  const [state, setState]       = useState<TrashState>("idle");
+  const [toast, setToast]       = useState<string|null>(null);
+  const [particles, setP]       = useState(false);
+  const [count, setCount]       = useState(0);
+  const [phase, setPhase]       = useState<null|"processing"|"done"|"result">(null);
+  const [currentLabel, setLabel]= useState("");
+  const [dumpedLabels, setDumped]= useState<string[]>([]);
 
   const DONE_MSGS = [t.home.done1, t.home.done2, t.home.done3, t.home.done4, t.home.done5];
 
   const runSequence = useCallback((label: string) => {
     setLabel(label);
+    setDumped(prev => [...new Set([...prev, label])].slice(-3));
     setState("eating");
     setP(true);
     setPhase("processing");
     setTimeout(() => setP(false), 1400);
     setTimeout(() => setState("satisfied"), 800);
     setTimeout(() => setPhase("done"), 1900);
-    setTimeout(() => { setState("idle"); setPhase(null); }, 3600);
+    // done → result 버튼 표시 (자동 초기화 제거)
     setCount(n => n + 1);
     setTimeout(() => {
       setToast(DONE_MSGS[Math.floor(Math.random() * DONE_MSGS.length)]);
       setTimeout(() => setToast(null), 3000);
     }, 2000);
-  }, []);
+  }, []); // eslint-disable-line
+
+  function goToResult() {
+    const seed = Date.now() % 999983;
+    router.push(buildResultUrl(dumpedLabels.length ? dumpedLabels : [currentLabel], seed));
+  }
+
+  function resetMachine() {
+    setState("idle");
+    setPhase(null);
+  }
 
   const handleDrop = useCallback(() => runSequence("감정"), [runSequence]);
-  const quickDump = useCallback((label:string) => runSequence(label), [runSequence]);
+  const quickDump  = useCallback((label:string) => runSequence(label), [runSequence]);
 
   return (
     <div style={{ background:"#EDE4D0", minHeight:"100vh", overflowX:"hidden" }} className="page-wrapper">
@@ -386,35 +401,44 @@ export default function MainPage() {
                     position:"absolute",
                     top:"42%", left:"50%",
                     transform:"translate(-50%,-50%) rotate(-1deg)",
-                    zIndex:50, pointerEvents:"none",
+                    zIndex:50, pointerEvents:"auto", width:"80%", maxWidth:300,
                   }}
                 >
                   <div style={{
                     background:"#F5EFE0",
                     border:`2px solid ${INK}`,
                     borderRadius:3,
-                    padding:"14px 22px",
+                    padding:"14px 20px 16px",
                     textAlign:"center",
                     boxShadow:"4px 4px 0 rgba(42,37,32,0.85)",
                   }}>
-                    <p style={{
-                      fontSize:11, fontFamily:"monospace",
-                      color:ROSE, letterSpacing:"0.1em", marginBottom:6,
-                    }}>
+                    <p style={{ fontSize:11, fontFamily:"monospace", color:ROSE, letterSpacing:"0.1em", marginBottom:6 }}>
                       ✓ COMPLETE
                     </p>
                     <p style={{
-                      fontSize:18,
-                      fontFamily:"var(--font-serif)",
-                      color:INK, fontWeight:700,
-                      lineHeight:1.4,
-                      whiteSpace:"pre-line",
+                      fontSize:18, fontFamily:"var(--font-serif)", color:INK, fontWeight:700,
+                      lineHeight:1.4, whiteSpace:"pre-line", marginBottom:14,
                     }}>
                       {t.home.completeTitle}
                     </p>
-                    <p style={{ fontSize:10, color:"#8A8270", fontFamily:"var(--font-serif)", marginTop:6 }}>
-                      {t.home.completeSub}
-                    </p>
+                    {/* 결과 카드 버튼 */}
+                    <button onClick={goToResult} style={{
+                      width:"100%", height:40,
+                      background:ROSE, border:"none", borderRadius:3,
+                      fontSize:13, fontFamily:"var(--font-serif)", color:"#F5EFE0", fontWeight:700,
+                      cursor:"pointer", marginBottom:7,
+                      boxShadow:`0 3px 10px ${ROSE}55`,
+                    }}>
+                      결과 카드 만들기 →
+                    </button>
+                    <button onClick={resetMachine} style={{
+                      width:"100%", height:34,
+                      background:"transparent", border:`1px solid ${INK}30`,
+                      borderRadius:3, fontSize:12, fontFamily:"var(--font-serif)",
+                      color:"#8A8270", cursor:"pointer",
+                    }}>
+                      다시 파쇄하기
+                    </button>
                   </div>
                 </motion.div>
               )}

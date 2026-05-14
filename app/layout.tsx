@@ -51,6 +51,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
+      <head>
+        <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossOrigin="anonymous" async />
+        {process.env.NEXT_PUBLIC_KAKAO_JS_KEY && (
+          <script dangerouslySetInnerHTML={{ __html:
+            `window.addEventListener('load',function(){var k="${process.env.NEXT_PUBLIC_KAKAO_JS_KEY}";if(k&&window.Kakao&&!window.Kakao.isInitialized())window.Kakao.init(k);});`
+          }} />
+        )}
+      </head>
       <body>
         {/* 모바일: 하단 탭 / PC: 상단 네비로 전환됨 (BottomNav 내부 처리) */}
         <LocaleProvider>

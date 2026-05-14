@@ -2,8 +2,9 @@
 
 import { useState, Suspense } from "react";
 import { motion, AnimatePresence, useAnimate } from "framer-motion";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { buildResultUrl } from "@/lib/resultCard";
 
 type Mode = "drift" | "dissolve" | "burn" | "sink";
 type Phase = "write" | "animating" | "done";
@@ -51,6 +52,7 @@ function SoftParticles({ mode }: { mode: Mode }) {
 
 function ReleaseContent() {
   const params = useSearchParams();
+  const router = useRouter();
   const [text, setText] = useState(params.get("text") ?? "");
   const [mode, setMode] = useState<Mode | null>(null);
   const [phase, setPhase] = useState<Phase>("write");
@@ -58,6 +60,12 @@ function ReleaseContent() {
   const [showParticles, setShowParticles] = useState(false);
   const [result] = useState(() => RESULTS[Math.floor(Math.random() * RESULTS.length)]);
   const [scope, animate] = useAnimate();
+
+  function goToResult() {
+    const emotion = text.trim().slice(0, 10) || (mode ?? "감정");
+    const seed = Date.now() % 999983;
+    router.push(buildResultUrl([emotion], seed));
+  }
 
   const canRelease = text.trim().length > 0 && mode !== null;
 
@@ -325,23 +333,31 @@ function ReleaseContent() {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }}
                 style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
-                <button onClick={reset}
-                  style={{
-                    height: 52, background: "#38332E", border: "none", borderRadius: 3,
-                    fontSize: 14, fontFamily: "var(--font-serif)", color: "#F4EFE4",
-                    cursor: "pointer", letterSpacing: "0.05em",
-                  }}>
+
+                {/* 결과 카드 만들기 — 메인 CTA */}
+                <button onClick={goToResult} style={{
+                  height: 52, background: "#C8607A", border: "none", borderRadius: 3,
+                  fontSize: 15, fontFamily: "var(--font-serif)", color: "#F5EFE0", fontWeight: 700,
+                  cursor: "pointer", boxShadow: "0 4px 16px rgba(200,96,122,0.4)",
+                }}>
+                  결과 카드 만들기 →
+                </button>
+
+                <button onClick={reset} style={{
+                  height: 48, background: "#38332E", border: "none", borderRadius: 3,
+                  fontSize: 13, fontFamily: "var(--font-serif)", color: "#F4EFE4",
+                  cursor: "pointer", letterSpacing: "0.05em",
+                }}>
                   하나 더 비울게
                 </button>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {[{ href: "/archive", label: "그래도 남길게" }, { href: "/", label: "홈으로" }].map((b) => (
                     <Link key={b.href} href={b.href} style={{
-                      height: 48, background: "#FAF6EF",
+                      height: 44, background: "#FAF6EF",
                       border: "1px solid #DDD4C0", borderRadius: 3,
                       fontSize: 13, fontFamily: "var(--font-serif)", color: "#5A5248",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       letterSpacing: "0.03em",
-                      boxShadow: "1px 2px 6px rgba(44,40,37,0.06)",
                     }}>
                       {b.label}
                     </Link>
