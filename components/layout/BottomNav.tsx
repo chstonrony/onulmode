@@ -9,7 +9,7 @@ const INK  = "#2A2520";
 const TABS = [
   { href: "/",        label: "감정버리기", icon: "🗑️" },
   { href: "/blog",    label: "감정 이야기", icon: "📝" },
-  { href: "/archive", label: "기록장",     icon: "📓" },
+  { href: "/archive", label: "파쇄함",     icon: "📋" },
   { href: "/about",   label: "소개",       icon: "ℹ️" },
 ];
 

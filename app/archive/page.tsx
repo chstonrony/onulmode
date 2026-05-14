@@ -29,7 +29,7 @@ export default function ArchivePage() {
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title="기록장" />
+      <TopBar title="파쇄함" />
       <div style={{ padding: "16px 20px 80px" }}>
 
         {/* 캘린더 */}

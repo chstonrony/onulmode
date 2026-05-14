@@ -209,7 +209,7 @@ export default function MainPage() {
             fontSize:13, color:"#7A7260",
             fontFamily:"var(--font-serif)", display:"flex", alignItems:"center", gap:4,
           }}>
-            <span style={{fontSize:14}}>📖</span> 기록장
+            <span style={{fontSize:14}}>📋</span> 파쇄함
           </Link>
         </div>
       </div>
@@ -522,12 +522,22 @@ export default function MainPage() {
         {/* 감정 탭 — 찢어진 종이 스타일 */}
         <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center" }}>
           {[
-            {l:"지쳤어",  bg:"#F0E0DC", r:-3, tc:"#B87878"},
-            {l:"서운해",  bg:"#D8E4EE", r: 2, tc:"#6888A8"},
-            {l:"억울해",  bg:"#E4DCED", r:-4, tc:"#8878B0"},
-            {l:"허무해",  bg:"#D8E8DC", r: 3, tc:"#6898A0"},
-            {l:"외로워",  bg:"#F5EBCC", r:-2, tc:"#A09848"},
-            {l:"모르겠어",bg:"#EDE4D4", r: 4, tc:"#8A8070"},
+            {l:"지쳤어",   bg:"#F0E0DC", r:-3, tc:"#B87878"},
+            {l:"짜증나",   bg:"#F0D8D4", r: 2, tc:"#C06858"},
+            {l:"서운해",   bg:"#D8E4EE", r:-2, tc:"#6888A8"},
+            {l:"답답해",   bg:"#D8DCE8", r: 3, tc:"#607098"},
+            {l:"억울해",   bg:"#E4DCED", r:-4, tc:"#8878B0"},
+            {l:"불안해",   bg:"#E8D8EE", r: 1, tc:"#9068A8"},
+            {l:"허무해",   bg:"#D8E8DC", r:-3, tc:"#6898A0"},
+            {l:"무기력해", bg:"#E0DDD8", r: 2, tc:"#887870"},
+            {l:"외로워",   bg:"#F5EBCC", r:-2, tc:"#A09848"},
+            {l:"슬퍼",     bg:"#D8E0EE", r: 4, tc:"#5878A8"},
+            {l:"화났어",   bg:"#F0D8D8", r:-5, tc:"#B85858"},
+            {l:"귀찮아",   bg:"#E0E4D8", r: 3, tc:"#788860"},
+            {l:"막막해",   bg:"#D8DDE4", r:-2, tc:"#586878"},
+            {l:"질렸어",   bg:"#E8E0C8", r: 5, tc:"#907840"},
+            {l:"후회돼",   bg:"#E4D8E4", r:-3, tc:"#906890"},
+            {l:"모르겠어", bg:"#EDE4D4", r: 2, tc:"#8A8070"},
           ].map(em=>(
             <motion.button key={em.l}
               whileTap={{scale:0.9, rotate:0}}
