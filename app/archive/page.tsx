@@ -10,84 +10,99 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
-const BG = "#FAF8F4";
+const BG = "#EDE4D0";
+const PAPER = "#F5EFE0";
+const LINE = "#D8CEC0";
+const ROSE = "#C8607A";
 
 export default function ArchivePage() {
   const { entries, loaded } = useMoodStore();
   const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
 
   if (!loaded) return (
-    <div className="flex items-center justify-center h-screen" style={{ background: BG }}>
-      <div className="flex gap-2">{[0,1,2].map(i => <div key={i} className="pulse-dot w-2 h-2 rounded-full" style={{ background: "#4A7C59" }} />)}</div>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: BG }}>
+      <div style={{ display: "flex", gap: 6 }}>
+        {[0,1,2].map(i => <div key={i} className="pulse-dot" style={{ width: 8, height: 8, borderRadius: "50%", background: ROSE }} />)}
+      </div>
     </div>
   );
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title="아카이브" />
-      <div className="px-5 pt-4 pb-12">
+      <TopBar title="기록장" />
+      <div style={{ padding: "16px 20px 80px" }}>
 
-        {/* Calendar card */}
+        {/* 캘린더 */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-          className="p-5 rounded-2xl mb-5" style={{ background: "#FFFFFF", border: "1.5px solid #E4DDD3", boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}>
+          style={{ padding: 20, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, marginBottom: 16 }}>
           <MoodCalendar entries={entries} />
         </motion.div>
 
-        {/* Stats */}
+        {/* 통계 */}
         {entries.length > 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-            className="grid grid-cols-3 rounded-2xl mb-5 overflow-hidden"
-            style={{ border: "1.5px solid #E4DDD3", background: "#FFFFFF" }}>
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden", marginBottom: 16 }}>
             {[
-              { value: entries.length, unit: "일", label: "총 기록", color: "#4A7C59" },
+              { value: entries.length, unit: "일", label: "총 기록", color: ROSE },
               { value: getStreak(entries), unit: "일", label: "연속 기록", color: "#B8860B" },
-              { value: getTopLabel(entries), unit: "", label: "주요 감정", color: "#A04040", isText: true },
+              { value: getTopLabel(entries), unit: "", label: "주요 감정", color: "#7A5A9A", isText: true },
             ].map((s, i) => (
-              <div key={i} className="flex flex-col items-center py-4"
-                style={{ borderRight: i < 2 ? "1px solid #E4DDD3" : "none" }}>
+              <div key={i} style={{
+                display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 0",
+                borderRight: i < 2 ? `1px solid ${LINE}` : "none",
+              }}>
                 {s.isText
-                  ? <span style={{ fontSize: 18, fontWeight: 700, color: s.color }}>{s.value}</span>
-                  : <div className="flex items-baseline gap-0.5">
-                      <span style={{ fontSize: 26, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.value}</span>
-                      <span style={{ fontSize: 12, color: "#A09588" }}>{s.unit}</span>
+                  ? <span style={{ fontSize: 18, fontWeight: 700, color: s.color, fontFamily: "var(--font-serif)" }}>{s.value}</span>
+                  : <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+                      <span style={{ fontSize: 24, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: "var(--font-serif)" }}>{s.value}</span>
+                      <span style={{ fontSize: 11, color: "#A89880" }}>{s.unit}</span>
                     </div>
                 }
-                <span style={{ fontSize: 11, color: "#A09588", marginTop: 4 }}>{s.label}</span>
+                <span style={{ fontSize: 11, color: "#A89880", marginTop: 4 }}>{s.label}</span>
               </div>
             ))}
           </motion.div>
         )}
 
-        {/* List header */}
-        <div className="flex items-center justify-between mb-3">
-          <p style={{ fontSize: 12, fontWeight: 500, color: "#A09588" }}>기록 목록</p>
-          <Link href="/today" style={{ fontSize: 12, color: "#4A7C59", fontWeight: 500 }}>+ 오늘 기록</Link>
+        {/* 목록 헤더 */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em" }}>RECORDS</p>
+          <Link href="/today" style={{ fontSize: 12, color: ROSE, fontFamily: "var(--font-serif)", textDecoration: "none", fontWeight: 700 }}>
+            + 오늘 기록
+          </Link>
         </div>
 
         {entries.length === 0 ? <EmptyState /> : (
-          <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #E4DDD3" }}>
+          <div style={{ background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden" }}>
             {sorted.map((entry, i) => {
               const em = getEmotion(entry.emotion);
               const Icon = em.icon;
               return (
                 <motion.div key={entry.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}>
-                  <Link href={`/archive/${entry.date}`}>
-                    <div className="flex items-center gap-4 px-4 py-4 bg-white"
-                      style={{ borderBottom: i < sorted.length - 1 ? "1px solid #F4F0EA" : "none" }}>
-                      <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl"
-                        style={{ background: em.bg, border: `1.5px solid ${em.border}` }}>
-                        <Icon size={18} strokeWidth={1.5} style={{ color: em.color }} />
+                  <Link href={`/archive/${entry.date}`} style={{ textDecoration: "none" }}>
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 14,
+                      padding: "14px 18px",
+                      borderBottom: i < sorted.length - 1 ? `1px solid ${LINE}` : "none",
+                      borderLeft: `3px solid ${em.color}`,
+                    }}>
+                      <div style={{
+                        flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 36, height: 36, borderRadius: 4,
+                        background: em.bg, border: `1px solid ${em.border}`,
+                      }}>
+                        <Icon size={16} strokeWidth={1.5} style={{ color: em.color }} />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span style={{ fontSize: 12, fontWeight: 600, color: em.color }}>{em.label}</span>
-                          <span style={{ fontSize: 11, color: "#A09588" }}>{format(new Date(entry.date), "M.d EEE", { locale: ko })}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: em.color, fontFamily: "var(--font-serif)" }}>{em.label}</span>
+                          <span style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace" }}>{format(new Date(entry.date), "M.d EEE", { locale: ko })}</span>
                         </div>
-                        <p className="truncate" style={{ fontSize: 14, color: entry.title ? "#2A2420" : "#A09588", fontWeight: entry.title ? 500 : 400 }}>
+                        <p style={{ fontSize: 13, color: entry.title ? "#3A3228" : "#A89880", fontWeight: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {entry.title || entry.body || "—"}
                         </p>
                       </div>
-                      <ChevronRight size={14} strokeWidth={1.5} style={{ color: "#D4CBC0", flexShrink: 0 }} />
+                      <ChevronRight size={13} strokeWidth={1.5} style={{ color: "#C8BDB0", flexShrink: 0 }} />
                     </div>
                   </Link>
                 </motion.div>
@@ -102,15 +117,23 @@ export default function ArchivePage() {
 
 function EmptyState() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center py-16 text-center">
-      <div className="flex items-center justify-center w-16 h-16 rounded-2xl mb-5"
-        style={{ background: "#EEF5F0", border: "1.5px solid #AECFBA" }}>
-        <span style={{ fontSize: 28 }}>🌱</span>
-      </div>
-      <h3 style={{ fontSize: 17, fontWeight: 600, color: "#2A2420", marginBottom: 8 }}>아직 기록이 없어요</h3>
-      <p style={{ fontSize: 14, color: "#A09588", lineHeight: 1.65, marginBottom: 24 }}>첫 번째 감정 기록을 남겨보세요.</p>
-      <Link href="/today" className="flex items-center gap-2 px-6 h-11 rounded-xl font-semibold"
-        style={{ background: "#2A2420", color: "#FAF8F4", fontSize: 14 }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 24px", textAlign: "center",
+        background: "#F5EFE0", border: "1px dashed #D8CEC0", borderRadius: 4 }}>
+      <p style={{ fontSize: 32, marginBottom: 16 }}>📓</p>
+      <p style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 8 }}>
+        아직 기록이 없어요
+      </p>
+      <p style={{ fontSize: 13, color: "#A89880", lineHeight: 1.7, marginBottom: 24, fontWeight: 300 }}>
+        오늘의 감정을 처음으로 기록해보세요.
+      </p>
+      <Link href="/today" style={{
+        display: "inline-flex", alignItems: "center",
+        background: "#C8607A", color: "#F5EFE0",
+        padding: "10px 24px", borderRadius: 4,
+        fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
+        textDecoration: "none",
+      }}>
         첫 기록 시작하기
       </Link>
     </motion.div>

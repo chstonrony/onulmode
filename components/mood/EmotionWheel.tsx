@@ -61,7 +61,7 @@ function EmotionButton({ emotion, isSelected, isDeselected, onSelect }: {
       <span style={{
         fontSize: 13,
         fontWeight: isSelected ? 700 : 500,
-        color: isSelected ? emotion.color : "#6B6258",
+        color: isSelected ? emotion.color : "#5A5248",
         fontFamily: "var(--font-display)",
         transition: "color 0.15s",
       }}>
@@ -95,8 +95,8 @@ export default function EmotionWheel({ selected, onSelect }: EmotionWheelProps) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className="mt-5 px-4 py-3 rounded-2xl"
-            style={{ background: cfg.bg, border: `1.5px solid ${cfg.border}` }}
+            className="mt-5 px-4 py-3"
+            style={{ borderRadius: 4, background: cfg.bg, border: `1.5px solid ${cfg.border}` }}
           >
             <p style={{
               fontSize: 14,

@@ -7,8 +7,12 @@ import { EmotionType } from "@/types";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import Link from "next/link";
 
-const BG = "#FAF8F4";
+const BG = "#EDE4D0";
+const PAPER = "#F5EFE0";
+const LINE = "#D8CEC0";
+const ROSE = "#C8607A";
 
 export default function ProfilePage() {
   const { entries, loaded } = useMoodStore();
@@ -24,52 +28,110 @@ export default function ProfilePage() {
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
       <TopBar title="나" />
-      <div className="px-5 pt-6 pb-12">
+      <div style={{ padding: "20px 20px 80px" }}>
 
+        {/* 프로필 카드 */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center py-10 text-center rounded-2xl mb-5"
-          style={{ background: "#FFFFFF", border: "1.5px solid #E4DDD3" }}>
-          <div className="flex items-center justify-center w-20 h-20 rounded-2xl mb-5"
-            style={{ background: top ? top.bg : "#F4F0EA", border: top ? `1.5px solid ${top.border}` : "1.5px solid #E4DDD3" }}>
+          style={{
+            display: "flex", flexDirection: "column", alignItems: "center",
+            padding: "36px 24px", textAlign: "center",
+            background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, marginBottom: 14,
+          }}>
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            width: 72, height: 72, marginBottom: 16, borderRadius: 4,
+            background: top ? top.bg : "#D8CEC0", border: top ? `1px solid ${top.border}` : `1px solid ${LINE}`,
+          }}>
             {top
-              ? (() => { const Icon = top.icon; return <Icon size={34} strokeWidth={1.2} style={{ color: top.color }} />; })()
-              : <span style={{ fontSize: 32 }}>🌱</span>
+              ? (() => { const Icon = top.icon; return <Icon size={30} strokeWidth={1.2} style={{ color: top.color }} />; })()
+              : <span style={{ fontSize: 28 }}>🌱</span>
             }
           </div>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#2A2420" }}>나의 감정 기록</p>
-          {first && <p style={{ fontSize: 12, color: "#A09588", marginTop: 5 }}>{format(new Date(first.date), "yyyy.MM.dd", { locale: ko })}부터</p>}
+          <p style={{ fontSize: 20, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>
+            나의 감정 기록
+          </p>
+          {first && (
+            <p style={{ fontSize: 12, color: "#A89880", marginTop: 6, fontFamily: "monospace" }}>
+              {format(new Date(first.date), "yyyy.MM.dd", { locale: ko })}부터
+            </p>
+          )}
           {top && (
-            <div className="flex items-center gap-2 mt-4 px-4 py-2 rounded-lg" style={{ background: top.bg, border: `1px solid ${top.border}` }}>
-              <span style={{ fontSize: 12, color: top.color, fontWeight: 600 }}>대표 감정 — {top.label}</span>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 6, marginTop: 14,
+              padding: "6px 16px", background: top.bg, border: `1px solid ${top.border}`, borderRadius: 4,
+            }}>
+              <span style={{ fontSize: 13, color: top.color, fontWeight: 700, fontFamily: "var(--font-serif)" }}>
+                대표 감정 — {top.label}
+              </span>
+            </div>
+          )}
+          {entries.length === 0 && (
+            <div style={{ marginTop: 20 }}>
+              <p style={{ fontSize: 13, color: "#A89880", marginBottom: 14, fontWeight: 300 }}>
+                아직 기록이 없어요.<br/>오늘의 감정을 처음으로 남겨보세요.
+              </p>
+              <Link href="/today" style={{
+                display: "inline-flex", alignItems: "center",
+                background: ROSE, color: "#F5EFE0",
+                padding: "10px 24px", borderRadius: 4,
+                fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
+                textDecoration: "none",
+              }}>
+                첫 기록 시작하기
+              </Link>
             </div>
           )}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="grid grid-cols-2 gap-3 mb-5">
+        {/* 통계 */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
           {[
-            { label: "총 기록 일수", value: entries.length, unit: "일", color: "#4A7C59" },
+            { label: "총 기록 일수", value: entries.length, unit: "일", color: ROSE },
             { label: "이번 달 기록", value: thisMonth, unit: "일", color: "#B8860B" },
           ].map(s => (
-            <div key={s.label} className="p-5 rounded-2xl" style={{ background: "#FFFFFF", border: "1.5px solid #E4DDD3" }}>
-              <div className="flex items-baseline gap-0.5 mb-1">
-                <span style={{ fontSize: 30, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.value}</span>
-                <span style={{ fontSize: 13, color: "#A09588" }}>{s.unit}</span>
+            <div key={s.label} style={{ padding: "18px 16px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
+                <span style={{ fontSize: 28, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: "var(--font-serif)" }}>{s.value}</span>
+                <span style={{ fontSize: 12, color: "#A89880" }}>{s.unit}</span>
               </div>
-              <span style={{ fontSize: 12, color: "#A09588" }}>{s.label}</span>
+              <span style={{ fontSize: 12, color: "#A89880" }}>{s.label}</span>
             </div>
           ))}
         </motion.div>
 
+        {/* 소개 */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.14 }}
-          className="p-5 rounded-2xl mb-5" style={{ background: "#FFFFFF", border: "1.5px solid #E4DDD3" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: "#A09588", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>About</p>
-          <p style={{ fontSize: 14, color: "#6B6258", lineHeight: 1.8 }}>
-            오늘무드는 매일 나의 감정을 기록하고 색으로 표현하는 감성 기록 서비스입니다.
-            감정을 쓰는 행위 자체가 심리적 돌봄이 됩니다.
+          style={{ padding: "18px 20px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, marginBottom: 14 }}>
+          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 10 }}>ABOUT</p>
+          <p style={{ fontSize: 14, color: "#5A5248", lineHeight: 1.85, fontWeight: 300 }}>
+            오늘무드는 오늘의 감정을 기록하고, 쌓인 마음을 버리는 감성 웹 서비스예요.
+            감정을 쓰고 버리는 행위 자체가 작은 돌봄이 돼요.
           </p>
         </motion.div>
 
-        <p style={{ fontSize: 11, color: "#C4BAB0", textAlign: "center" }}>ONULMODE v0.1.0</p>
+        {/* 링크 */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18 }}
+          style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            { href: "/about", label: "서비스 소개" },
+            { href: "/blog", label: "감정 이야기" },
+            { href: "/privacy", label: "개인정보처리방침" },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "14px 18px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4,
+              color: "#5A5248", fontSize: 14, fontFamily: "var(--font-serif)", textDecoration: "none",
+            }}>
+              <span>{label}</span>
+              <span style={{ color: "#C8BDB0", fontSize: 16 }}>→</span>
+            </Link>
+          ))}
+        </motion.div>
+
+        <p style={{ fontSize: 11, color: "#C4BAB0", textAlign: "center", marginTop: 28, fontFamily: "monospace" }}>
+          ONULMODE v0.1.0
+        </p>
       </div>
     </div>
   );

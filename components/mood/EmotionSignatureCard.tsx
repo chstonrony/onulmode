@@ -14,8 +14,8 @@ export default function EmotionSignatureCard({ entry, onClose }: { entry: MoodEn
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="relative overflow-hidden rounded-2xl p-7"
-      style={{ background: em.bg, border: `1.5px solid ${em.border}` }}>
+      className="relative overflow-hidden p-7"
+      style={{ borderRadius: 4, background: em.bg, border: `1.5px solid ${em.border}` }}>
 
       {onClose && (
         <button onClick={onClose} className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full"

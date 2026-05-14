@@ -22,13 +22,13 @@ export default function MoodCalendar({ entries }: { entries: MoodEntry[] }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <button onClick={() => go(-1)} className="flex items-center justify-center w-8 h-8 rounded-lg" style={{ background: "#F4F0EA", color: "#6B6258" }}><ChevronLeft size={16} strokeWidth={1.5} /></button>
-        <span style={{ fontSize: 15, fontWeight: 600, color: "#2A2420" }}>{format(current, "yyyy년 M월", { locale: ko })}</span>
-        <button onClick={() => go(1)} className="flex items-center justify-center w-8 h-8 rounded-lg" style={{ background: "#F4F0EA", color: "#6B6258" }}><ChevronRight size={16} strokeWidth={1.5} /></button>
+        <button onClick={() => go(-1)} className="flex items-center justify-center w-8 h-8" style={{ background: "#D8CEC0", color: "#7A7260", borderRadius: 4 }}><ChevronLeft size={16} strokeWidth={1.5} /></button>
+        <span style={{ fontSize: 15, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>{format(current, "yyyy년 M월", { locale: ko })}</span>
+        <button onClick={() => go(1)} className="flex items-center justify-center w-8 h-8" style={{ background: "#D8CEC0", color: "#7A7260", borderRadius: 4 }}><ChevronRight size={16} strokeWidth={1.5} /></button>
       </div>
 
       <div className="grid grid-cols-7 mb-2">
-        {DAYS.map((d) => <div key={d} className="text-center" style={{ fontSize: 11, color: "#A09588", fontWeight: 500, paddingBottom: 6 }}>{d}</div>)}
+        {DAYS.map((d) => <div key={d} className="text-center" style={{ fontSize: 11, color: "#A89880", fontWeight: 500, paddingBottom: 6 }}>{d}</div>)}
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
@@ -48,8 +48,8 @@ export default function MoodCalendar({ entries }: { entries: MoodEntry[] }) {
                     </div>
                   </Link>
                 ) : (
-                  <div className="flex items-center justify-center rounded-xl" style={{ width: 36, height: 36, background: today ? "#2A2420" : "transparent" }}>
-                    <span style={{ fontSize: 13, fontWeight: today ? 600 : 400, color: today ? "#FAF8F4" : inMonth ? "#6B6258" : "#D4CBC0" }}>{format(day, "d")}</span>
+                  <div className="flex items-center justify-center" style={{ width: 36, height: 36, background: today ? "#C8607A" : "transparent", borderRadius: 4 }}>
+                    <span style={{ fontSize: 13, fontWeight: today ? 700 : 400, color: today ? "#F5EFE0" : inMonth ? "#5A5248" : "#C8BDB0" }}>{format(day, "d")}</span>
                   </div>
                 )}
               </div>
@@ -59,8 +59,8 @@ export default function MoodCalendar({ entries }: { entries: MoodEntry[] }) {
       </AnimatePresence>
 
       {monthEntries.length > 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5 pt-4" style={{ borderTop: "1px solid #E4DDD3" }}>
-          <p style={{ fontSize: 11, color: "#A09588", fontWeight: 500, marginBottom: 10 }}>이번 달 감정 분포</p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5 pt-4" style={{ borderTop: "1px solid #D8CEC0" }}>
+          <p style={{ fontSize: 11, color: "#A89880", fontWeight: 500, marginBottom: 10 }}>이번 달 감정 분포</p>
           <Distribution entries={monthEntries} />
         </motion.div>
       )}
@@ -81,7 +81,7 @@ function Distribution({ entries }: { entries: MoodEntry[] }) {
         return (
           <div key={type} className="flex items-center gap-3">
             <span style={{ fontSize: 12, color: em.color, fontWeight: 600, width: 28 }}>{em.label}</span>
-            <div className="flex-1 h-1.5 rounded-full" style={{ background: "#EDE8E0" }}>
+            <div className="flex-1 h-1.5 rounded-full" style={{ background: "#D8CEC0" }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                 className="h-full rounded-full" style={{ background: em.color, opacity: 0.6 }} />
             </div>
