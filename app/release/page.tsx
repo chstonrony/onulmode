@@ -12,6 +12,23 @@ type Phase = "write" | "animating" | "done";
 const ROSE = "#C8607A";
 const INK  = "#1A1410";
 
+// placeholder 랜덤 풀
+const PLACEHOLDERS = [
+  "여기에 감정 투입…\n안 적어도 됨. 근데 적으면 더 잘 씹힘.",
+  "오늘 뭐 때문에 꾸역꾸역 버텼음?\n\n다 쏟아내도 됨. 어차피 우걱이가 씹어먹을 거임.",
+  "질긴 감정은 처리 오래 걸림.\n그래도 일단 투입해봐.",
+  "우걱이가 읽는 중…\n\n뭐든 괜찮음. 어차피 갈아버릴 거니까.",
+  "오늘 뭐가 제일 걸렸음?\n\n솔직하게 써도 됨. 우걱이는 판단 안 함. 그냥 씹어먹음.",
+];
+
+// 상황별 표정 이모지
+const EXPRESSIONS: Record<string, string> = {
+  idle:    ["😐","🫠","😵‍💫","🥴","😑"][Math.floor(Math.random()*5)],
+  eating:  "🤢",
+  stressed:"😵",
+  overload:"🔥",
+};
+
 const MODES: { id: Mode; label: string; sub: string; bg: string; rot: number }[] = [
   { id: "chew",  label: "우걱 먹이기",    sub: "바람에 날리기",   bg: "#F0E0DC", rot: -6 },
   { id: "grind", label: "빠각 돌리기",    sub: "조용히 사라지기", bg: "#D8E8DC", rot:  4 },
@@ -254,6 +271,10 @@ function ReleaseContent() {
   const [showP, setShowP] = useState(false);
   const [result]          = useState(() => RESULTS[Math.floor(Math.random() * RESULTS.length)]);
   const [scope, animate]  = useAnimate();
+  // 랜덤 placeholder
+  const [placeholder]     = useState(() => PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]);
+  // 랜덤 표정 이모지
+  const [expr]            = useState(() => EXPRESSIONS.idle);
 
   const canFeed   = text.trim().length > 0 && mode !== null;
   const stressed  = text.length > 80;
@@ -323,12 +344,27 @@ function ReleaseContent() {
           </div>
 
           {/* 목구멍 힌트 */}
-          <div style={{ display:"flex", justifyContent:"center", marginBottom:6 }}>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom:4 }}>
             <div style={{ width:36, height:10, borderRadius:"50%", background:"#2A1E1A", opacity:0.6 }}/>
           </div>
 
           {/* 눈 */}
           <UgegiEyes active={phase==="animating"} stressed={stressed} />
+
+          {/* 랜덤 표정 이모지 — 잇몸 왼쪽 아래 */}
+          <div style={{ position:"absolute", bottom:16, left:16 }}>
+            <motion.span
+              animate={ overload
+                ? { rotate:[-5,5,-5], scale:[1,1.1,1] }
+                : stressed
+                ? { rotate:[-3,3,-3] }
+                : {} }
+              transition={{ duration:0.4, repeat:Infinity }}
+              style={{ fontSize:22, display:"block", filter:"grayscale(0.2)" }}
+            >
+              {overload ? EXPRESSIONS.overload : stressed ? EXPRESSIONS.stressed : phase==="animating" ? EXPRESSIONS.eating : expr}
+            </motion.span>
+          </div>
         </div>
 
         {/* 이빨 */}
@@ -398,7 +434,7 @@ function ReleaseContent() {
                   <textarea
                     value={text}
                     onChange={e=>setText(e.target.value)}
-                    placeholder={"여기에 감정 투입…\n안 적어도 됨. 근데 적으면 더 잘 씹힘."}
+                    placeholder={placeholder}
                     rows={8}
                     style={{
                       background:"transparent", border:"none", outline:"none", resize:"none",
