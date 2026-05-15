@@ -173,42 +173,22 @@ body {
 /* ── 파쇄기 기계 프레임 ── */
 .machine-frame {
   width: min(92vw, 520px);
-  border-radius: 12px;
+  margin: 0 auto;
+  background: #1f1b18;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-  background: #1a1612;
+  box-shadow: 0 28px 70px rgba(64, 45, 30, 0.28);
 }
 
 .machine-top {
+  height: 34px;
+  padding: 0 14px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: #111009;
-  padding: 8px 14px;
-}
-
-.machine-top span:first-child {
-  font-size: 10px;
-  color: #C8607A;
-  letter-spacing: 0.18em;
-}
-
-.machine-top span:nth-child(2) {
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
-  color: #6a6258;
-  letter-spacing: 0.1em;
-}
-
-.machine-top span:last-child {
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
-  color: #4a4238;
-  border: 1px solid #3a3228;
-  border-radius: 3px;
-  padding: 1px 7px;
-  letter-spacing: 0.06em;
-  cursor: pointer;
+  align-items: center;
+  color: #b9a99a;
+  font-size: 11px;
+  letter-spacing: 1px;
 }
 
 .machine-frame video {
