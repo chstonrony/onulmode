@@ -61,15 +61,16 @@ function UgegiEyes({ active }: { active: boolean }) {
   }, []);
 
   return (
-    <div style={{ display:"flex", gap:28, justifyContent:"center", marginTop:-8, marginBottom:4, position:"relative", zIndex:5 }}>
+    /* 고정 높이 컨테이너 — 깜빡여도 레이아웃 안 밀림 */
+    <div style={{ display:"flex", gap:28, justifyContent:"center", height:36, alignItems:"center", position:"relative", zIndex:5 }}>
       {[0,1].map(i=>(
         <motion.div key={i}
-          animate={{ x: eyeX+(i===0?-2:2), y: eyeY }}
-          transition={{ duration:0.6, ease:"easeOut" }}
+          animate={{ x: eyeX+(i===0?-2:2), scaleY: blink ? 0.12 : 1 }}
+          transition={{ duration:0.6, ease:"easeOut", scaleY:{ duration:0.08 } }}
           style={{
-            width:26, height: blink?3:26,
-            borderRadius: blink?2:"50%", background: INK,
-            position:"relative", overflow:"hidden", transition:"height 0.07s",
+            width:26, height:26,
+            borderRadius:"50%", background: INK,
+            position:"relative", overflow:"hidden",
             boxShadow: active ? `0 0 14px ${ROSE}88` : "none",
           }}
         >
