@@ -227,6 +227,18 @@ body {
   box-shadow: 0 10px 32px rgba(216, 107, 135, 0.5);
 }
 
+/* ── 파쇄기 흔들림 ── */
+@keyframes shredder-shake {
+  0%,100% { transform: translateX(0) rotate(0deg); }
+  20%     { transform: translateX(-4px) rotate(-0.6deg); }
+  40%     { transform: translateX( 4px) rotate( 0.6deg); }
+  60%     { transform: translateX(-2px) rotate(-0.3deg); }
+  80%     { transform: translateX( 2px) rotate( 0.3deg); }
+}
+.hero-media.shaking {
+  animation: shredder-shake 0.38s ease;
+}
+
 /* ── 파쇄기 기계 프레임 ── */
 .machine-frame {
   width: min(92vw, 520px);

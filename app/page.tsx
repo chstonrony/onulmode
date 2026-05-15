@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,17 +30,113 @@ const EMOTION_CHIPS = [
   { k: "모르겠어", bg: "#EDE4D4", r:  2, tc: "#8A8070" },
 ] as const;
 
-export default function MainPage() {
-  const router = useRouter();
-  const { t }  = useLocale();
+interface FlyingCard {
+  id: number;
+  label: string;
+  bg: string;
+  tc: string;
+  startX: number;
+  startY: number;
+  width: number;
+  height: number;
+  dx: number;   // target offset from start
+  dy: number;
+}
 
-  const [toast, setToast]         = useState<string | null>(null);
-  const [count, setCount]         = useState(0);
-  const [phase, setPhase]         = useState<null | "processing" | "done">(null);
-  const [currentLabel, setLabel]  = useState("");
-  const [dumpedLabels, setDumped] = useState<string[]>([]);
+/* ── Web Audio 파쇄 사운드 ── */
+function playShredSound() {
+  try {
+    const ctx = new AudioContext();
+    const sr  = ctx.sampleRate;
+    const dur = 0.28;
+    const buf = ctx.createBuffer(1, sr * dur, sr);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (sr * dur * 0.5));
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 900;
+    bp.Q.value = 0.7;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.55, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+
+    src.connect(bp);
+    bp.connect(gain);
+    gain.connect(ctx.destination);
+    src.start();
+  } catch {}
+}
+
+export default function MainPage() {
+  const router        = useRouter();
+  const { t }         = useLocale();
+  const heroMediaRef  = useRef<HTMLDivElement>(null);
+
+  const [toast, setToast]          = useState<string | null>(null);
+  const [count, setCount]          = useState(0);
+  const [phase, setPhase]          = useState<null | "processing" | "done">(null);
+  const [currentLabel, setLabel]   = useState("");
+  const [dumpedLabels, setDumped]  = useState<string[]>([]);
+  const [shaking, setShaking]      = useState(false);
+  const [flyingCards, setFlyingCards] = useState<FlyingCard[]>([]);
 
   const DONE_MSGS = [t.home.done1, t.home.done2, t.home.done3, t.home.done4, t.home.done5];
+
+  /* 파쇄기 입 좌표 계산 — 영상 상단 25% 중앙 */
+  function getShredderMouth(): { x: number; y: number } {
+    if (!heroMediaRef.current) return { x: window.innerWidth / 2, y: 200 };
+    const rect = heroMediaRef.current.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width  * 0.5,
+      y: rect.top  + rect.height * 0.22,
+    };
+  }
+
+  /* 감정 칩 클릭 핸들러 */
+  function handleChipClick(
+    e: React.MouseEvent<HTMLButtonElement>,
+    label: string,
+    bg: string,
+    tc: string,
+  ) {
+    const rect   = e.currentTarget.getBoundingClientRect();
+    const mouth  = getShredderMouth();
+    const cardId = Date.now();
+
+    setFlyingCards(prev => [...prev, {
+      id: cardId, label, bg, tc,
+      startX: rect.left, startY: rect.top,
+      width: rect.width, height: rect.height,
+      dx: mouth.x - rect.left - rect.width  / 2,
+      dy: mouth.y - rect.top  - rect.height / 2,
+    }]);
+  }
+
+  /* 카드가 파쇄기 입에 도착했을 때 */
+  function onCardArrived(cardId: number, label: string) {
+    setFlyingCards(prev => prev.filter(c => c.id !== cardId));
+    playShredSound();
+    setShaking(true);
+    setTimeout(() => setShaking(false), 400);
+
+    // 파쇄 시퀀스
+    setLabel(label);
+    setDumped(prev => [...new Set([...prev, label])].slice(-3));
+    setPhase("processing");
+    setTimeout(() => setPhase("done"), 1900);
+    setCount(n => n + 1);
+    setTimeout(() => {
+      const DONE = [t.home.done1, t.home.done2, t.home.done3, t.home.done4, t.home.done5];
+      setToast(DONE[Math.floor(Math.random() * DONE.length)]);
+      setTimeout(() => setToast(null), 3000);
+    }, 2100);
+  }
 
   const runSequence = useCallback((label: string) => {
     setLabel(label);
@@ -49,7 +145,8 @@ export default function MainPage() {
     setTimeout(() => setPhase("done"), 1900);
     setCount(n => n + 1);
     setTimeout(() => {
-      setToast(DONE_MSGS[Math.floor(Math.random() * DONE_MSGS.length)]);
+      const DONE = [t.home.done1, t.home.done2, t.home.done3, t.home.done4, t.home.done5];
+      setToast(DONE[Math.floor(Math.random() * DONE.length)]);
       setTimeout(() => setToast(null), 3000);
     }, 2100);
   }, []); // eslint-disable-line
@@ -93,11 +190,13 @@ export default function MainPage() {
       {/* ── Hero 섹션 ── */}
       <section className="hero-section" style={{ paddingTop: 20 }}>
 
-        <div className="hero-media">
+        <div
+          ref={heroMediaRef}
+          className={`hero-media${shaking ? " shaking" : ""}`}
+        >
           <video autoPlay muted loop playsInline className="desktop-video">
             <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
           </video>
-
           <video autoPlay muted loop playsInline className="mobile-video">
             <source src="/videos/shredder-mobile.mp4" type="video/mp4" />
           </video>
@@ -135,10 +234,9 @@ export default function MainPage() {
           {EMOTION_CHIPS.map(em => {
             const label = t.emotions[em.k as keyof typeof t.emotions] ?? em.k;
             return (
-              <motion.button
+              <button
                 key={em.k}
-                whileTap={{ scale: 0.88 }}
-                onClick={() => runSequence(label)}
+                onClick={e => handleChipClick(e, label, em.bg, em.tc)}
                 style={{
                   background: em.bg, border: "none",
                   padding: "8px 15px 10px",
@@ -147,6 +245,13 @@ export default function MainPage() {
                   boxShadow: "2px 3px 10px rgba(42,37,32,0.13)",
                   transform: `rotate(${em.r}deg)`,
                   position: "relative", overflow: "hidden",
+                  transition: "transform 0.1s, box-shadow 0.1s",
+                }}
+                onMouseDown={e => {
+                  (e.currentTarget as HTMLButtonElement).style.transform = `rotate(${em.r}deg) scale(0.93)`;
+                }}
+                onMouseUp={e => {
+                  (e.currentTarget as HTMLButtonElement).style.transform = `rotate(${em.r}deg)`;
                 }}
               >
                 <div style={{
@@ -155,7 +260,7 @@ export default function MainPage() {
                   borderColor: `transparent transparent rgba(42,37,32,0.07) transparent`,
                 }} />
                 {label}
-              </motion.button>
+              </button>
             );
           })}
         </div>
@@ -166,6 +271,40 @@ export default function MainPage() {
           </p>
         )}
       </motion.div>
+
+      {/* ── 날아가는 카드 복사본 ── */}
+      <AnimatePresence>
+        {flyingCards.map(card => (
+          <motion.div
+            key={card.id}
+            initial={{ x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 }}
+            animate={{ x: card.dx, y: card.dy, scale: 0.15, rotate: -20, opacity: 0 }}
+            transition={{ duration: 0.58, ease: [0.4, 0, 0.6, 1] }}
+            onAnimationComplete={() => onCardArrived(card.id, card.label)}
+            style={{
+              position: "fixed",
+              left: card.startX,
+              top:  card.startY,
+              width: card.width,
+              height: card.height,
+              background: card.bg,
+              color: card.tc,
+              borderRadius: 2,
+              padding: "8px 15px 10px",
+              fontSize: 13,
+              fontFamily: "var(--font-serif)",
+              fontWeight: 700,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "4px 6px 20px rgba(42,37,32,0.25)",
+              pointerEvents: "none",
+              zIndex: 200,
+              willChange: "transform, opacity",
+            }}
+          >
+            {card.label}
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       {/* ── 파쇄 처리 오버레이 ── */}
       <AnimatePresence>
