@@ -51,13 +51,13 @@ function ResultContent() {
         style={{ padding: "20px 20px 0", textAlign: "center" }}
       >
         <p style={{ fontSize: 11, color: ROSE, fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 8 }}>
-          SHREDDING COMPLETE
+          EMOTIONAL WASTE DISPOSAL COMPLETE
         </p>
         <h1 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.35 }}>
-          오늘의 감정<br/>파쇄 결과서
+          감정 폐기<br/>처리 확인서
         </h1>
         <p style={{ fontSize: 13, color: "#A89880", marginTop: 6, fontFamily: "var(--font-serif)", fontWeight: 300 }}>
-          AI가 분석한 오늘의 감정 상태예요
+          AI가 당신의 감정을 분석 후 파쇄했습니다
         </p>
       </motion.div>
 
@@ -92,8 +92,8 @@ function ResultContent() {
         style={{ textAlign: "center", padding: "20px 24px 0" }}
       >
         <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "var(--font-serif)", lineHeight: 1.7 }}>
-          이미지 저장 후 인스타 스토리에 올려봐<br/>
-          친구한테도 파쇄 권유해도 됨
+          이미지 저장 후 카톡이나 스토리에 올려봐<br/>
+          &ldquo;AI가 내 기분 이렇게 찌그러뜨림ㅋㅋ&rdquo; 으로 공유 가능
         </p>
       </motion.div>
 
