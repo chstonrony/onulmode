@@ -228,6 +228,42 @@ body {
 }
 
 /* ── 파쇄기 기계 프레임 ── */
+/* ── 영상 위 감정 단어 핫스팟 ── */
+.video-hotspot-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.emotion-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: rgba(245, 235, 220, 0.82);
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.55);
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.emotion-hotspot:hover {
+  background: rgba(200, 96, 122, 0.28);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.emotion-hotspot:active {
+  transform: scale(0.94);
+}
+
+/* ── 파쇄기 기계 프레임 ── */
 .machine-frame {
   width: min(92vw, 520px);
   margin: 0 auto;
