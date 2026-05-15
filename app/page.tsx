@@ -81,24 +81,58 @@ interface FlyingCard {
 function playShredSound() {
   try {
     const ctx = new AudioContext();
-    const sr  = ctx.sampleRate;
-    const dur = 0.35;
-    const buf = ctx.createBuffer(1, sr * dur, sr);
-    const d   = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) {
-      d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (sr * dur * 0.45));
-    }
-    const src  = ctx.createBufferSource();
-    src.buffer = buf;
-    const bp   = ctx.createBiquadFilter();
-    bp.type    = "bandpass";
-    bp.frequency.value = 1100;
-    bp.Q.value = 0.6;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.6, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
-    src.start();
+    // 브라우저 autoplay 정책 대응 — resume 필수
+    ctx.resume().then(() => {
+      const sr = ctx.sampleRate;
+      const now = ctx.currentTime;
+
+      // ── Layer 1: 우걱 갈리는 노이즈 (0.4s) ──
+      const buf1 = ctx.createBuffer(1, sr * 0.4, sr);
+      const d1 = buf1.getChannelData(0);
+      for (let i = 0; i < d1.length; i++) {
+        d1[i] = (Math.random() * 2 - 1) * Math.exp(-i / (sr * 0.18));
+      }
+      const src1 = ctx.createBufferSource();
+      src1.buffer = buf1;
+      const bp1 = ctx.createBiquadFilter();
+      bp1.type = "bandpass"; bp1.frequency.value = 700; bp1.Q.value = 0.8;
+      const g1 = ctx.createGain();
+      g1.gain.setValueAtTime(1.0, now);
+      g1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      src1.connect(bp1); bp1.connect(g1); g1.connect(ctx.destination);
+      src1.start(now);
+
+      // ── Layer 2: 저음 우걱 충격음 (0.12s) ──
+      const buf2 = ctx.createBuffer(1, sr * 0.12, sr);
+      const d2 = buf2.getChannelData(0);
+      for (let i = 0; i < d2.length; i++) {
+        d2[i] = Math.sin(i / sr * 2 * Math.PI * 120) * Math.exp(-i / (sr * 0.04))
+               + (Math.random() * 2 - 1) * 0.3 * Math.exp(-i / (sr * 0.06));
+      }
+      const src2 = ctx.createBufferSource();
+      src2.buffer = buf2;
+      const g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.85, now);
+      g2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      src2.connect(g2); g2.connect(ctx.destination);
+      src2.start(now);
+
+      // ── Layer 3: 우걱 두 번째 씹음 (0.15s 후) ──
+      const buf3 = ctx.createBuffer(1, sr * 0.25, sr);
+      const d3 = buf3.getChannelData(0);
+      for (let i = 0; i < d3.length; i++) {
+        d3[i] = (Math.random() * 2 - 1) * Math.exp(-i / (sr * 0.1));
+      }
+      const src3 = ctx.createBufferSource();
+      src3.buffer = buf3;
+      const bp3 = ctx.createBiquadFilter();
+      bp3.type = "bandpass"; bp3.frequency.value = 500; bp3.Q.value = 1.2;
+      const g3 = ctx.createGain();
+      g3.gain.setValueAtTime(0.75, now + 0.15);
+      g3.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      src3.connect(bp3); bp3.connect(g3); g3.connect(ctx.destination);
+      src3.start(now + 0.15);
+    });
   } catch {}
 }
 
