@@ -93,7 +93,7 @@ export default function MainPage() {
       {/* ── Hero 섹션 ── */}
       <section className="hero-section" style={{ paddingTop: 20 }}>
 
-        <div className="hero-media" style={{ position: "relative" }}>
+        <div className="hero-media">
           <video autoPlay muted loop playsInline className="desktop-video">
             <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
           </video>
@@ -101,31 +101,6 @@ export default function MainPage() {
           <video autoPlay muted loop playsInline className="mobile-video">
             <source src="/videos/shredder-mobile.mp4" type="video/mp4" />
           </video>
-
-          {/* 영상 위 감정 단어 핫스팟 */}
-          <div className="video-hotspot-layer">
-            {([
-              { k: "지쳤어",   label: t.emotions["지쳤어"],   x: "12%",  y: "18%",  size: 16 },
-              { k: "짜증나",   label: t.emotions["짜증나"],   x: "58%",  y: "12%",  size: 14 },
-              { k: "서운해",   label: t.emotions["서운해"],   x: "8%",   y: "42%",  size: 15 },
-              { k: "억울해",   label: t.emotions["억울해"],   x: "52%",  y: "36%",  size: 17 },
-              { k: "불안해",   label: t.emotions["불안해"],   x: "64%",  y: "55%",  size: 13 },
-              { k: "허무해",   label: t.emotions["허무해"],   x: "18%",  y: "62%",  size: 15 },
-              { k: "외로워",   label: t.emotions["외로워"],   x: "50%",  y: "74%",  size: 14 },
-              { k: "모르겠어", label: t.emotions["모르겠어"], x: "14%",  y: "82%",  size: 13 },
-              { k: "화났어",   label: t.emotions["화났어"],   x: "66%",  y: "28%",  size: 14 },
-              { k: "막막해",   label: t.emotions["막막해"],   x: "36%",  y: "85%",  size: 13 },
-            ] as const).map(({ k, label, x, y, size }) => (
-              <button
-                key={k}
-                className="emotion-hotspot"
-                onClick={() => runSequence(label ?? k)}
-                style={{ left: x, top: y, fontSize: size }}
-              >
-                {label ?? k}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* 오버레이 텍스트 + CTA */}
