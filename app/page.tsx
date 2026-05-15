@@ -93,14 +93,16 @@ export default function MainPage() {
       {/* ── Hero 섹션 ── */}
       <section className="hero-section" style={{ paddingTop: 20 }}>
 
-        {/* Desktop 영상 */}
+        {/* Desktop 영상 — /public/videos/shredder-desktop.mp4 추가 후 활성화 */}
         <video autoPlay muted loop playsInline className="hero-video desktop-video">
           <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
+          <source src="/hero.mp4" type="video/mp4" />
         </video>
 
-        {/* Mobile 영상 */}
+        {/* Mobile 영상 — /public/videos/shredder-mobile.mp4 추가 후 활성화 */}
         <video autoPlay muted loop playsInline className="hero-video mobile-video">
           <source src="/videos/shredder-mobile.mp4" type="video/mp4" />
+          <source src="/hero.mp4" type="video/mp4" />
         </video>
 
         {/* 오버레이 텍스트 + CTA */}
