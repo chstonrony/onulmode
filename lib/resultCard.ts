@@ -90,6 +90,46 @@ const PRESCRIPTIONS = [
   "이 정도면 꽤 버틴 거야, 진짜로",
 ] as const;
 
+const STAMPS = [
+  "질김", "눅눅함", "빠각 완료", "재파쇄", "감정 과식", "소화 실패", "이빨에 꼈음", "묵은 감정",
+] as const;
+
+const UG_MEMOS = [
+  "이건 좀 매웠음",
+  "다음엔 빨리 버리셈",
+  "씹는데 오래 걸렸음",
+  "좀 더 일찍 가져왔음 됐는데",
+  "이거 이상한 맛 남",
+  "씹다가 이빨에 꼈음",
+  "묵은 감정이라 거의 돌덩이였음",
+  "처리 완료긴 한데 별로였음",
+] as const;
+
+const BIZARRE_STATS_POOL = [
+  { label: "감정 눅눅함",        value: "84%" },
+  { label: "사회생활 찌꺼기",    value: "39%" },
+  { label: "현타 농도",          value: "위험" },
+  { label: "우울 숙성도",        value: "92%" },
+  { label: "억울함 농도",        value: "67%" },
+  { label: "멘탈 수분 함량",     value: "8%" },
+  { label: "분노 발효도",        value: "77%" },
+  { label: "허무함 축적량",      value: "초과" },
+  { label: "귀찮음 포화도",      value: "88%" },
+  { label: "혼자 참은 시간",     value: "너무 오래" },
+  { label: "감정 곰팡이 지수",   value: "63%" },
+  { label: "질긴 감정 섬유질",   value: "다량" },
+] as const;
+
+const RESULT_GRADES = [
+  "빠각 완료",
+  "질겅 처리중",
+  "소화 실패",
+  "감정 찌꺼기 남음",
+  "재파쇄 권장",
+  "이빨에 꼈음",
+  "부분 분해 완료",
+] as const;
+
 export interface ResultData {
   date: string;
   serial: string;
@@ -102,6 +142,12 @@ export interface ResultData {
   grade: { text: string; sub: string };
   prescription: string;
   seed: number;
+  // 새 필드
+  cardStyle: 1 | 2 | 3 | 4 | 5;
+  stamp: string;
+  ugMemo: string;
+  resultGrade: string;
+  bizarreStats: { label: string; value: string }[];
 }
 
 export function generateResult(emotions: string[], seed?: number): ResultData {
@@ -113,6 +159,10 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
   const wasteCode = `EMO-${String(Math.floor(rng() * 9000) + 1000)}-${["A","B","C","D"][Math.floor(rng() * 4)]}`;
   const intensity = Math.min(98, Math.max(31, 45 + emotions.length * 8 + Math.floor((rng() - 0.5) * 32)));
 
+  // 이상한 수치 2-3개 랜덤 선택
+  const statPool = [...BIZARRE_STATS_POOL].sort(() => rng() - 0.5);
+  const bizarreStats = statPool.slice(0, 2 + Math.floor(rng() * 2));
+
   return {
     date, serial, wasteCode,
     ingredients:    generateIngredients(emotions.length ? emotions : ["감정"], rng),
@@ -123,6 +173,11 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     grade:          pick(GRADES,            rng),
     prescription:   pick(PRESCRIPTIONS,    rng),
     seed: s,
+    cardStyle:      (Math.floor(rng() * 5) + 1) as 1|2|3|4|5,
+    stamp:          pick(STAMPS,            rng),
+    ugMemo:         pick(UG_MEMOS,          rng),
+    resultGrade:    pick(RESULT_GRADES,     rng),
+    bizarreStats,
   };
 }
 
