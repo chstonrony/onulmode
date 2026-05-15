@@ -262,9 +262,10 @@ body {
     display: block;
     width: 100%;
     max-width: 420px;
-    height: 62vh;
+    height: 68vh;        /* 파쇄 동작이 담기도록 조금 더 길게 */
     object-fit: cover;
-    object-position: center center;
+    object-position: center 30%; /* 파쇄기 입 + 감정 단어 중심 */
+    border-radius: 20px; /* 모바일도 카드 느낌 */
   }
 
   .hero-overlay h1 {
