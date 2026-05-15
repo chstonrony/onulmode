@@ -170,11 +170,10 @@ body {
   padding: 24px;
 }
 
-.hero-video {
+.hero-media {
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-  object-fit: cover;
   background: #000;
 }
 
@@ -182,11 +181,13 @@ body {
 .desktop-video {
   width: min(92vw, 520px);
   display: block;
+  object-fit: cover;
 }
 
 /* Mobile 영상 */
 .mobile-video {
   display: none;
+  object-fit: cover;
 }
 
 .hero-overlay {
@@ -258,14 +259,22 @@ body {
     display: none;
   }
 
+  .hero-media {
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .desktop-video {
+    display: none;
+  }
+
   .mobile-video {
     display: block;
     width: 100%;
-    max-width: 420px;
-    height: 68vh;        /* 파쇄 동작이 담기도록 조금 더 길게 */
+    height: 68vh;
     object-fit: cover;
-    object-position: center 30%; /* 파쇄기 입 + 감정 단어 중심 */
-    border-radius: 20px; /* 모바일도 카드 느낌 */
+    object-position: center 30%;
   }
 
   .hero-overlay h1 {
