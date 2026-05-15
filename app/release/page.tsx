@@ -48,34 +48,102 @@ function UgegiTeeth() {
   );
 }
 
-/* ── 눈 ── */
+/* ── 우걱이 눈 ── */
 function UgegiEyes({ active }: { active: boolean }) {
-  const [eyeX, setEyeX] = useState(0);
-  const [eyeY, setEyeY] = useState(0);
-  const [blink, setBlink] = useState(false);
+  const [pupilX, setPupilX] = useState(0);
+  const [pupilY, setPupilY] = useState(0);
+  const [blink, setBlink]   = useState(false);
+  const [angry, setAngry]   = useState(false);
 
   useEffect(() => {
-    const m = setInterval(() => { setEyeX((Math.random()-.5)*5); setEyeY((Math.random()-.5)*3); }, 1800);
-    const b = setInterval(() => { setBlink(true); setTimeout(()=>setBlink(false), 110); }, 2600);
-    return () => { clearInterval(m); clearInterval(b); };
+    // 시선 이동
+    const m = setInterval(() => {
+      setPupilX((Math.random() - 0.5) * 14);
+      setPupilY((Math.random() - 0.5) * 8);
+    }, 1600 + Math.random() * 800);
+
+    // 깜빡임 (scaleY — 레이아웃 영향 없음)
+    const b = setInterval(() => {
+      setBlink(true);
+      setTimeout(() => setBlink(false), 120);
+    }, 2800 + Math.random() * 1400);
+
+    // 가끔 찡그림
+    const a = setInterval(() => {
+      setAngry(true);
+      setTimeout(() => setAngry(false), 900);
+    }, 6000 + Math.random() * 4000);
+
+    return () => { clearInterval(m); clearInterval(b); clearInterval(a); };
   }, []);
 
   return (
-    /* 고정 높이 컨테이너 — 깜빡여도 레이아웃 안 밀림 */
-    <div style={{ display:"flex", gap:28, justifyContent:"center", height:36, alignItems:"center", position:"relative", zIndex:5 }}>
-      {[0,1].map(i=>(
-        <motion.div key={i}
-          animate={{ x: eyeX+(i===0?-2:2), scaleY: blink ? 0.12 : 1 }}
-          transition={{ duration:0.6, ease:"easeOut", scaleY:{ duration:0.08 } }}
-          style={{
-            width:26, height:26,
-            borderRadius:"50%", background: INK,
+    <div style={{ display:"flex", gap:36, justifyContent:"center", alignItems:"center", height:100, position:"relative", zIndex:5 }}>
+      {[0, 1].map(i => (
+        <div key={i} style={{ position:"relative", width:72, height:72, flexShrink:0 }}>
+
+          {/* 눈알 (흰자) */}
+          <div style={{
+            width:72, height:72, borderRadius:"50%",
+            background:"#FAF8F2",
+            border:`4px solid ${INK}`,
             position:"relative", overflow:"hidden",
-            boxShadow: active ? `0 0 14px ${ROSE}88` : "none",
-          }}
-        >
-          {!blink && <div style={{ position:"absolute", top:5, left:5, width:7, height:7, borderRadius:"50%", background:"white", opacity:0.8 }} />}
-        </motion.div>
+            boxShadow: active
+              ? `0 0 22px ${ROSE}BB, 0 4px 14px rgba(0,0,0,0.5)`
+              : `0 4px 14px rgba(0,0,0,0.45)`,
+          }}>
+            {/* 동공 */}
+            <motion.div
+              animate={{ x: pupilX + (i === 0 ? -1 : 1), y: pupilY }}
+              transition={{ duration:0.9, ease:"easeOut" }}
+              style={{
+                position:"absolute",
+                top:"50%", left:"50%",
+                width:36, height:36,
+                borderRadius:"50%",
+                background: active ? ROSE : INK,
+                transform:"translate(-50%, -50%)",
+                transition:"background 0.3s",
+              }}
+            >
+              {/* 하이라이트 */}
+              <div style={{ position:"absolute", top:6, left:7, width:11, height:11, borderRadius:"50%", background:"white", opacity:0.92 }} />
+              <div style={{ position:"absolute", top:13, right:5, width:5, height:5, borderRadius:"50%", background:"white", opacity:0.5 }} />
+            </motion.div>
+
+            {/* 깜빡임 — scaleY로 위에서 내려오는 눈꺼풀 */}
+            <motion.div
+              animate={{ scaleY: blink ? 1 : 0 }}
+              transition={{ duration:0.06 }}
+              style={{
+                position:"absolute", top:0, left:0, right:0, bottom:0,
+                background: INK,
+                transformOrigin:"top center",
+                borderRadius:"50%",
+              }}
+            />
+
+            {/* 찡그림 — 사선 눈꺼풀 */}
+            {angry && (
+              <div style={{
+                position:"absolute",
+                top:-4, left: i===0?-4:8,
+                width:40, height:18,
+                background: INK,
+                transform:`rotate(${i===0?18:-18}deg)`,
+                transformOrigin:"center",
+                borderRadius:4,
+              }} />
+            )}
+          </div>
+
+          {/* 눈 밑 다크서클 (지쳐 보임) */}
+          <div style={{
+            position:"absolute", bottom:-5, left:"50%", transform:"translateX(-50%)",
+            width:50, height:8, borderRadius:"50%",
+            background: INK, opacity:0.18,
+          }} />
+        </div>
       ))}
     </div>
   );
