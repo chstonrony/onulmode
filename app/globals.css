@@ -157,17 +157,73 @@ body {
 .pulse-dot:nth-child(2) { animation-delay: .35s; }
 .pulse-dot:nth-child(3) { animation-delay: .7s; }
 
-/* ── 히어로 영상 ── */
-.hero-video {
-  width: min(92vw, 520px);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+/* ── 히어로 섹션 ── */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #efe3cf;
+  padding: 24px;
 }
 
-.hero-video video {
-  width: 100%;
+.hero-video {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  object-fit: cover;
+  background: #000;
+}
+
+/* Desktop 영상 */
+.desktop-video {
+  width: min(92vw, 520px);
   display: block;
+}
+
+/* Mobile 영상 */
+.mobile-video {
+  display: none;
+}
+
+.hero-overlay {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.hero-overlay h1 {
+  font-size: 2rem;
+  font-family: var(--font-serif);
+  color: #2A2520;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #d86b87;
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 16px 28px;
+  font-size: 1rem;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 24px rgba(216, 107, 135, 0.4);
+}
+
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(216, 107, 135, 0.5);
 }
 
 /* ── 파쇄기 기계 프레임 ── */
@@ -194,4 +250,24 @@ body {
 .machine-frame video {
   width: 100%;
   display: block;
+}
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 768px) {
+  .desktop-video {
+    display: none;
+  }
+
+  .mobile-video {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: 62vh;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .hero-overlay h1 {
+    font-size: 1.4rem;
+  }
 }

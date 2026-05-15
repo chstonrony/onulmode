@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,16 +31,14 @@ const EMOTION_CHIPS = [
 ] as const;
 
 export default function MainPage() {
-  const router  = useRouter();
-  const { t }   = useLocale();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter();
+  const { t }  = useLocale();
 
   const [toast, setToast]         = useState<string | null>(null);
   const [count, setCount]         = useState(0);
   const [phase, setPhase]         = useState<null | "processing" | "done">(null);
   const [currentLabel, setLabel]  = useState("");
   const [dumpedLabels, setDumped] = useState<string[]>([]);
-  const [muted, setMuted]         = useState(true);
 
   const DONE_MSGS = [t.home.done1, t.home.done2, t.home.done3, t.home.done4, t.home.done5];
 
@@ -56,13 +54,6 @@ export default function MainPage() {
     }, 2100);
   }, []); // eslint-disable-line
 
-  function toggleSound() {
-    if (!videoRef.current) return;
-    const next = !muted;
-    videoRef.current.muted = next;
-    setMuted(next);
-  }
-
   function goToResult() {
     const seed = Date.now() % 999983;
     router.push(buildResultUrl(dumpedLabels.length ? dumpedLabels : [currentLabel], seed));
@@ -74,14 +65,19 @@ export default function MainPage() {
     <div style={{ background: "#efe3cf", minHeight: "100vh", overflowX: "hidden" }}>
 
       {/* ── 헤더 ── */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 0" }}>
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "28px 24px 0", position: "relative", zIndex: 10,
+      }}>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ fontSize: 22, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700 }}>오늘무드</span>
-          <svg width="13" height="13" viewBox="0 0 14 14">
+          <span style={{ fontSize: 20, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700 }}>
+            오늘무드
+          </span>
+          <svg width="12" height="12" viewBox="0 0 14 14">
             <path d="M7 1L8.3 5H12.5L9.2 7.8L10.5 12L7 9.5L3.5 12L4.8 7.8L1.5 5H5.7Z" fill={ROSE} opacity="0.85" />
           </svg>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {count > 0 && (
             <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
               style={{ fontSize: 9, fontFamily: "monospace", color: "#7A6858", background: "#F0E8D4", border: "1px solid #C8B898", borderRadius: 2, padding: "2px 8px" }}>
@@ -94,72 +90,46 @@ export default function MainPage() {
         </div>
       </div>
 
-      {/* ── 파쇄기 영상 ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 20px 0", gap: 10 }}
-      >
-        <div className="machine-frame">
-          <div className="machine-top">
-            <span>● ● ●</span>
-            <span>EMOTIONAL_SHREDDER.exe</span>
-            <button
-              onClick={toggleSound}
-              style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit" }}
-            >
-              <span style={{ color: muted ? "#4a4238" : ROSE, borderColor: muted ? "#3a3228" : ROSE }}>
-                {muted ? "🔇 MUTED" : "🔊 SOUND"}
-              </span>
-            </button>
-          </div>
+      {/* ── Hero 섹션 ── */}
+      <section className="hero-section" style={{ paddingTop: 20 }}>
 
-          <video ref={videoRef} autoPlay muted loop playsInline>
-            <source src="/hero.mp4" type="video/mp4" />
-          </video>
+        {/* Desktop 영상 */}
+        <video autoPlay muted loop playsInline className="hero-video desktop-video">
+          <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
+        </video>
+
+        {/* Mobile 영상 */}
+        <video autoPlay muted loop playsInline className="hero-video mobile-video">
+          <source src="/videos/shredder-mobile.mp4" type="video/mp4" />
+        </video>
+
+        {/* 오버레이 텍스트 + CTA */}
+        <div className="hero-overlay">
+          <h1>
+            {t.home.headline1}<br />
+            <span style={{ borderBottom: `3px solid ${ROSE}`, paddingBottom: 2 }}>
+              {t.home.headline2}
+            </span>
+          </h1>
+          <Link href="/release" className="hero-cta">
+            {t.home.cta} →
+          </Link>
+          <p style={{ fontSize: 12, color: "#9A8E80", fontFamily: "var(--font-serif)", fontWeight: 300, marginTop: 14 }}>
+            {t.home.caption}
+          </p>
         </div>
+      </section>
 
-        {count > 0 && (
-          <span style={{ fontSize: 10, fontFamily: "monospace", color: "#A89880", letterSpacing: "0.08em" }}>
-            ● {t.home.statusIdle.replace("{n}", String(count))}
-          </span>
-        )}
-      </motion.div>
-
-      {/* ── 카피 + CTA ── */}
+      {/* ── 감정 칩 섹션 ── */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.3 }}
-        style={{ padding: "22px 20px 0", textAlign: "center" }}
+        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        style={{ padding: "32px 18px 88px", background: "#efe3cf" }}
       >
-        <h1 style={{ fontSize: 26, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700, lineHeight: 1.45, marginBottom: 18 }}>
-          {t.home.headline1}&nbsp;
-          <span style={{ borderBottom: `3px solid ${ROSE}`, paddingBottom: 1 }}>{t.home.headline2}</span>
-        </h1>
-        <Link href="/release" style={{
-          display: "inline-flex", alignItems: "center", justifyContent: "space-between",
-          width: "100%", maxWidth: 360, height: 52,
-          background: ROSE, borderRadius: 4, padding: "0 22px",
-          fontSize: 16, fontFamily: "var(--font-serif)", color: "#FDFAF5", fontWeight: 700,
-          textDecoration: "none",
-          boxShadow: `0 5px 20px ${ROSE}50`,
-        }}>
-          <span>{t.home.cta}</span>
-          <span style={{ fontSize: 19 }}>→</span>
-        </Link>
-        <p style={{ fontSize: 12, color: "#8A8070", fontFamily: "var(--font-serif)", fontWeight: 300, marginTop: 10 }}>
-          {t.home.caption}
-        </p>
-      </motion.div>
-
-      {/* ── 감정 칩 ── */}
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 0.55 }}
-        style={{ padding: "20px 18px 88px" }}
-      >
-        <p style={{ fontSize: 11, fontFamily: "var(--font-serif)", color: "#9A9080", textAlign: "center", marginBottom: 12 }}>
-          {t.home.emotionLabel}{t.home.emotionWord ? ` ${t.home.emotionWord}` : ""}{t.home.emotionSuffix ? ` ${t.home.emotionSuffix}` : ""}
+        <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#9A9080", textAlign: "center", marginBottom: 14 }}>
+          {t.home.emotionLabel}
+          {t.home.emotionWord ? ` ${t.home.emotionWord}` : ""}
+          {t.home.emotionSuffix ? ` ${t.home.emotionSuffix}` : ""}
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
           {EMOTION_CHIPS.map(em => {
@@ -189,6 +159,12 @@ export default function MainPage() {
             );
           })}
         </div>
+
+        {count > 0 && (
+          <p style={{ textAlign: "center", fontSize: 10, fontFamily: "monospace", color: "#9A9280", marginTop: 18, letterSpacing: "0.07em" }}>
+            {t.home.statusIdle.replace("{n}", String(count))}
+          </p>
+        )}
       </motion.div>
 
       {/* ── 파쇄 처리 오버레이 ── */}
