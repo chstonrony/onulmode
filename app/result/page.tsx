@@ -32,7 +32,7 @@ function ResultContent() {
   }
 
   return (
-    <div style={{ background: "#EDE4D0", minHeight: "100vh", padding: "0 0 80px" }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh", padding: "0 0 80px" }}>
 
       {/* 헤더 */}
       <div style={{ padding: "24px 20px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -126,7 +126,7 @@ function ResultContent() {
 export default function ResultPage() {
   return (
     <Suspense fallback={
-      <div style={{ background: "#EDE4D0", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "#efe3cf", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ display: "flex", gap: 6 }}>
           {[0,1,2].map(i => (
             <div key={i} className="pulse-dot" style={{ width: 8, height: 8, borderRadius: "50%", background: "#C8607A" }} />

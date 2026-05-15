@@ -94,7 +94,7 @@ function ReleaseContent() {
   const reset = () => { setPhase("write"); setText(""); setMode(null); setSaveIt(false); };
 
   return (
-    <div style={{ background: "#EDE4D0", minHeight: "100vh", paddingBottom: 90 }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh", paddingBottom: 90 }}>
 
       {/* 배경 워드 */}
       {["조금 무거운", "말 못한", "오늘도"].map((w, i) => (
@@ -374,7 +374,7 @@ function ReleaseContent() {
 
 export default function ReleasePage() {
   return (
-    <Suspense fallback={<div style={{ background: "#EDE4D0", minHeight: "100vh" }} />}>
+    <Suspense fallback={<div style={{ background: "#efe3cf", minHeight: "100vh" }} />}>
       <ReleaseContent />
     </Suspense>
   );

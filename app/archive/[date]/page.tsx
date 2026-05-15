@@ -10,7 +10,7 @@ import { ko } from "date-fns/locale";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 
-const BG = "#EDE4D0";
+const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
 const LINE = "#D8CEC0";
 const ROSE = "#C8607A";

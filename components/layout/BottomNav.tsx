@@ -26,7 +26,7 @@ export default function BottomNav() {
       {/* ── 모바일 하단 탭 ── */}
       <nav className="mobile-nav" style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50,
-        background: "#EDE4D0",
+        background: "#efe3cf",
         borderTop: "1px solid #D0C6B4",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         display: "flex",

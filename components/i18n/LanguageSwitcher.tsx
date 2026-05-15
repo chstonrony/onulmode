@@ -5,7 +5,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { LOCALES, LOCALE_LABELS, Locale } from "@/lib/i18n";
 
 const ROSE = "#C8607A";
-const BG   = "#EDE4D0";
+const BG   = "#efe3cf";
 const LINE = "#D8CEC0";
 
 export default function LanguageSwitcher({ compact = false }: { compact?: boolean }) {

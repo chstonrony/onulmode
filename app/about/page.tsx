@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
         <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>

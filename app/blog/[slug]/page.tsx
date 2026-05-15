@@ -42,7 +42,7 @@ export default async function ArticlePage({ params }: Props) {
   const paragraphs = article.content.split("\n\n").filter(Boolean);
 
   return (
-    <div style={{ background: "#EDE4D0", minHeight: "100vh" }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
         <Link href="/blog" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>

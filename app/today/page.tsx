@@ -13,7 +13,7 @@ import TopBar from "@/components/layout/TopBar";
 import { Pencil, CalendarDays } from "lucide-react";
 import Link from "next/link";
 
-const BG = "#EDE4D0";
+const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
 const LINE = "#D8CEC0";
 const ROSE = "#C8607A";

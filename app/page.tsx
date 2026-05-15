@@ -71,7 +71,7 @@ export default function MainPage() {
   function resetMachine() { setPhase(null); }
 
   return (
-    <div style={{ background: "#EDE4D0", minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh", overflowX: "hidden" }}>
 
       {/* ── 헤더 ── */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 0" }}>
@@ -100,29 +100,30 @@ export default function MainPage() {
         transition={{ duration: 0.5 }}
         style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 20px 0", gap: 10 }}
       >
-        <div className="hero-video">
+        <div className="machine-frame">
+          <div className="machine-top">
+            <span>● ● ●</span>
+            <span>EMOTIONAL_SHREDDER.exe</span>
+            <button
+              onClick={toggleSound}
+              style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit" }}
+            >
+              <span style={{ color: muted ? "#4a4238" : ROSE, borderColor: muted ? "#3a3228" : ROSE }}>
+                {muted ? "🔇 MUTED" : "🔊 SOUND"}
+              </span>
+            </button>
+          </div>
+
           <video ref={videoRef} autoPlay muted loop playsInline>
             <source src="/hero.mp4" type="video/mp4" />
           </video>
         </div>
 
-        {/* 소리 토글 + 상태 */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button onClick={toggleSound} style={{
-            background: "transparent", border: `1px solid ${muted ? "#C8BDB0" : ROSE}`,
-            borderRadius: 20, padding: "4px 12px",
-            fontSize: 11, fontFamily: "monospace",
-            color: muted ? "#A89880" : ROSE,
-            cursor: "pointer", letterSpacing: "0.06em",
-          }}>
-            {muted ? "🔇 소리 끔" : "🔊 소리 켬"}
-          </button>
-          {count > 0 && (
-            <span style={{ fontSize: 10, fontFamily: "monospace", color: "#A89880", letterSpacing: "0.08em" }}>
-              ● {t.home.statusIdle.replace("{n}", String(count))}
-            </span>
-          )}
-        </div>
+        {count > 0 && (
+          <span style={{ fontSize: 10, fontFamily: "monospace", color: "#A89880", letterSpacing: "0.08em" }}>
+            ● {t.home.statusIdle.replace("{n}", String(count))}
+          </span>
+        )}
       </motion.div>
 
       {/* ── 카피 + CTA ── */}
