@@ -33,10 +33,10 @@ const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =
       {/* ── 헤더 ── */}
       <div style={{ padding: "16px 18px 14px", textAlign: "center" }}>
         <p style={{ fontSize: 11, letterSpacing: "0.2em", marginBottom: 5, fontWeight: 700 }}>
-          EMOTIONAL SHREDDER
+          우걱이의 감정 파쇄 결과지
         </p>
         <p style={{ fontSize: 16, fontFamily: SERIF, fontWeight: 700, lineHeight: 1.3 }}>
-          오늘의 감정 처리 결과
+          빠각 완료 보고서
         </p>
         <p style={{ fontSize: 9, color: "#A89880", marginTop: 5, letterSpacing: "0.1em" }}>
           #{serial}
