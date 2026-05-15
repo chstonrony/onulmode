@@ -93,7 +93,7 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, onRetry }: P
         ...btnBase, background: INK, color: "#F5EFE0",
         opacity: saving ? 0.7 : 1,
       }}>
-        {saving ? "저장 중..." : "📥 이미지 저장"}
+        {saving ? "저장 중..." : "내 감정 결과지 저장"}
       </button>
 
       {/* 카카오톡 공유 */}
@@ -105,7 +105,7 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, onRetry }: P
             d="M9 1.5C4.86 1.5 1.5 4.11 1.5 7.35c0 2.05 1.35 3.85 3.38 4.9l-.86 3.2c-.07.26.22.47.44.31L8.2 13.6c.26.03.53.04.8.04 4.14 0 7.5-2.61 7.5-5.85C16.5 4.11 13.14 1.5 9 1.5z"
             fill="#3C1E1E"/>
         </svg>
-        카카오톡으로 공유
+        친구한테 내 파쇄 결과 보내기
       </button>
 
       {/* 링크 복사 + 다시 파쇄 */}
