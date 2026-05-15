@@ -143,7 +143,7 @@ export interface ResultData {
   prescription: string;
   seed: number;
   // 새 필드
-  cardStyle: 1 | 2 | 3 | 4 | 5;
+  cardStyle: 1 | 2 | 3 | 4 | 5 | 6;
   stamp: string;
   ugMemo: string;
   resultGrade: string;
@@ -173,7 +173,9 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     grade:          pick(GRADES,            rng),
     prescription:   pick(PRESCRIPTIONS,    rng),
     seed: s,
-    cardStyle:      (Math.floor(rng() * 5) + 1) as 1|2|3|4|5,
+    // 12% 확률로 소화 멈춤 스타일(6)
+  // 12% 확률로 소화 멈춤 스타일(6), 나머지는 1-5 중 랜덤
+  cardStyle:      (rng() < 0.12 ? 6 : (Math.floor(rng() * 5) + 1)) as 1|2|3|4|5|6,
     stamp:          pick(STAMPS,            rng),
     ugMemo:         pick(UG_MEMOS,          rng),
     resultGrade:    pick(RESULT_GRADES,     rng),

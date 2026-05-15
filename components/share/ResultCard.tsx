@@ -555,6 +555,117 @@ function Style5({ data, emotions }: { data: ResultData; emotions: string[] }) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   스타일 6 — 우걱이 소화 멈춤 (허접한 천사 + 위로)
+══════════════════════════════════════════════════════════ */
+const SOHWA_MSGS_CARD = [
+  "괜찮은 척 오래해서 좀 굳어있었음.",
+  "혼자 해결하려고 너무 오래 들고 있었네.",
+  "오늘은 강한 사람 안 해도 됨.",
+  "말 안 하고 버티느라 수고했음.",
+  "이건 소화보다 위로가 먼저인 듯.",
+  "오늘은 그냥 살아있는 걸로 됨.",
+  "씹다가 울컥함.",
+  "오늘 감정은 안 갈고 그냥 안아줌.",
+  "이건 빨리 버릴 수 있는 감정이 아니었음.",
+];
+
+// 결과지용 천사 SVG (작은 버전)
+const TinyAngel = () => (
+  <svg width="90" height="105" viewBox="0 0 120 140">
+    <ellipse cx="60" cy="14" rx="28" ry="9" fill="none" stroke="#FFD060" strokeWidth="3.5" strokeDasharray="4,2" opacity="0.85" transform="rotate(-4,60,14)"/>
+    <path d="M32,60 Q12,40 8,55 Q6,72 28,72 Q18,62 32,60" fill="#F8F4E0" stroke={INK} strokeWidth="2.2"/>
+    <path d="M88,60 Q108,40 112,55 Q114,72 92,72 Q102,62 88,60" fill="#F8F4E0" stroke={INK} strokeWidth="2.2"/>
+    <ellipse cx="60" cy="75" rx="22" ry="28" fill="#FDFAF0" stroke={INK} strokeWidth="2.5"/>
+    <ellipse cx="60" cy="52" rx="20" ry="22" fill="#FDFAF0" stroke={INK} strokeWidth="2.5"/>
+    <ellipse cx="53" cy="49" rx="4.5" ry="5.5" fill={INK}/>
+    <circle cx="51.5" cy="47" r="1.5" fill="white" opacity="0.85"/>
+    <ellipse cx="67" cy="50" rx="4" ry="5" fill={INK}/>
+    <circle cx="65.5" cy="48" r="1.5" fill="white" opacity="0.85"/>
+    <path d="M53,62 Q60,65 67,61" fill="none" stroke={INK} strokeWidth="2.2" strokeLinecap="round"/>
+    <ellipse cx="48" cy="57" rx="6" ry="4" fill="#F8B0C0" opacity="0.4"/>
+    <ellipse cx="72" cy="58" rx="6" ry="4" fill="#F8B0C0" opacity="0.4"/>
+    <path d="M36,104 C36,100 32,98 32,102 C32,106 36,110 36,110 C36,110 40,106 40,102 C40,98 36,100 36,104" fill={ROSE} opacity="0.7" stroke={INK} strokeWidth="1"/>
+  </svg>
+);
+
+function Style6({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, ugMemo } = data;
+  const msg = SOHWA_MSGS_CARD[parseInt(serial) % SOHWA_MSGS_CARD.length];
+  return (
+    <div style={{ width:W, background:"#FDFBF5", fontFamily:MONO, color:INK, position:"relative",
+      border:`2.5px solid ${INK}`, boxShadow:`4px 4px 0 #B4A890` }}>
+
+      <svg style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", pointerEvents:"none" }} viewBox={`0 0 ${W} 420`}>
+        <DoodleStar x={22} y={22} size={12} fill="#FFD060" stroke="#B89030"/>
+        <DoodleStar x={W-20} y={26} size={10} fill="#FFD060" stroke="#B89030"/>
+        <DoodleHeart x={W-28} y={180} size={18}/>
+        <DoodleHeart x={24} y={320} size={14}/>
+        <ScribbleLine y={100} opacity={0.15}/>
+        <ScribbleLine y={310} opacity={0.15}/>
+        {/* 별들 */}
+        {[40,80,130,200,260,300].map((x,i)=>(
+          <text key={i} x={i%2===0?x:W-x} y={[30,60,200,250,350,380][i]} fontSize="10" fill="#FFD060" opacity="0.3" fontFamily="sans-serif">✦</text>
+        ))}
+      </svg>
+
+      <div style={{ padding:"20px 20px 18px", position:"relative" }}>
+        {/* 헤더 */}
+        <div style={{ textAlign:"center", marginBottom:16 }}>
+          <p style={{ fontSize:9, color:"#B4A890", letterSpacing:"0.18em", marginBottom:5 }}>
+            ✨ 우걱이 소화 멈춤 ✨
+          </p>
+          <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.08em" }}>
+            {date} / #{serial}
+          </p>
+        </div>
+
+        {/* 천사 */}
+        <div style={{ textAlign:"center", marginBottom:14 }}>
+          <TinyAngel />
+        </div>
+
+        {/* 감정 태그 */}
+        <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:5, marginBottom:14 }}>
+          {emotions.map(e=>(
+            <span key={e} style={{ fontSize:12, fontFamily:SERIF, fontWeight:700, color:ROSE, background:`${ROSE}12`, padding:"2px 10px", border:`1px dashed ${ROSE}60` }}>
+              {e}
+            </span>
+          ))}
+        </div>
+
+        {/* 위로 문구 — 핵심 */}
+        <div style={{ background:"#FAF8EE", border:`2px solid ${INK}`, borderRadius:2, padding:"14px 16px", marginBottom:16,
+          boxShadow:`3px 3px 0 ${INK}`, position:"relative" }}>
+          <div style={{ position:"absolute", top:-7, left:"50%", transform:"translateX(-50%)", width:50, height:11, background:"rgba(212,188,144,0.5)", borderRadius:1 }}/>
+          <p style={{ fontSize:15, fontFamily:SERIF, lineHeight:1.75, textAlign:"center", color:INK }}>
+            {msg}
+          </p>
+          <div style={{ textAlign:"right", marginTop:8, color:ROSE, fontSize:16, opacity:0.65 }}>♥</div>
+        </div>
+
+        {/* 우걱이 메모 */}
+        <div style={{ textAlign:"center", marginBottom:14 }}>
+          <p style={{ fontSize:11, fontFamily:HAND, color:"#8A8070", transform:"rotate(-1deg)", display:"inline-block" }}>
+            {ugMemo}
+          </p>
+          <p style={{ fontSize:8, color:"#C4BAB0", marginTop:4, letterSpacing:"0.08em" }}>— 우걱이 씀</p>
+        </div>
+
+        {/* 하단 */}
+        <div style={{ borderTop:`1px dashed ${INK}25`, paddingTop:10, textAlign:"center" }}>
+          <p style={{ fontSize:10, fontFamily:SERIF, color:"#6A6258", marginBottom:3 }}>
+            우걱이 돌리다가 울컥함 ㅋㅋ
+          </p>
+          <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.06em" }}>
+            onulmode.vercel.app
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
    메인 컴포넌트 — 스타일 라우팅
 ══════════════════════════════════════════════════════════ */
 const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) => {
@@ -566,6 +677,7 @@ const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =
       {style === 3 && <Style3 data={data} emotions={emotions} />}
       {style === 4 && <Style4 data={data} emotions={emotions} />}
       {style === 5 && <Style5 data={data} emotions={emotions} />}
+      {style === 6 && <Style6 data={data} emotions={emotions} />}
     </div>
   );
 });

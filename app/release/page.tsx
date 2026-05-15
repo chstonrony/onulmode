@@ -29,6 +29,164 @@ const EXPRESSIONS: Record<string, string> = {
   overload:"🔥",
 };
 
+// ── 소화 멈춤 위로 문구 ──────────────────────────────────
+const SOHWA_MSGS = [
+  "괜찮은 척 오래해서 좀 굳어있었음.",
+  "혼자 해결하려고 너무 오래 들고 있었네.",
+  "오늘은 강한 사람 안 해도 됨.",
+  "이건 우걱이도 오래 씹었음.",
+  "너무 오래 참아서 딱딱해졌음.",
+  "말 안 하고 버티느라 수고했음.",
+  "이건 소화보다 위로가 먼저인 듯.",
+  "오늘은 그냥 살아있는 걸로 됨.",
+  "이 감정은 오래됐음. 그만큼 힘들었던 거임.",
+  "씹다가 울컥함.",
+  "혼자 너무 오래 버텨서 우걱이도 좀 마음 아팠음.",
+  "오늘 감정은 안 갈고 그냥 안아줌.",
+  "이건 빨리 버릴 수 있는 감정이 아니었음.",
+];
+
+// ── 소화 멈춤 허접한 천사 SVG ────────────────────────────
+function SoHwaAngel() {
+  return (
+    <svg width="120" height="140" viewBox="0 0 120 140" style={{ overflow:"visible" }}>
+      {/* 후광 — 삐뚤한 타원 */}
+      <ellipse cx="60" cy="14" rx="28" ry="9" fill="none" stroke="#FFD060" strokeWidth="3.5"
+        strokeDasharray="4,2" opacity="0.85" transform="rotate(-4, 60, 14)"/>
+      {/* 왼쪽 날개 — 허접하게 */}
+      <path d="M32,60 Q12,40 8,55 Q6,72 28,72 Q18,62 32,60"
+        fill="#F8F4E0" stroke="#1A1410" strokeWidth="2.2" strokeLinejoin="round"/>
+      <path d="M30,65 Q14,58 16,72" fill="none" stroke="#C8C0A0" strokeWidth="1.2" opacity="0.5"/>
+      {/* 오른쪽 날개 */}
+      <path d="M88,60 Q108,40 112,55 Q114,72 92,72 Q102,62 88,60"
+        fill="#F8F4E0" stroke="#1A1410" strokeWidth="2.2" strokeLinejoin="round"/>
+      <path d="M90,65 Q106,58 104,72" fill="none" stroke="#C8C0A0" strokeWidth="1.2" opacity="0.5"/>
+      {/* 몸통 — 대충 그린 */}
+      <ellipse cx="60" cy="75" rx="22" ry="28" fill="#FDFAF0" stroke="#1A1410" strokeWidth="2.5"/>
+      {/* 얼굴 — 멍한 표정 */}
+      <ellipse cx="60" cy="52" rx="20" ry="22" fill="#FDFAF0" stroke="#1A1410" strokeWidth="2.5"/>
+      {/* 왼쪽 눈 — 초점 약간 다름 */}
+      <ellipse cx="53" cy="49" rx="4.5" ry="5.5" fill="#1A1410"/>
+      <circle cx="51.5" cy="47" r="1.5" fill="white" opacity="0.85"/>
+      {/* 오른쪽 눈 */}
+      <ellipse cx="67" cy="50" rx="4" ry="5" fill="#1A1410"/>
+      <circle cx="65.5" cy="48" r="1.5" fill="white" opacity="0.85"/>
+      {/* 입 — 뭔가 말하려는 듯 */}
+      <path d="M53,62 Q60,65 67,61" fill="none" stroke="#1A1410" strokeWidth="2.2" strokeLinecap="round"/>
+      {/* 볼 — 대충 그린 핑크 */}
+      <ellipse cx="48" cy="57" rx="6" ry="4" fill="#F8B0C0" opacity="0.4" transform="rotate(-5,48,57)"/>
+      <ellipse cx="72" cy="58" rx="6" ry="4" fill="#F8B0C0" opacity="0.4" transform="rotate(5,72,58)"/>
+      {/* 손 — 뭔가 들고 있음 */}
+      <path d="M40,88 Q32,96 38,104 Q44,98 40,88" fill="none" stroke="#1A1410" strokeWidth="2"/>
+      {/* 허접한 하트 */}
+      <path d="M36,104 C36,100 32,98 32,102 C32,106 36,110 36,110 C36,110 40,106 40,102 C40,98 36,100 36,104"
+        fill={ROSE} opacity="0.7" stroke="#1A1410" strokeWidth="1"/>
+      {/* 별똥별 */}
+      <path d="M10,30 L14,22 L18,30 L10,26 L18,26 Z" fill="#FFD060" opacity="0.7"/>
+      <path d="M100,90 L103,84 L106,90 L100,87 L106,87 Z" fill="#FFD060" opacity="0.6"/>
+      {/* 이상한 낙서선 */}
+      <path d="M20,100 Q25,95 30,100 Q35,105 40,100" fill="none" stroke="#C8BEB0" strokeWidth="1" opacity="0.4"/>
+    </svg>
+  );
+}
+
+// ── 소화 멈춤 오버레이 ────────────────────────────────────
+function SoHwaStopOverlay({ msg, onContinue, onKeep }: {
+  msg: string;
+  onContinue: () => void;
+  onKeep: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        position: "fixed", inset: 0, zIndex: 80,
+        background: "#FDFBF5",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        padding: "32px 28px",
+      }}
+    >
+      {/* 배경 — 아주 희미한 별 */}
+      {[[12,8],[88,15],[5,70],[95,60],[50,90]].map(([x,y],i)=>(
+        <div key={i} style={{ position:"absolute", left:`${x}%`, top:`${y}%`, fontSize:12, opacity:0.12, pointerEvents:"none" }}>✦</div>
+      ))}
+
+      <motion.div
+        initial={{ scale: 0.7, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        transition={{ delay: 0.1, type: "spring", stiffness: 150, damping: 14 }}
+        style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 320, width: "100%" }}
+      >
+        {/* 타이틀 */}
+        <p style={{ fontSize: 10, fontFamily: "monospace", color: "#B4A890", letterSpacing: "0.18em", marginBottom: 14 }}>
+          ✨ 우걱이 소화 멈춤 ✨
+        </p>
+
+        {/* 천사 */}
+        <motion.div
+          animate={{ y: [-4, 4, -4] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          style={{ marginBottom: 20 }}
+        >
+          <SoHwaAngel />
+        </motion.div>
+
+        {/* 위로 문구 — 손글씨 느낌으로 삐뚤게 */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          style={{
+            background: "#FAF8EE",
+            border: `2px solid ${INK}`,
+            borderRadius: 2,
+            padding: "14px 18px",
+            width: "100%",
+            boxShadow: `3px 3px 0 ${INK}`,
+            marginBottom: 24,
+            position: "relative",
+          }}
+        >
+          {/* 테이프 느낌 */}
+          <div style={{ position:"absolute", top:-7, left:"50%", transform:"translateX(-50%)", width:52, height:11, background:"rgba(212,188,144,0.55)", borderRadius:1 }}/>
+          <p style={{ fontSize: 16, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.7, textAlign: "center" }}>
+            {msg}
+          </p>
+          {/* 대충 그린 하트 낙서 */}
+          <div style={{ textAlign:"right", marginTop:8, fontSize:16, color:ROSE, opacity:0.7 }}>♥</div>
+        </motion.div>
+
+        {/* 버튼들 */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}
+        >
+          <button onClick={onContinue} style={{
+            height: 48, background: INK, border: `2px solid ${INK}`, borderRadius: 2,
+            fontSize: 14, fontFamily: "var(--font-serif)", color: "#FAF8F2", fontWeight: 700,
+            cursor: "pointer", boxShadow: `3px 3px 0 #6A6258`,
+          }}>
+            ...고마움 (빠각 결과지 받기)
+          </button>
+          <button onClick={onKeep} style={{
+            height: 42, background: "#FAF8F2", border: `1.5px dashed ${INK}50`, borderRadius: 2,
+            fontSize: 13, fontFamily: "var(--font-serif)", color: "#8A8070", cursor: "pointer",
+          }}>
+            오늘은 안 갈래. 그냥 들고 있을게.
+          </button>
+        </motion.div>
+
+        <p style={{ fontSize: 9, color: "#C4BAB0", fontFamily: "monospace", marginTop: 16, letterSpacing: "0.06em" }}>
+          — 우걱이 처리소 —
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 const MODES: { id: Mode; label: string; sub: string; bg: string; rot: number }[] = [
   { id: "chew",  label: "우걱 먹이기",    sub: "바람에 날리기",   bg: "#F0E0DC", rot: -6 },
   { id: "grind", label: "빠각 돌리기",    sub: "조용히 사라지기", bg: "#D8E8DC", rot:  4 },
@@ -276,6 +434,9 @@ function ReleaseContent() {
   // 랜덤 표정 이모지
   const [expr]            = useState(() => EXPRESSIONS.idle);
 
+  const [soHwaStop, setSoHwaStop]   = useState(false);
+  const [soHwaMsg, setSoHwaMsg]     = useState("");
+
   const canFeed   = text.trim().length > 0 && mode !== null;
   const stressed  = text.length > 80;
   const overload  = text.length > 140;
@@ -298,10 +459,18 @@ function ReleaseContent() {
     }
     setShowP(true);
     setTimeout(()=>setShowP(false), 1600);
-    setPhase("done");
+
+    // 18% 확률로 소화 멈춤 이벤트
+    if (Math.random() < 0.18) {
+      const msg = SOHWA_MSGS[Math.floor(Math.random() * SOHWA_MSGS.length)];
+      setSoHwaMsg(msg);
+      setTimeout(() => setSoHwaStop(true), 800);
+    } else {
+      setPhase("done");
+    }
   };
 
-  const reset = () => { setPhase("write"); setText(""); setMode(null); };
+  const reset = () => { setPhase("write"); setText(""); setMode(null); setSoHwaStop(false); };
 
   return (
     <div style={{ background:"#efe3cf", minHeight:"100vh", paddingBottom:90, position:"relative", overflow:"hidden" }}>
@@ -554,6 +723,17 @@ function ReleaseContent() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── 소화 멈춤 오버레이 ── */}
+      <AnimatePresence>
+        {soHwaStop && (
+          <SoHwaStopOverlay
+            msg={soHwaMsg}
+            onContinue={() => { setSoHwaStop(false); setPhase("done"); }}
+            onKeep={() => { setSoHwaStop(false); reset(); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
