@@ -94,95 +94,34 @@ export default function MainPage() {
         </div>
       </div>
 
-      {/* ── 파쇄기 영상 본체 ── */}
+      {/* ── 파쇄기 영상 ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        style={{ display: "flex", justifyContent: "center", padding: "20px 20px 0", position: "relative" }}
+        style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 20px 0", gap: 10 }}
       >
-        {/* 기계 프레임 */}
-        <div style={{ position: "relative", width: "100%", maxWidth: 420 }}>
+        <div className="hero-video">
+          <video ref={videoRef} autoPlay muted loop playsInline>
+            <source src="/hero.mp4" type="video/mp4" />
+          </video>
+        </div>
 
-          {/* 상단 레이블 */}
-          <div style={{
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            background: INK, borderRadius: "4px 4px 0 0",
-            padding: "7px 14px",
+        {/* 소리 토글 + 상태 */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={toggleSound} style={{
+            background: "transparent", border: `1px solid ${muted ? "#C8BDB0" : ROSE}`,
+            borderRadius: 20, padding: "4px 12px",
+            fontSize: 11, fontFamily: "monospace",
+            color: muted ? "#A89880" : ROSE,
+            cursor: "pointer", letterSpacing: "0.06em",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: ROSE }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C4874A" }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#8A9E78" }} />
-            </div>
-            <p style={{ fontSize: 9, fontFamily: "monospace", color: "#A89880", letterSpacing: "0.12em" }}>
-              EMOTIONAL_SHREDDER.exe
-            </p>
-            {/* 소리 토글 */}
-            <button onClick={toggleSound} style={{
-              background: "transparent", border: `1px solid ${muted ? "#4A4238" : ROSE}`,
-              borderRadius: 3, padding: "2px 8px",
-              fontSize: 10, fontFamily: "monospace",
-              color: muted ? "#6A6258" : ROSE,
-              cursor: "pointer", letterSpacing: "0.06em",
-            }}>
-              {muted ? "🔇 MUTED" : "🔊 SOUND"}
-            </button>
-          </div>
-
-          {/* 영상 */}
-          <div style={{ position: "relative", lineHeight: 0, background: "#1A1612" }}>
-            <video
-              ref={videoRef}
-              autoPlay muted loop playsInline
-              style={{
-                width: "100%",
-                display: "block",
-                filter: "brightness(0.72) contrast(1.05)",
-              }}
-            >
-              <source src="/hero.mp4" type="video/mp4" />
-            </video>
-
-            {/* 스캔라인 오버레이 (CRT 느낌) */}
-            <div style={{
-              position: "absolute", inset: 0, pointerEvents: "none",
-              backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)",
-              mixBlendMode: "multiply",
-            }} />
-
-            {/* 좌하단 상태 표시 */}
-            <div style={{
-              position: "absolute", bottom: 10, left: 12,
-              background: "rgba(26,22,18,0.82)", borderRadius: 2, padding: "3px 8px",
-            }}>
-              <p style={{ fontSize: 9, fontFamily: "monospace", color: ROSE, letterSpacing: "0.1em" }}>
-                ● REC &nbsp;|&nbsp; {t.home.statusIdle.replace("{n}", String(count))}
-              </p>
-            </div>
-          </div>
-
-          {/* 하단 기계 패널 */}
-          <div style={{
-            background: INK, borderRadius: "0 0 4px 4px",
-            padding: "10px 14px",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <p style={{ fontSize: 9, fontFamily: "monospace", color: "#6A6258", letterSpacing: "0.08em" }}>
-              INPUT SLOT ↑
-            </p>
-            <p style={{ fontSize: 10, fontFamily: "monospace", color: "#A89880" }}>
-              오늘무드 v2.7
-            </p>
-            <div style={{ display: "flex", gap: 4 }}>
-              {[ROSE, "#C4874A", "#8A9E78"].map((c, i) => (
-                <motion.div key={i}
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.2, delay: i * 0.3, repeat: Infinity }}
-                  style={{ width: 5, height: 5, borderRadius: 1, background: c }}
-                />
-              ))}
-            </div>
-          </div>
+            {muted ? "🔇 소리 끔" : "🔊 소리 켬"}
+          </button>
+          {count > 0 && (
+            <span style={{ fontSize: 10, fontFamily: "monospace", color: "#A89880", letterSpacing: "0.08em" }}>
+              ● {t.home.statusIdle.replace("{n}", String(count))}
+            </span>
+          )}
         </div>
       </motion.div>
 
