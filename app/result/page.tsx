@@ -26,9 +26,9 @@ function ResultContent() {
 
   const shareUrl = buildResultUrl(emotions, data.seed);
 
+  // 다시 파쇄하려면 진짜로 새 감정을 던져야 함
   function handleRetry() {
-    const newSeed = Date.now() % 999983;
-    router.push(buildResultUrl(emotions, newSeed));
+    router.push("/release");
   }
 
   return (

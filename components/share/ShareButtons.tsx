@@ -121,7 +121,7 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, onRetry }: P
           ...btnBase, background: `${ROSE}18`,
           border: `1px solid ${ROSE}44`, color: ROSE, fontSize: 13,
         }}>
-          다시 파쇄하기
+          새 감정 던지러 가기
         </button>
       </div>
 
