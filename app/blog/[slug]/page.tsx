@@ -120,15 +120,40 @@ export default async function ArticlePage({ params }: Props) {
           })}
         </article>
 
+        {/* 저자 코멘트 */}
+        {article.authorNote && (
+          <div style={{
+            margin: "36px 0 0",
+            padding: "20px 22px",
+            background: "#FAF8F0",
+            border: "1.5px solid #D8CEC0",
+            borderLeft: "3px solid #C8607A",
+            borderRadius: 3,
+            position: "relative",
+          }}>
+            <div style={{ position: "absolute", top: -10, left: 16, background: "#FAF8F0", padding: "0 8px" }}>
+              <span style={{ fontSize: 10, fontFamily: "monospace", color: "#C8607A", letterSpacing: "0.1em" }}>
+                SHARON'S NOTE
+              </span>
+            </div>
+            <p style={{ fontSize: 14, color: "#5A5248", lineHeight: 1.85, fontFamily: "var(--font-serif)", fontWeight: 300 }}>
+              {article.authorNote}
+            </p>
+            <p style={{ fontSize: 11, color: "#B4A890", marginTop: 10, fontFamily: "monospace" }}>
+              — 오늘무드 만든 사람
+            </p>
+          </div>
+        )}
+
         {/* CTA */}
         <div style={{
-          margin: "40px 0", padding: "24px 28px", textAlign: "center",
+          margin: "32px 0", padding: "24px 28px", textAlign: "center",
           background: "#F5EFE0", border: "1px dashed #D8CEC0", borderRadius: 4,
         }}>
           <p style={{ fontSize: 14, color: "#5A5248", marginBottom: 14, fontFamily: "var(--font-serif)" }}>
             읽고 나서 감정이 올라왔다면, 여기 버려도 돼요.
           </p>
-          <Link href="/" style={{
+          <Link href="/release" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
             padding: "11px 24px", borderRadius: 4,
