@@ -123,7 +123,7 @@ function ResultContent() {
             ✦ 친구한테 공유하면?
           </p>
           <p style={{ fontSize: 13, color: INK, lineHeight: 1.7, fontFamily: "var(--font-serif)" }}>
-            결과지가 <strong>6종 랜덤</strong>이라 친구 결과가 달라요.<br/>
+            결과지가 <strong>11종 랜덤</strong>이라 친구 결과가 달라요.<br/>
             &ldquo;이거 나온 거 봐 ㅋㅋ 너는 뭐 나와?&rdquo;
           </p>
           {/* 말풍선 꼬리 */}

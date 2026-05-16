@@ -90,7 +90,7 @@ export default function AboutPage() {
             </div>
             <div style={{ marginTop: 16, padding: "12px 16px", background: `${ROSE}12`, border: `1px solid ${ROSE}30`, borderRadius: 3 }}>
               <p style={{ fontSize: 12, color: ROSE, fontFamily: "monospace" }}>
-                ※ 결과지는 6가지 랜덤. 매번 다르게 나옴. 친구 것이랑 비교해봐.
+                ※ 결과지는 11가지 랜덤. 매번 다르게 나옴. 친구 것이랑 비교해봐.
               </p>
             </div>
           </Section>

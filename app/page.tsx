@@ -456,7 +456,7 @@ export default function MainPage() {
               ↑ 감정 카드를 파쇄기에 던져봐
             </p>
             <p style={{ fontSize: 10, color: "#C4BAB0", fontFamily: "monospace", marginTop: 4 }}>
-              결과지 6종 랜덤 — 매번 달라서 친구 것이랑 비교 가능
+              결과지 11종 랜덤 — 매번 달라서 친구 것이랑 비교 가능
             </p>
           </motion.div>
         )}
