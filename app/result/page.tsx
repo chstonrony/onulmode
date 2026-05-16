@@ -58,14 +58,17 @@ function ResultContent() {
         transition={{ duration: 0.4 }}
         style={{ padding: "18px 20px 0", textAlign: "center" }}
       >
+        <p style={{ fontSize: 9, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 4 }}>
+          {data.errorCode}
+        </p>
         <p style={{ fontSize: 10, color: ROSE, fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 6 }}>
           ■ EMOTIONAL WASTE DISPOSAL COMPLETE
         </p>
-        <h1 style={{ fontSize: 24, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.3 }}>
-          감정 폐기<br/>처리 확인서
+        <h1 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.3 }}>
+          {data.resultTitle}
         </h1>
-        <p style={{ fontSize: 12, color: "#A89880", marginTop: 6, fontFamily: "monospace" }}>
-          우걱이가 {emotions.slice(0,2).join(", ")} 처리 완료
+        <p style={{ fontSize: 11, color: "#A89880", marginTop: 6, fontFamily: "monospace" }}>
+          {data.warningMessage}
         </p>
       </motion.div>
 

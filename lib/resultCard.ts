@@ -12,6 +12,158 @@ const EXTRA_POOL = [
   "자책", "질림", "후회", "피곤함", "속상함", "답답함",
 ] as const;
 
+// ─── ERROR CODE 시스템 (100개) ────────────────────────────
+const ERROR_CODES = [
+  "UGEGI-404", "SAD-999", "HEART_BROKEN", "SOCIAL_LIFE.EXE",
+  "CRYING_IN_THE_CLUB", "EMOTIONAL_DAMAGE", "MENTAL_OVERLOAD",
+  "TEARS_NOT_FOUND", "HUMAN.EXE_STOPPED", "FEELINGS.ELL",
+  "SADNESS_OVERFLOW", "ANGER_LEAKED", "LONELINESS_DETECTED",
+  "SELF_ESTEEM.DLL_MISSING", "HOPE_NOT_FOUND", "BURNOUT_LEVEL_MAX",
+  "UGEGI_OVERHEATED", "EMOTION_CORRUPTED", "HEART.EXE_CRASHED",
+  "CRYING_PROCESS_FAILED", "OVERTHINK_INFINITE_LOOP",
+  "SEROTONIN_LOW_BATTERY", "DOPAMINE_NOT_FOUND",
+  "FAKE_SMILE_DETECTED", "PATIENCE_BUFFER_FULL",
+  "SOCIAL_BATTERY_DEAD", "KINDNESS_OVERFLOW_ERROR",
+  "PRETENDING_OK_FAILED", "FEELINGS_FILE_CORRUPTED",
+  "SELF_BLAME_LOOP_DETECTED", "MEMORY_LEAK_REGRET",
+  "RELATIONSHIP_404", "WORK_STRESS_EXCEEDED",
+  "MONDAY_BLUE_FATAL", "WEEKEND_TOO_SHORT",
+  "DREAM_LOAD_FAILED", "MOTIVATION_NULL_POINTER",
+  "ANXIETY_PROCESS_RUNNING", "COMPARISON_VIRUS_DETECTED",
+  "UGEGI_STOMACH_FULL", "EMOTION_QUEUE_OVERFLOW",
+  "REALITY_CHECK_ERROR", "HAPPINESS_FILE_MISSING",
+  "COMFORT_FOOD_REQUIRED", "SLEEP_DEPRIVATION_CRITICAL",
+  "OVERTHINKING_AT_3AM", "GROUP_CHAT_LEFT",
+  "PHONE_NOT_RINGING", "SEEN_NOT_REPLIED",
+  "EXPECTATION_NOT_MET", "UGEGI_BITE_ERROR",
+  "FEELING_TOO_MUCH", "FEELING_NOTHING",
+  "FORCED_LAUGH.EXE", "INTERNAL_CRY_DETECTED",
+  "VENT_TARGET_UNAVAILABLE", "COMFORT_UNAVAILABLE",
+  "RELATABLE_PAIN_999", "TOO_MUCH_TO_HANDLE",
+  "EMOTION_STUCK_IN_LOOP", "UGEGI_CONFUSED",
+  "SYSTEM_EMOTION_HALTED", "MENTAL_SEGFAULT",
+  "FRIENDSHIP_TIMEOUT", "REPLY_DELAYED_FOREVER",
+  "OVERTHINK_404_SOLUTION", "SLEEP_CRASH",
+  "UGEGI_CHOKED", "CRINGE_MEMORY_DETECTED",
+  "PAST_TRAUMA_ACCESSED", "UNKNOWN_SADNESS_TYPE",
+  "UNDEFINED_EMOTION", "EMOTION_COMPILE_ERROR",
+  "REGRET_BUFFER_MAX", "EMBARRASSMENT_CRITICAL",
+  "ALONE_IN_CROWD", "INVISIBLE_MODE_ON",
+  "SENSITIVITY_OVERFLOW", "MASK_PROCESS_RUNNING",
+  "UGEGI_CANNOT_SWALLOW", "EMOTION_TOO_BIG",
+  "HEART_STRING_BROKEN", "SUPPORT_SYSTEM_NULL",
+  "UGEGI_NEED_BREAK", "TIRED_OF_BEING_TIRED",
+  "WEEKEND_SADNESS_TYPE_B", "EXISTENTIAL_CRISIS.EXE",
+  "WHO_AM_I_404", "PURPOSE_FILE_MISSING",
+  "FUTURE_UNCLEAR_ERROR", "COMPARISON_DAMAGE_TAKEN",
+  "UGEGI_SYSTEM_ERROR", "BAGAK_FAILED",
+  "EMOTION_PARSE_ERROR", "MENTAL_DISK_FULL",
+  "UGEGI_RETRY_LIMIT", "HEART_FIREWALL_DOWN",
+  "VULNERABILITY_EXPOSED", "UGEGI_LAST_RESORT",
+] as const;
+
+// ─── 경고문 (50개) ────────────────────────────────────────
+const WARNING_MESSAGES = [
+  "⚠ 혼자 삭히기 위험",
+  "⚠ 감정 과열 감지",
+  "⚠ 울컥 가능성 높음",
+  "⚠ 사회생활 데미지 누적",
+  "⚠ 안 괜찮은 척 감지됨",
+  "⚠ 멘탈 꾸깃 상태",
+  "⚠ 눈물 임계치 초과",
+  "⚠ 감정 과부하 상태",
+  "⚠ 버티기 한계 근접",
+  "⚠ 감정 유통기한 초과",
+  "⚠ 괜찮은 척 파탄",
+  "⚠ 자책 루프 감지",
+  "⚠ 우걱이 소화 불량",
+  "⚠ 감정 찌꺼기 축적",
+  "⚠ 말 못한 것들 과부하",
+  "⚠ 멘탈 배터리 방전",
+  "⚠ 억울함 발효 중",
+  "⚠ 비교 바이러스 검출",
+  "⚠ 혼자 견디기 위험 단계",
+  "⚠ 감정 압축 실패",
+  "⚠ 사회생활 과부하",
+  "⚠ 번아웃 전조 감지",
+  "⚠ 감정 폭발 직전",
+  "⚠ 허무함 임계점 도달",
+  "⚠ 수분 부족 (눈물 포함)",
+  "⚠ 안 괜찮음 확인됨",
+  "⚠ 외로움 농도 위험",
+  "⚠ 감정 서버 다운",
+  "⚠ 우걱이 이빨 막힘",
+  "⚠ 즉각 휴식 권고",
+  "⚠ 현타 농도 위험",
+  "⚠ 서운함 포화 상태",
+  "⚠ 멘탈 수분 8% 미만",
+  "⚠ 행복인 척 과부하",
+  "⚠ 웃음 강도 의심됨",
+  "⚠ 감정 곰팡이 발생",
+  "⚠ 피로 누적 경보",
+  "⚠ 인간관계 데미지",
+  "⚠ 오래된 감정 발굴",
+  "⚠ 마음 와장창 위험",
+  "⚠ 감정 소화 실패",
+  "⚠ 정체 모를 눈물 감지",
+  "⚠ 뭔가 말하고 싶음",
+  "⚠ 우걱이 긴급 출동",
+  "⚠ 처리 불가 감정 감지",
+  "⚠ 위로 필요 수준: 높음",
+  "⚠ 마음 꾸깃 상태",
+  "⚠ 감정 블랙박스 열림",
+  "⚠ 눈물 잔류량 72%",
+  "⚠ 감정 와장창 완료",
+] as const;
+
+// ─── 버튼 텍스트 (다시 파쇄) ──────────────────────────────
+const BUTTON_RETRY_TEXTS = [
+  "다시 파쇄하기",
+  "감정 다시 갈기",
+  "우걱이에게 재전송",
+  "한 번 더 꾸깃하기",
+  "다시 우걱우걱",
+  "감정 재분석",
+  "재파쇄 시도",
+  "또 버리기",
+  "더 갈아버리기",
+  "우걱이 한 번 더",
+  "감정 추가 투입",
+  "빠각 한 번 더",
+  "재처리 요청",
+  "다시 던져보기",
+  "꾸깃 한 번 더",
+  "감정 재파쇄",
+  "우걱이야 한 번 더",
+  "또 갈아줘",
+  "retry.exe",
+  "한 번 더 (몰래)",
+] as const;
+
+// ─── 버튼 텍스트 (닫기) ──────────────────────────────────
+const BUTTON_CLOSE_TEXTS = [
+  "그냥 닫기",
+  "울면서 종료",
+  "현실로 돌아가기",
+  "대충 닫기",
+  "그냥 버티기",
+  "닫으면서 한숨",
+  "종료 (눈물 포함)",
+  "escape.exe",
+  "현실 복귀",
+  "그냥 이불 들어가기",
+  "닫기 (아직 안 괜찮음)",
+  "오늘은 여기까지",
+  "이만 물러나겠음",
+  "창 닫고 눕기",
+  "포기하고 나가기",
+  "그냥 자야겠음",
+  "잠깐 자고 올게",
+  "나중에 또 옴",
+  "일단 나가기",
+  "현실도피 종료",
+] as const;
+
 export function generateIngredients(inputs: string[], rng: () => number) {
   const base  = inputs.slice(0, 2);
   const extra = pick(EXTRA_POOL, rng);
@@ -407,16 +559,20 @@ export interface ResultData {
   grade: { text: string; sub: string };
   prescription: string;
   seed: number;
-  cardStyle: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  cardStyle: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
   stamp: string;
   ugMemo: string;
   resultGrade: string;
   resultTitle: string;
   ugegiBehavior: string;
   bizarreStats: { label: string; value: string }[];
+  errorCode: string;
+  warningMessage: string;
+  retryButtonText: string;
+  closeButtonText: string;
 }
 
-const CARD_STYLES_POOL = [1, 2, 3, 4, 5, 7, 8, 9] as const;
+const CARD_STYLES_POOL = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11] as const;
 
 export function generateResult(emotions: string[], seed?: number): ResultData {
   const s   = seed ?? (Date.now() % 999983);
@@ -430,28 +586,32 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
   const statPool = [...BIZARRE_STATS_POOL].sort(() => rng() - 0.5);
   const bizarreStats = statPool.slice(0, 2 + Math.floor(rng() * 2));
 
-  // 12% 확률로 소화 멈춤 스타일(6), 나머지는 1,2,3,4,5,7,8,9 중 랜덤
+  // 12% 확률로 소화 멈춤 스타일(6), 나머지는 풀 중 랜덤
   const cardStyle = (rng() < 0.12
     ? 6
     : CARD_STYLES_POOL[Math.floor(rng() * CARD_STYLES_POOL.length)]
-  ) as 1|2|3|4|5|6|7|8|9;
+  ) as 1|2|3|4|5|6|7|8|9|10|11;
 
   return {
     date, serial, wasteCode,
     ingredients:    generateIngredients(emotions.length ? emotions : ["감정"], rng),
     intensity,
-    shredStatus:    pick(SHRED_STATUSES,    rng),
-    verdict:        pick(VERDICTS,          rng),
-    machineComment: pick(MACHINE_COMMENTS,  rng),
-    grade:          pick(GRADES,            rng),
-    prescription:   pick(PRESCRIPTIONS,    rng),
+    shredStatus:    pick(SHRED_STATUSES,      rng),
+    verdict:        pick(VERDICTS,            rng),
+    machineComment: pick(MACHINE_COMMENTS,    rng),
+    grade:          pick(GRADES,              rng),
+    prescription:   pick(PRESCRIPTIONS,      rng),
     seed: s,
     cardStyle,
-    stamp:          pick(STAMPS,            rng),
-    ugMemo:         pick(UG_MEMOS,          rng),
-    resultGrade:    pick(RESULT_GRADES,     rng),
-    resultTitle:    pick(RESULT_TITLES,     rng),
-    ugegiBehavior:  pick(UGEGI_BEHAVIORS,   rng),
+    stamp:          pick(STAMPS,              rng),
+    ugMemo:         pick(UG_MEMOS,            rng),
+    resultGrade:    pick(RESULT_GRADES,       rng),
+    resultTitle:    pick(RESULT_TITLES,       rng),
+    ugegiBehavior:  pick(UGEGI_BEHAVIORS,     rng),
+    errorCode:      pick(ERROR_CODES,         rng),
+    warningMessage: pick(WARNING_MESSAGES,    rng),
+    retryButtonText: pick(BUTTON_RETRY_TEXTS, rng),
+    closeButtonText: pick(BUTTON_CLOSE_TEXTS, rng),
     bizarreStats,
   };
 }

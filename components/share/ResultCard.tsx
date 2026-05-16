@@ -747,7 +747,7 @@ function Style7({ data, emotions }: { data: ResultData; emotions: string[] }) {
    스타일 8 — AI 오류 보고서 (Windows 오류창 감성)
 ══════════════════════════════════════════════════════════ */
 function Style8({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, resultTitle, verdict, machineComment, ugMemo, bizarreStats, intensity, stamp } = data;
+  const { date, serial, resultTitle, verdict, machineComment, ugMemo, bizarreStats, intensity, errorCode, warningMessage } = data;
   return (
     <div style={{ width:W, fontFamily:MONO, color:INK, position:"relative",
       border:`2px solid #808080`, boxShadow:`3px 3px 0 #404040` }}>
@@ -791,9 +791,15 @@ function Style8({ data, emotions }: { data: ResultData; emotions: string[] }) {
         {/* 오류 상자 */}
         <div style={{ background:"white", border:"2px inset #808080", padding:"8px 10px", marginBottom:12 }}>
           <p style={{ fontSize:9, color:"#6A6058", marginBottom:4, letterSpacing:"0.08em" }}>오류 상세 정보:</p>
-          <p style={{ fontSize:10, color:ROSE, fontWeight:700, marginBottom:4 }}>ERROR CODE: {serial}-UGEGI</p>
+          <p style={{ fontSize:10, color:ROSE, fontWeight:700, marginBottom:4 }}>ERROR CODE: {data.errorCode}</p>
           <p style={{ fontSize:11, color:INK, lineHeight:1.6, marginBottom:4 }}>{verdict}</p>
           <p style={{ fontSize:10, color:"#5A5248", fontStyle:"italic" }}>&ldquo;{machineComment}&rdquo;</p>
+        </div>
+
+        {/* 경고 배너 */}
+        <div style={{ background:"#FFF0F0", border:"2px solid #CC0000", padding:"6px 10px", marginBottom:8, display:"flex", alignItems:"center", gap:8 }}>
+          <span style={{ fontSize:14 }}>⚠</span>
+          <p style={{ fontSize:11, color:"#CC0000", fontWeight:700 }}>{warningMessage.replace("⚠ ", "")}</p>
         </div>
 
         {/* 오류 결과 */}
@@ -922,6 +928,174 @@ function Style9({ data, emotions }: { data: ResultData; emotions: string[] }) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   스타일 10 — 멘탈 응급 알림창 (카카오톡/시스템 알림 감성)
+══════════════════════════════════════════════════════════ */
+function Style10({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, resultTitle, verdict, machineComment, ugMemo, bizarreStats, errorCode, warningMessage, stamp } = data;
+  return (
+    <div style={{ width:W, background:"#F0F0F0", fontFamily:MONO, color:INK, position:"relative",
+      border:`1px solid #C0C0C0`, borderRadius:8, boxShadow:`0 4px 24px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.8) inset` }}>
+
+      {/* 알림 헤더 */}
+      <div style={{ background:"linear-gradient(180deg,#E8E8E8,#D0D0D0)", borderRadius:"8px 8px 0 0", padding:"10px 14px", borderBottom:"1px solid #B0B0B0", display:"flex", alignItems:"center", gap:10 }}>
+        <div style={{ width:36, height:36, borderRadius:8, background:ROSE, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+          <span style={{ fontSize:18, color:"white" }}>🦷</span>
+        </div>
+        <div>
+          <p style={{ fontSize:12, fontWeight:700, color:INK }}>우걱이 처리소</p>
+          <p style={{ fontSize:9, color:"#8A8070" }}>감정 처리 알림 · {date}</p>
+        </div>
+        <div style={{ marginLeft:"auto", fontSize:9, color:"#8A8070", border:"1px solid #C0C0C0", padding:"2px 8px", borderRadius:10, background:"white" }}>
+          지금
+        </div>
+      </div>
+
+      <div style={{ padding:"14px 16px" }}>
+
+        {/* 알림 제목 */}
+        <p style={{ fontSize:15, fontWeight:700, color:INK, marginBottom:6, lineHeight:1.3 }}>
+          {resultTitle}
+        </p>
+
+        {/* 경고 */}
+        <div style={{ background:"#FFF3CD", border:"1px solid #FFCC00", borderRadius:4, padding:"6px 10px", marginBottom:10, display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ fontSize:12 }}>⚠</span>
+          <p style={{ fontSize:11, color:"#856404", fontWeight:700 }}>{warningMessage.replace("⚠ ", "")}</p>
+        </div>
+
+        {/* 감정 태그들 */}
+        <p style={{ fontSize:9, color:"#8A8070", marginBottom:5, letterSpacing:"0.08em" }}>감지된 감정:</p>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:10 }}>
+          {emotions.map(e => (
+            <span key={e} style={{ fontSize:11, background:ROSE, color:"white", padding:"2px 10px", borderRadius:10, fontWeight:700 }}>{e}</span>
+          ))}
+        </div>
+
+        {/* 상태 메시지 */}
+        <div style={{ background:"white", borderRadius:6, padding:"8px 12px", marginBottom:10, border:"1px solid #E0E0E0" }}>
+          <p style={{ fontSize:11, color:INK, lineHeight:1.7, marginBottom:4 }}>{verdict}</p>
+          <p style={{ fontSize:10, color:"#8A8070", fontStyle:"italic" }}>&ldquo;{machineComment}&rdquo;</p>
+        </div>
+
+        {/* 수치 */}
+        <p style={{ fontSize:9, color:"#8A8070", marginBottom:5, letterSpacing:"0.08em" }}>분석 수치:</p>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"3px 10px", marginBottom:10 }}>
+          {bizarreStats.map(s => (
+            <div key={s.label} style={{ display:"flex", justifyContent:"space-between", fontSize:10, background:"white", padding:"3px 8px", borderRadius:4, border:"1px solid #E8E8E8" }}>
+              <span style={{ color:"#8A8070" }}>{s.label}</span>
+              <span style={{ fontWeight:700, color: s.value.includes("%")&&parseInt(s.value)>70 ? ROSE : INK }}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 우걱이 메모 */}
+        <p style={{ fontSize:10, fontFamily:HAND, color:"#6A6258", transform:"rotate(-1deg)", display:"inline-block", marginBottom:8 }}>{ugMemo}</p>
+
+        {/* 버튼들 */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:10 }}>
+          <div style={{ background:ROSE, borderRadius:6, padding:"8px 0", textAlign:"center" }}>
+            <p style={{ fontSize:11, color:"white", fontWeight:700 }}>재파쇄</p>
+          </div>
+          <div style={{ background:"#E8E8E8", borderRadius:6, padding:"8px 0", textAlign:"center", border:"1px solid #C0C0C0" }}>
+            <p style={{ fontSize:11, color:"#5A5248", fontWeight:700 }}>닫기</p>
+          </div>
+        </div>
+
+        <p style={{ fontSize:8, color:"#C0B8B0", textAlign:"center", marginTop:8 }}>
+          {errorCode} · onulmode.vercel.app
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   스타일 11 — 감정 위험 경고문 (공문서 + 경고 스티커 감성)
+══════════════════════════════════════════════════════════ */
+function Style11({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, resultTitle, verdict, machineComment, ugMemo, bizarreStats, errorCode, warningMessage, intensity, stamp } = data;
+  return (
+    <div style={{ width:W, background:"#FFFFF0", fontFamily:MONO, color:INK, position:"relative",
+      border:`3px solid #FFD700`, boxShadow:`4px 4px 0 #B8A000, inset 0 0 0 2px #FFD700` }}>
+
+      {/* 위험 줄무늬 헤더 */}
+      <div style={{ height:18, backgroundImage:"repeating-linear-gradient(45deg, #FFD700 0px, #FFD700 10px, #1A1410 10px, #1A1410 20px)", marginBottom:0 }}/>
+
+      <div style={{ padding:"14px 16px 16px" }}>
+
+        {/* 위험 아이콘 + 제목 */}
+        <div style={{ textAlign:"center", marginBottom:14 }}>
+          <div style={{ fontSize:32, marginBottom:6 }}>⚠️</div>
+          <p style={{ fontSize:9, letterSpacing:"0.2em", color:"#8A7000", marginBottom:4 }}>
+            감정 위험 경고문 / No.{serial}
+          </p>
+          <p style={{ fontSize:20, fontWeight:700, color:"#CC0000", lineHeight:1.2, letterSpacing:"0.02em" }}>
+            {resultTitle}
+          </p>
+          <p style={{ fontSize:9, color:"#8A7000", marginTop:4 }}>{date} 발급</p>
+        </div>
+
+        {/* 경고 박스 */}
+        <div style={{ background:"#FFF3CD", border:"2px solid #CC0000", padding:"10px 12px", marginBottom:12, position:"relative" }}>
+          <div style={{ position:"absolute", top:-10, left:16, background:"#CC0000", color:"white", fontSize:8, padding:"2px 8px", letterSpacing:"0.1em" }}>
+            경고
+          </div>
+          <p style={{ fontSize:12, color:"#CC0000", fontWeight:700, marginBottom:4 }}>{warningMessage}</p>
+          <p style={{ fontSize:11, color:"#5A4A00", lineHeight:1.6 }}>{verdict}</p>
+        </div>
+
+        {/* 감정 목록 */}
+        <p style={{ fontSize:9, color:"#8A7000", letterSpacing:"0.1em", marginBottom:6 }}>위험 감정 목록:</p>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:5, marginBottom:12 }}>
+          {emotions.map(e => (
+            <span key={e} style={{ fontSize:12, fontWeight:700, background:"#CC0000", color:"white", padding:"2px 10px", border:"1px solid #990000" }}>
+              ▶ {e}
+            </span>
+          ))}
+        </div>
+
+        {/* 수치 분석 */}
+        <p style={{ fontSize:9, color:"#8A7000", letterSpacing:"0.1em", marginBottom:6 }}>위험 수치 측정:</p>
+        {bizarreStats.map(s => (
+          <div key={s.label} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", fontSize:11, marginBottom:5, paddingBottom:5, borderBottom:"1px dashed #D4C000" }}>
+            <span style={{ color:"#5A4A00" }}>{s.label}</span>
+            <span style={{ fontWeight:700, color: s.value.includes("%")&&parseInt(s.value)>70 ? "#CC0000" : "#5A4A00",
+              background: s.value.includes("%")&&parseInt(s.value)>70 ? "#FFE0E0" : "transparent",
+              padding:"1px 6px" }}>
+              {s.value}
+            </span>
+          </div>
+        ))}
+
+        {/* 우걱이 진단 */}
+        <div style={{ background:"#FFF9E0", border:"1px solid #D4C000", padding:"8px 10px", marginTop:10, marginBottom:10 }}>
+          <p style={{ fontSize:9, color:"#8A7000", letterSpacing:"0.08em", marginBottom:4 }}>우걱이 판정:</p>
+          <p style={{ fontSize:11, fontStyle:"italic", color:"#3A3000", lineHeight:1.6 }}>&ldquo;{machineComment}&rdquo;</p>
+        </div>
+
+        {/* 하단 스탬프 영역 */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
+          <div>
+            <p style={{ fontSize:9, color:"#8A7000", marginBottom:3 }}>담당자 (우걱이) 메모:</p>
+            <p style={{ fontSize:11, fontFamily:HAND, transform:"rotate(-2deg)", display:"inline-block", color:"#3A3000" }}>{ugMemo}</p>
+          </div>
+          <div style={{ border:`2px solid #CC0000`, padding:"4px 10px", transform:"rotate(-5deg)", textAlign:"center", background:"#FFF3CD" }}>
+            <p style={{ fontSize:9, color:"#CC0000", fontWeight:700 }}>{stamp}</p>
+          </div>
+        </div>
+
+        <p style={{ fontSize:8, color:"#8A7000", textAlign:"center", marginTop:12, letterSpacing:"0.06em" }}>
+          {errorCode} · onulmode.vercel.app
+        </p>
+      </div>
+
+      {/* 아래 줄무늬 */}
+      <div style={{ height:14, backgroundImage:"repeating-linear-gradient(45deg, #FFD700 0px, #FFD700 8px, #1A1410 8px, #1A1410 16px)" }}/>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
    메인 컴포넌트 — 스타일 라우팅
 ══════════════════════════════════════════════════════════ */
 const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) => {
@@ -936,7 +1110,9 @@ const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =
       {style === 6 && <Style6 data={data} emotions={emotions} />}
       {style === 7 && <Style7 data={data} emotions={emotions} />}
       {style === 8 && <Style8 data={data} emotions={emotions} />}
-      {style === 9 && <Style9 data={data} emotions={emotions} />}
+      {style === 9  && <Style9  data={data} emotions={emotions} />}
+      {style === 10 && <Style10 data={data} emotions={emotions} />}
+      {style === 11 && <Style11 data={data} emotions={emotions} />}
     </div>
   );
 });
