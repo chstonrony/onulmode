@@ -239,6 +239,70 @@ body {
   animation: shredder-shake 0.38s ease;
 }
 
+/* ── 우걱이 처리소 모바일 히어로 ── */
+
+/* 전체 잇몸 영역 */
+.ugegi-head {
+  position: relative;
+  z-index: 20;
+}
+
+/* 검정 잇몸 */
+.ugegi-gum {
+  background: #1A1410;
+  padding-top: 12px;
+}
+
+/* 눈 컨테이너 */
+.ugegi-eyes-wrap {
+  position: relative;
+}
+
+/* 이빨 래퍼 */
+.ugegi-teeth-wrap {
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  /* 잇몸: 더 키우고 넓게 */
+  .ugegi-gum {
+    padding-top: 20px;
+    padding-bottom: 4px;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* 눈: 1.5배 확대 */
+  .ugegi-eyes-wrap {
+    transform: scale(1.45);
+    transform-origin: center center;
+    margin: 12px 0 8px;
+  }
+
+  /* 이빨: 더 높게 */
+  .ugegi-teeth-wrap svg {
+    height: 105px;
+  }
+
+  /* 전체 우걱이 영역이 화면 45~50% 차지 */
+  .ugegi-head {
+    min-height: 46vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  /* 표정 이모지 더 크게 */
+  .ugegi-expr {
+    font-size: 32px !important;
+    bottom: 20px !important;
+    left: 18px !important;
+  }
+}
+
 /* ── 파쇄기 기계 프레임 ── */
 .machine-frame {
   width: min(92vw, 520px);

@@ -478,9 +478,9 @@ function ReleaseContent() {
       <BackgroundDoodles textLen={text.length} />
 
       {/* ── 우걱이 입 ── */}
-      <div style={{ position:"relative" }}>
+      <div className="ugegi-head" style={{ position:"relative" }}>
         {/* 잇몸 + 목구멍 */}
-        <div style={{ background: INK, paddingTop:12 }}>
+        <div className="ugegi-gum" style={{ background: INK, paddingTop:12 }}>
 
           {/* 상단 바 */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 16px 8px" }}>
@@ -518,10 +518,12 @@ function ReleaseContent() {
           </div>
 
           {/* 눈 */}
-          <UgegiEyes active={phase==="animating"} stressed={stressed} />
+          <div className="ugegi-eyes-wrap">
+            <UgegiEyes active={phase==="animating"} stressed={stressed} />
+          </div>
 
-          {/* 랜덤 표정 이모지 — 잇몸 왼쪽 아래 */}
-          <div style={{ position:"absolute", bottom:16, left:16 }}>
+          {/* 랜덤 표정 이모지 */}
+          <div className="ugegi-expr" style={{ position:"absolute", bottom:16, left:16 }}>
             <motion.span
               animate={ overload
                 ? { rotate:[-5,5,-5], scale:[1,1.1,1] }
@@ -538,6 +540,7 @@ function ReleaseContent() {
 
         {/* 이빨 */}
         <motion.div
+          className="ugegi-teeth-wrap"
           animate={ stressed ? { x:[-1,1,-1,1,0] } : {} }
           transition={{ duration:0.3, repeat: stressed ? Infinity : 0 }}
         >
@@ -556,9 +559,9 @@ function ReleaseContent() {
               <motion.div
                 animate={ overload ? { x:[-2,2,-2,2,0] } : {} }
                 transition={{ duration:0.25, repeat: overload ? Infinity : 0 }}
-                style={{ marginBottom:16 }}
+                style={{ marginBottom:12 }}
               >
-                <h2 style={{ fontSize:22, fontFamily:"var(--font-serif)", color:INK, lineHeight:1.4, marginBottom:5 }}>
+                <h2 style={{ fontSize:20, fontFamily:"var(--font-serif)", color:INK, lineHeight:1.35, marginBottom:4 }}>
                   {overload ? "우걱이 꾸역꾸역 먹는 중…" : "우걱이한테 먹일 감정 적어줘"}
                 </h2>
                 <p style={{ fontSize:11, fontFamily:"monospace", color: overload ? ROSE : "#A89880", letterSpacing:"0.05em" }}>
