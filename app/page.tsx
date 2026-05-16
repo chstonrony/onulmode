@@ -78,15 +78,34 @@ interface FlyingCard {
   chipKey: string;
 }
 
-/* ── Web Audio 파쇄음 ── */
+/* ── 클릭 효과음 (철컥) ── */
+function playClickSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    ctx.resume().then(() => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "square";
+      osc.frequency.setValueAtTime(220, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 0.045);
+      gain.gain.setValueAtTime(0.22, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.065);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.065);
+      setTimeout(() => ctx.close().catch(() => {}), 300);
+    });
+  } catch {}
+}
+
+/* ── Web Audio 파쇄음 (드르륵 + 철컥 + 으적 레이어) ── */
 function playShredSound() {
   try {
-    // 비디오 파일의 오디오 트랙을 그대로 재생
     const audio = new Audio("/videos/shredder-desktop.mp4");
     audio.volume = 1.0;
     audio.currentTime = 0;
     audio.play().catch(() => {});
-    // 영상 전체가 아닌 파쇄 구간만 — 2초 후 페이드아웃
     setTimeout(() => {
       const fadeOut = setInterval(() => {
         if (audio.volume > 0.05) {
@@ -97,6 +116,72 @@ function playShredSound() {
         }
       }, 50);
     }, 1800);
+
+    // Web Audio 레이어: 드르륵 + 철컥 + 으적
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    ctx.resume().then(() => {
+      const sr = ctx.sampleRate;
+
+      // 드르륵 — 거친 기계 그라인드
+      const grindBuf = ctx.createBuffer(1, Math.floor(sr * 0.9), sr);
+      const gd = grindBuf.getChannelData(0);
+      for (let i = 0; i < gd.length; i++) {
+        const t = i / sr;
+        const pulse = Math.abs(Math.sin(Math.PI * 16 * t)) > 0.45 ? 1 : 0.25;
+        gd[i] = (Math.random() * 2 - 1) * 0.65 * pulse + Math.sin(2 * Math.PI * 48 * t) * 0.28;
+      }
+      const grind = ctx.createBufferSource();
+      grind.buffer = grindBuf;
+      const grindGain = ctx.createGain();
+      grindGain.gain.setValueAtTime(0.42, ctx.currentTime);
+      grindGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.9);
+      const grindFilter = ctx.createBiquadFilter();
+      grindFilter.type = "bandpass";
+      grindFilter.frequency.value = 550;
+      grindFilter.Q.value = 2.2;
+      grind.connect(grindFilter);
+      grindFilter.connect(grindGain);
+      grindGain.connect(ctx.destination);
+      grind.start();
+
+      // 철컥 — 두 번 기계음 충격
+      [0.04, 0.32].forEach(delay => {
+        const clickOsc = ctx.createOscillator();
+        const clickGain = ctx.createGain();
+        clickOsc.connect(clickGain);
+        clickGain.connect(ctx.destination);
+        clickOsc.type = "sawtooth";
+        const t0 = ctx.currentTime + delay;
+        clickOsc.frequency.setValueAtTime(140, t0);
+        clickOsc.frequency.exponentialRampToValueAtTime(30, t0 + 0.08);
+        clickGain.gain.setValueAtTime(0.38, t0);
+        clickGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.11);
+        clickOsc.start(t0);
+        clickOsc.stop(t0 + 0.11);
+      });
+
+      // 으적 — 찢기는 끝 소리
+      setTimeout(() => {
+        const tearBuf = ctx.createBuffer(1, Math.floor(sr * 0.28), sr);
+        const td = tearBuf.getChannelData(0);
+        for (let i = 0; i < td.length; i++) {
+          td[i] = (Math.random() * 2 - 1) * (1 - i / td.length) * 0.75;
+        }
+        const tear = ctx.createBufferSource();
+        tear.buffer = tearBuf;
+        const tearGain = ctx.createGain();
+        tearGain.gain.setValueAtTime(0.3, ctx.currentTime);
+        const tearFilter = ctx.createBiquadFilter();
+        tearFilter.type = "highpass";
+        tearFilter.frequency.value = 1800;
+        tear.connect(tearFilter);
+        tearFilter.connect(tearGain);
+        tearGain.connect(ctx.destination);
+        tear.start();
+      }, 580);
+
+      setTimeout(() => ctx.close().catch(() => {}), 2200);
+    });
   } catch {}
 }
 
@@ -175,6 +260,7 @@ export default function MainPage() {
     chipKey: string, label: string, bg: string, tc: string, initRot: number,
   ) {
     if (eatenKeys.has(chipKey)) return; // 이미 먹힌 카드는 무시
+    playClickSound();
     const rect  = e.currentTarget.getBoundingClientRect();
     const mouth = getMouthPos();
     setFlyingCards(prev => [...prev, {
@@ -284,13 +370,18 @@ export default function MainPage() {
                 style={{
                   position: "relative",
                   zIndex: sc.z,
-                  transform: `translate(${sc.tx}px, ${sc.ty}px) rotate(${sc.rot}deg)`,
+                  transform: `translate(${sc.tx}px, ${sc.ty}px)`,
                   display: "inline-block",
                   opacity: eatenKeys.has(em.k) ? 0 : 1,
                   pointerEvents: eatenKeys.has(em.k) ? "none" : "auto",
                   transition: "opacity 0.3s ease",
                 }}
               >
+              <div style={{
+                display: "inline-block",
+                animation: `float-paper ${2.1 + (idx % 5) * 0.38}s ease-in-out ${(idx * 0.31) % 2.4}s infinite`,
+                '--r': `${sc.rot}deg`,
+              } as React.CSSProperties}>
                 <button
                   onClick={e => handleChipClick(e, em.k, label, em.bg, em.tc, sc.rot)}
                   style={{
@@ -337,6 +428,7 @@ export default function MainPage() {
                   }} />
                   {label}
                 </button>
+              </div>
               </div>
             );
           })}

@@ -258,91 +258,113 @@ function UgegiTeeth({ stressed }: { stressed: boolean }) {
   );
 }
 
-/* ── 멍청하고 흐리멍텅한 눈 ── */
+/* ── 기괴하고 탈동기화된 눈 ── */
 function UgegiEyes({ active, stressed }: { active: boolean; stressed: boolean }) {
   const [leftX,  setLeftX]  = useState(-4);
   const [leftY,  setLeftY]  = useState(2);
   const [rightX, setRightX] = useState(5);
   const [rightY, setRightY] = useState(-3);
-  const [blink,  setBlink]  = useState(false);
-  const [shake,  setShake]  = useState(false);
+  const [leftBlink,  setLeftBlink]  = useState(false);
+  const [rightBlink, setRightBlink] = useState(false);
+  const [leftSpeed,  setLeftSpeed]  = useState(0.55);
+  const [rightSpeed, setRightSpeed] = useState(0.65);
+  const [leftScale,  setLeftScale]  = useState(1);
+  const [rightScale, setRightScale] = useState(1);
 
   useEffect(() => {
-    // 각각 다른 방향으로 멍하게 이동
-    const m = setInterval(() => {
-      setLeftX((Math.random() - 0.5) * 18 - 3);  // 약간 왼쪽 편향
-      setLeftY((Math.random() - 0.5) * 10);
-      setRightX((Math.random() - 0.5) * 18 + 3); // 약간 오른쪽 편향
-      setRightY((Math.random() - 0.5) * 10);
-    }, 1400 + Math.random() * 800);
+    // 왼쪽 눈 — 짧은 주기로 불규칙하게
+    const lMove = setInterval(() => {
+      const isJerk = Math.random() < 0.4;
+      setLeftSpeed(isJerk ? 0.07 : 0.4 + Math.random() * 0.5);
+      setLeftX((Math.random() - 0.5) * 26 - 3);
+      setLeftY((Math.random() - 0.5) * 16);
+    }, 650 + Math.random() * 500);
 
-    // 깜빡임
-    const b = setInterval(() => {
-      setBlink(true);
-      setTimeout(() => setBlink(false), 100);
-    }, 2200 + Math.random() * 1800);
+    // 오른쪽 눈 — 다른 타이밍, 다른 범위
+    const rMove = setInterval(() => {
+      const isJerk = Math.random() < 0.45;
+      setRightSpeed(isJerk ? 0.06 : 0.35 + Math.random() * 0.55);
+      setRightX((Math.random() - 0.5) * 26 + 3);
+      setRightY((Math.random() - 0.5) * 16);
+    }, 900 + Math.random() * 600);
 
-    // 눈 떨림 (스트레스 아닐 때도 가끔)
-    const s = setInterval(() => {
-      setShake(true);
-      setTimeout(() => setShake(false), 350);
-    }, 5000 + Math.random() * 4000);
+    // 왼쪽 눈 독립 깜빡임 — 가끔 이중 깜빡임
+    const lBlink = setInterval(() => {
+      setLeftBlink(true);
+      const dur = Math.random() < 0.25 ? 160 : 55;
+      setTimeout(() => {
+        setLeftBlink(false);
+        if (Math.random() < 0.28) {
+          setTimeout(() => { setLeftBlink(true); setTimeout(() => setLeftBlink(false), 50); }, 130);
+        }
+      }, dur);
+    }, 1500 + Math.random() * 2000);
 
-    return () => { clearInterval(m); clearInterval(b); clearInterval(s); };
+    // 오른쪽 눈 독립 깜빡임 — 다른 타이밍
+    const rBlink = setInterval(() => {
+      setRightBlink(true);
+      setTimeout(() => setRightBlink(false), 45 + Math.random() * 75);
+    }, 2100 + Math.random() * 1800);
+
+    // 동공 크기 갑자기 변화 — 확장/수축
+    const pulse = setInterval(() => {
+      if (Math.random() < 0.5) {
+        setLeftScale(0.55 + Math.random() * 0.9);
+        setTimeout(() => setLeftScale(1), 150 + Math.random() * 250);
+      }
+      if (Math.random() < 0.4) {
+        setRightScale(0.6 + Math.random() * 0.85);
+        setTimeout(() => setRightScale(1), 140 + Math.random() * 220);
+      }
+    }, 1200 + Math.random() * 1400);
+
+    return () => {
+      clearInterval(lMove); clearInterval(rMove);
+      clearInterval(lBlink); clearInterval(rBlink);
+      clearInterval(pulse);
+    };
   }, []);
-
-  const isShaking = shake || stressed;
 
   return (
     <div style={{ display:"flex", gap:40, justifyContent:"center", alignItems:"center", height:110, position:"relative", zIndex:5 }}>
 
-      {/* 왼쪽 눈 — 약간 아래 처짐 */}
+      {/* 왼쪽 눈 */}
       <motion.div
-        animate={ isShaking ? { x:[-2,3,-2,3,0], y:[1,-1,2,-1,0] } : {} }
-        transition={{ duration:0.35, repeat: isShaking ? Infinity : 0 }}
+        animate={stressed ? { x:[-4,5,-4,5,0], y:[2,-3,2,-3,0] } : {}}
+        transition={{ duration:0.22, repeat: stressed ? Infinity : 0 }}
         style={{ position:"relative", transform:"rotate(-6deg)" }}
       >
         <div style={{
-          width:68, height:74,  /* 약간 세로로 길게 — 처진 느낌 */
+          width:68, height:74,
           borderRadius:"44% 50% 50% 50%",
           background:"#FAF4E0",
           border:`4px solid ${INK}`,
           position:"relative", overflow:"hidden",
           boxShadow: active ? `0 0 24px ${ROSE}AA, inset 0 2px 8px rgba(0,0,0,0.1)` : `0 4px 16px rgba(0,0,0,0.5)`,
         }}>
-          {/* 동공 — 초점 약간 안 맞음 */}
           <motion.div
-            animate={{ x: leftX, y: leftY, scaleY: blink ? 0.1 : 1 }}
-            transition={{ duration:0.8, ease:"easeOut", scaleY:{ duration:0.07 } }}
-            style={{
-              position:"absolute", top:"50%", left:"50%",
-              width:34, height:34, borderRadius:"50%",
-              background: active ? ROSE : INK,
-              transform:"translate(-50%,-50%)",
-            }}
+            animate={{ x: leftX, y: leftY, scaleY: leftBlink ? 0.08 : 1, scale: leftScale }}
+            transition={{ x:{ duration:leftSpeed, ease:"easeOut" }, y:{ duration:leftSpeed, ease:"easeOut" }, scaleY:{ duration:0.06 }, scale:{ duration:0.16 } }}
+            style={{ position:"absolute", top:"50%", left:"50%", width:34, height:34, borderRadius:"50%", background: active ? ROSE : INK, transform:"translate(-50%,-50%)" }}
           >
             <div style={{ position:"absolute", top:5, left:6, width:10, height:10, borderRadius:"50%", background:"white", opacity:0.88 }}/>
             <div style={{ position:"absolute", top:13, right:4, width:5, height:5, borderRadius:"50%", background:"white", opacity:0.45 }}/>
           </motion.div>
-          {/* 눈꺼풀 덮개 */}
           <motion.div
-            animate={{ scaleY: blink ? 1 : 0 }}
-            transition={{ duration:0.07 }}
+            animate={{ scaleY: leftBlink ? 1 : 0 }}
+            transition={{ duration:0.06 }}
             style={{ position:"absolute", inset:0, background:INK, transformOrigin:"top center", borderRadius:"inherit" }}
           />
-          {/* 처진 눈 위 주름 */}
           <div style={{ position:"absolute", top:2, left:4, right:4, height:10, background:INK, opacity:0.15, borderRadius:"50% 50% 0 0" }}/>
         </div>
-        {/* 다크서클 */}
         <div style={{ position:"absolute", bottom:-8, left:"50%", transform:"translateX(-50%)", width:54, height:10, borderRadius:"50%", background:INK, opacity:0.22 }}/>
-        {/* 처진 눈꼬리 주름 */}
         <div style={{ position:"absolute", top:48, right:-8, width:16, height:3, background:INK, opacity:0.25, borderRadius:2, transform:"rotate(30deg)" }}/>
       </motion.div>
 
-      {/* 오른쪽 눈 — 약간 위로, 더 동그란 */}
+      {/* 오른쪽 눈 */}
       <motion.div
-        animate={ isShaking ? { x:[3,-2,3,-2,0], y:[-1,2,-1,2,0] } : {} }
-        transition={{ duration:0.35, delay:0.05, repeat: isShaking ? Infinity : 0 }}
+        animate={stressed ? { x:[5,-4,5,-4,0], y:[-3,2,-3,2,0] } : {}}
+        transition={{ duration:0.22, delay:0.09, repeat: stressed ? Infinity : 0 }}
         style={{ position:"relative", transform:"rotate(4deg)" }}
       >
         <div style={{
@@ -354,21 +376,16 @@ function UgegiEyes({ active, stressed }: { active: boolean; stressed: boolean })
           boxShadow: active ? `0 0 24px ${ROSE}AA, inset 0 2px 8px rgba(0,0,0,0.1)` : `0 4px 16px rgba(0,0,0,0.5)`,
         }}>
           <motion.div
-            animate={{ x: rightX, y: rightY, scaleY: blink ? 0.1 : 1 }}
-            transition={{ duration:0.7, ease:"easeOut", scaleY:{ duration:0.07 } }}
-            style={{
-              position:"absolute", top:"50%", left:"50%",
-              width:38, height:36, borderRadius:"48% 52% 50% 50%",  /* 약간 찌그러진 동공 */
-              background: active ? ROSE : INK,
-              transform:"translate(-50%,-50%)",
-            }}
+            animate={{ x: rightX, y: rightY, scaleY: rightBlink ? 0.08 : 1, scale: rightScale }}
+            transition={{ x:{ duration:rightSpeed, ease:"easeOut" }, y:{ duration:rightSpeed, ease:"easeOut" }, scaleY:{ duration:0.06 }, scale:{ duration:0.16 } }}
+            style={{ position:"absolute", top:"50%", left:"50%", width:38, height:36, borderRadius:"48% 52% 50% 50%", background: active ? ROSE : INK, transform:"translate(-50%,-50%)" }}
           >
             <div style={{ position:"absolute", top:6, left:8, width:11, height:11, borderRadius:"50%", background:"white", opacity:0.9 }}/>
             <div style={{ position:"absolute", bottom:5, right:5, width:5, height:5, borderRadius:"50%", background:"white", opacity:0.4 }}/>
           </motion.div>
           <motion.div
-            animate={{ scaleY: blink ? 1 : 0 }}
-            transition={{ duration:0.07 }}
+            animate={{ scaleY: rightBlink ? 1 : 0 }}
+            transition={{ duration:0.06 }}
             style={{ position:"absolute", inset:0, background:INK, transformOrigin:"top center", borderRadius:"inherit" }}
           />
         </div>
