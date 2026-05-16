@@ -13,10 +13,11 @@ interface Props {
   cardRef: RefObject<HTMLDivElement | null>;
   shareUrl: string;
   emotions: string[];
+  productName?: string;
   onRetry: () => void;
 }
 
-export default function ShareButtons({ cardRef, shareUrl, emotions, onRetry }: Props) {
+export default function ShareButtons({ cardRef, shareUrl, emotions, productName, onRetry }: Props) {
   const [saving, setSaving]   = useState(false);
   const [copied, setCopied]   = useState(false);
   const [imgBlob, setImgBlob] = useState<string | null>(null);
@@ -59,8 +60,10 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, onRetry }: P
     kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: `우걱이가 내 ${emotionStr} 이렇게 갈아버림ㅋㅋ`,
-        description: "결과 랜덤이라 매번 다름. 너도 파쇄해봐 — 오늘무드",
+        title: productName
+          ? `우걱이가 내 감정을 "${productName}"으로 만들어버림ㅋㅋ`
+          : `우걱이가 내 ${emotionStr} 이렇게 갈아버림ㅋㅋ`,
+        description: "나는 뭐 나오나 궁하면 해봐. 매번 달라 — 오늘무드",
         imageUrl: OG_IMAGE_URL,
         link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
       },

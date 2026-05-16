@@ -928,6 +928,241 @@ function Style9({ data, emotions }: { data: ResultData; emotions: string[] }) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   병맛 음식 SVG 일러스트 (그림판 낙서 감성)
+══════════════════════════════════════════════════════════ */
+
+// 눈: 공통 표정 요소
+const SadEyes = ({ cx=50, cy=40, size=8 }: {cx?:number;cy?:number;size?:number}) => (
+  <>
+    <ellipse cx={cx-size*1.8} cy={cy} rx={size*0.6} ry={size*0.8} fill={INK}/>
+    <circle cx={cx-size*1.8-size*0.2} cy={cy-size*0.3} r={size*0.25} fill="white" opacity="0.8"/>
+    <ellipse cx={cx+size*1.8} cy={cy+size*0.15} rx={size*0.55} ry={size*0.75} fill={INK}/>
+    <circle cx={cx+size*1.8+size*0.15} cy={cy-size*0.15} r={size*0.22} fill="white" opacity="0.8"/>
+  </>
+);
+
+// 멍한 입 (공통)
+const BlankMouth = ({ cx=50, cy=58 }: {cx?:number;cy?:number}) => (
+  <path d={`M${cx-8},${cy} Q${cx},${cy+3} ${cx+8},${cy}`} fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
+);
+
+// 눈물 한 방울
+const Teardrop = ({ x=30, y=55 }: {x?:number;y?:number}) => (
+  <path d={`M${x},${y} Q${x-4},${y+8} ${x},${y+12} Q${x+4},${y+8} ${x},${y}`} fill="#7AB8E8" opacity="0.7"/>
+);
+
+// 그림판 느낌 선 (찌그러진)
+const WobblyRect = ({ x=10,y=10,w=80,h=80,fill="#FAF8EE",stroke=INK,sw=2.5 }:{x?:number;y?:number;w?:number;h?:number;fill?:string;stroke?:string;sw?:number}) => (
+  <path d={`M${x+3},${y} L${x+w-2},${y+1} L${x+w+1},${y+h-2} L${x+1},${y+h+1} Z`}
+    fill={fill} stroke={stroke} strokeWidth={sw} strokeLinejoin="round"/>
+);
+
+// 바나나 (축 처진)
+const FoodBanana = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <path d="M25,70 Q30,20 65,15 Q80,12 82,22 Q72,18 60,22 Q30,35 28,75 Z"
+      fill="#FFE135" stroke={INK} strokeWidth="2.5" strokeLinejoin="round"/>
+    <path d="M25,70 Q28,75 30,72 Q32,68 28,65 Z" fill="#C8A020" stroke={INK} strokeWidth="2"/>
+    <path d="M82,22 Q88,18 85,25 Q80,22 82,22 Z" fill="#8A6010" stroke={INK} strokeWidth="1.5"/>
+    <SadEyes cx={52} cy={32} size={6}/>
+    <BlankMouth cx={52} cy={44}/>
+    <Teardrop x={43} y={38}/>
+    <path d="M10,75 Q15,72 20,75 Q25,78 30,75" fill="none" stroke="#A8A080" strokeWidth="1.2" opacity="0.4"/>
+  </svg>
+);
+
+// 감자칩 (부서진)
+const FoodChip = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <path d="M20,55 L45,25 L80,30 L85,60 L60,80 L25,75 Z"
+      fill="#F0C870" stroke={INK} strokeWidth="2.5" strokeLinejoin="round"/>
+    <path d="M45,25 L55,45 L80,30" fill="none" stroke={INK} strokeWidth="1.5" opacity="0.5"/>
+    <path d="M20,55 L40,58 L60,80" fill="none" stroke={INK} strokeWidth="1.5" opacity="0.4"/>
+    <line x1="55" y1="30" x2="72" y2="50" stroke="#A08040" strokeWidth="1.5" opacity="0.4"/>
+    <SadEyes cx={52} cy={48} size={5}/>
+    <path d="M44,60 Q52,57 60,60" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
+    <path d="M72,20 L78,14 L82,20 L78,18 Z" fill={INK} opacity="0.6"/>
+    <path d="M78,16 L82,10" stroke={INK} strokeWidth="1.5" opacity="0.5"/>
+  </svg>
+);
+
+// 딸기우유 (구겨진)
+const FoodMilk = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <WobblyRect x={28} y={15} w={44} h={68} fill="#FFF0F5" sw={2.5}/>
+    <rect x={31} y={15} width={38} height={12} fill="#FF8090" rx="1"/>
+    <path d="M38,10 Q50,6 62,10 L62,15 L38,15 Z" fill="#F8D8E0" stroke={INK} strokeWidth="2"/>
+    <text x="50" y="24" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">딸기</text>
+    <path d="M42,35 Q50,32 58,35" fill="none" stroke="#FF8090" strokeWidth="2.5" opacity="0.6"/>
+    <SadEyes cx={50} cy={50} size={6}/>
+    <BlankMouth cx={50} cy={62}/>
+    <Teardrop x={40} y={57}/>
+    <path d="M30,42 Q28,50 32,55" fill="none" stroke={INK} strokeWidth="1.5"/>
+    <circle cx={50} cy={29} r={3} fill="none" stroke="#FF8090" strokeWidth="1.5" strokeDasharray="2,2"/>
+  </svg>
+);
+
+// 삼각김밥 (눈물 흘리는)
+const FoodRiceBall = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <path d="M50,12 L84,78 L16,78 Z"
+      fill="#FAF8F2" stroke={INK} strokeWidth="2.5" strokeLinejoin="round"/>
+    <path d="M50,12 L84,78" stroke="#E8E0D0" strokeWidth="1" opacity="0.4"/>
+    <rect x={28} y={68} width={44} height={12} fill="#1A1410" rx="1"/>
+    <text x="50" y="78" textAnchor="middle" fontSize="6.5" fill="#E8D8B0">참치</text>
+    <SadEyes cx={50} cy={45} size={6}/>
+    <path d="M43,57 Q50,61 57,57" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
+    <Teardrop x={36} y={52}/>
+    <Teardrop x={62} y={50}/>
+    <path d="M35,30 Q38,26 42,30" fill="none" stroke={INK} strokeWidth="1.5" opacity="0.3"/>
+  </svg>
+);
+
+// 식빵 (멍한)
+const FoodBread = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <path d="M18,35 Q18,18 50,15 Q82,18 82,35 L80,82 L20,82 Z"
+      fill="#F0C878" stroke={INK} strokeWidth="2.5" strokeLinejoin="round"/>
+    <path d="M20,36 Q50,28 80,36 L80,82 L20,82 Z" fill="#F5D890" stroke={INK} strokeWidth="1.5"/>
+    <path d="M18,35 Q18,18 50,15 Q82,18 82,35" fill="#E8B860" stroke={INK} strokeWidth="2.5"/>
+    <SadEyes cx={50} cy={52} size={6}/>
+    <path d="M42,65 L58,65" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
+    <path d="M28,40 Q35,38 42,40" fill="none" stroke="#D4A840" strokeWidth="1.2" opacity="0.4"/>
+    <path d="M58,40 Q65,38 72,40" fill="none" stroke="#D4A840" strokeWidth="1.2" opacity="0.4"/>
+    <text x="50" y="80" textAnchor="middle" fontSize="6" fill="#B89040" opacity="0.5">식</text>
+  </svg>
+);
+
+// 젤리/구미 (흐물흐물)
+const FoodJelly = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <path d="M20,45 Q18,20 50,15 Q82,20 80,45 Q82,80 50,85 Q18,80 20,45 Z"
+      fill="#C8A8E8" stroke={INK} strokeWidth="2.5" strokeLinejoin="round"/>
+    <path d="M28,35 Q50,28 72,35" fill="none" stroke="white" strokeWidth="3" opacity="0.35"/>
+    <SadEyes cx={50} cy={46} size={7}/>
+    <path d="M40,62 Q50,68 60,62" fill="none" stroke={INK} strokeWidth="2.5" strokeLinecap="round"/>
+    <Teardrop x={38} y={53}/>
+    <circle cx={75} cy={25} r={5} fill="#E0C0F0" stroke={INK} strokeWidth="1.5"/>
+    <path d="M48,15 Q52,10 56,15" fill="none" stroke={INK} strokeWidth="1.8"/>
+  </svg>
+);
+
+// 쿠키 (금간)
+const FoodCookie = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="36" fill="#C48840" stroke={INK} strokeWidth="2.5"/>
+    <circle cx="50" cy="50" r="36" fill="none" stroke="#A87030" strokeWidth="1" strokeDasharray="4,3"/>
+    <circle cx="38" cy="40" r="4" fill="#7A5020"/>
+    <circle cx="60" cy="38" r="3.5" fill="#7A5020"/>
+    <circle cx="44" cy="58" r="3" fill="#7A5020"/>
+    <circle cx="62" cy="60" r="4" fill="#7A5020"/>
+    <path d="M50,20 L52,55 L48,80" stroke={INK} strokeWidth="2" opacity="0.4"/>
+    <SadEyes cx={50} cy={47} size={5}/>
+    <BlankMouth cx={50} cy={57}/>
+    <path d="M35,35 L30,28" stroke={INK} strokeWidth="1.5" opacity="0.35"/>
+  </svg>
+);
+
+const FOOD_SVGS: Record<string, () => React.ReactElement> = {
+  banana:  FoodBanana,
+  chip:    FoodChip,
+  milk:    FoodMilk,
+  riceball:FoodRiceBall,
+  bread:   FoodBread,
+  jelly:   FoodJelly,
+  cookie:  FoodCookie,
+  pen:     FoodBread, // fallback
+  cheese:  FoodJelly, // fallback
+};
+
+/* ══════════════════════════════════════════════════════════
+   스타일 12 — 오늘의 결과물 (감정 → 이상한 사물 변환)
+══════════════════════════════════════════════════════════ */
+function Style12({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, productName, productEmoji, productType, productDescription,
+          machineComment, warningMessage, errorCode, bizarreStats, stamp } = data;
+  const FoodSVG = FOOD_SVGS[productType] ?? FoodBread;
+  return (
+    <div style={{ width:W, background:"#FAF8F0", fontFamily:MONO, color:INK, position:"relative",
+      border:`3px solid ${INK}`, boxShadow:`6px 6px 0 ${INK}` }}>
+
+      {/* 헤더 */}
+      <div style={{ background:INK, padding:"10px 16px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div>
+          <p style={{ fontSize:8, color:"#5A5248", letterSpacing:"0.14em", marginBottom:2 }}>UGEGI OUTPUT / {date}</p>
+          <p style={{ fontSize:12, fontWeight:700, color:"#FAF8F0" }}>오늘의 결과물</p>
+        </div>
+        <p style={{ fontSize:8, color:"#5A5248", fontFamily:"monospace" }}>No.{serial}</p>
+      </div>
+
+      <div style={{ padding:"16px 18px 14px", position:"relative" }}>
+
+        {/* 경고 배너 */}
+        <div style={{ background:"#FFF3CD", border:"2px solid #CC9900", padding:"5px 10px", marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ fontSize:11 }}>⚠</span>
+          <p style={{ fontSize:10, color:"#AA7700", fontWeight:700 }}>{warningMessage.replace("⚠ ", "")}</p>
+        </div>
+
+        {/* 투입 감정 */}
+        <p style={{ fontSize:8, color:"#A89880", letterSpacing:"0.08em", marginBottom:5 }}>투입 감정:</p>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:14 }}>
+          {emotions.map(e=>(
+            <span key={e} style={{ fontSize:11, background:`${ROSE}15`, color:ROSE, padding:"2px 8px", border:`1px solid ${ROSE}40`, fontWeight:700 }}>{e}</span>
+          ))}
+        </div>
+
+        {/* 결과물 — 핵심 */}
+        <div style={{ textAlign:"center", padding:"14px 12px", background:"#FDFBF0", border:`2.5px solid ${INK}`, marginBottom:12, position:"relative" }}>
+          {/* 테이프 */}
+          <div style={{ position:"absolute", top:-8, left:"50%", transform:"translateX(-50%)", width:56, height:13, background:"rgba(212,188,144,0.6)", borderRadius:2 }}/>
+          <p style={{ fontSize:8, color:"#A89880", letterSpacing:"0.12em", marginBottom:6 }}>[ 파쇄 결과물 ]</p>
+          {/* SVG 일러스트 */}
+          <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
+            <FoodSVG />
+          </div>
+          <p style={{ fontSize:20, fontWeight:900, color:INK, lineHeight:1.2, marginBottom:4 }}>
+            {productEmoji} {productName}
+          </p>
+          <p style={{ fontSize:11, color:"#6A6258", fontFamily:"var(--font-serif)", fontStyle:"italic", lineHeight:1.6 }}>
+            &ldquo;{productDescription}&rdquo;
+          </p>
+        </div>
+
+        {/* 우걱이 코멘트 */}
+        <div style={{ background:`${INK}06`, border:`1px dashed ${INK}30`, padding:"8px 12px", marginBottom:10 }}>
+          <p style={{ fontSize:8, color:"#A89880", letterSpacing:"0.1em", marginBottom:4 }}>우걱이 코멘트:</p>
+          <p style={{ fontSize:12, fontFamily:"var(--font-serif)", fontStyle:"italic", color:INK, lineHeight:1.6 }}>
+            &ldquo;{machineComment}&rdquo;
+          </p>
+        </div>
+
+        {/* 이상한 수치 */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"4px 12px", marginBottom:10 }}>
+          {bizarreStats.slice(0,4).map(s=>(
+            <div key={s.label} style={{ display:"flex", justifyContent:"space-between", fontSize:10, borderBottom:`1px dashed ${INK}20`, paddingBottom:3 }}>
+              <span style={{ color:"#8A8070" }}>{s.label}</span>
+              <span style={{ fontWeight:700, color: s.value.includes("%")&&parseInt(s.value)>70 ? ROSE : INK }}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 하단 */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", borderTop:`1px solid ${INK}20`, paddingTop:8 }}>
+          <p style={{ fontSize:9, color:"#A89880" }}>AI가 내 감정 먹다가 이게 나옴 ㅋㅋ</p>
+          <div style={{ border:`1.5px solid ${ROSE}`, padding:"3px 8px", transform:"rotate(5deg)", flexShrink:0 }}>
+            <p style={{ fontSize:8, color:ROSE, fontWeight:700 }}>{stamp}</p>
+          </div>
+        </div>
+
+        <p style={{ fontSize:7, color:"#C4BAB0", textAlign:"center", marginTop:6, letterSpacing:"0.08em" }}>
+          {errorCode} · onulmode.vercel.app
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
    스타일 10 — 멘탈 응급 알림창 (카카오톡/시스템 알림 감성)
 ══════════════════════════════════════════════════════════ */
 function Style10({ data, emotions }: { data: ResultData; emotions: string[] }) {
@@ -1113,6 +1348,7 @@ const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =
       {style === 9  && <Style9  data={data} emotions={emotions} />}
       {style === 10 && <Style10 data={data} emotions={emotions} />}
       {style === 11 && <Style11 data={data} emotions={emotions} />}
+      {style === 12 && <Style12 data={data} emotions={emotions} />}
     </div>
   );
 });

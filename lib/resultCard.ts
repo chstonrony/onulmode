@@ -550,6 +550,109 @@ const RESULT_GRADES = [
   "완전 빠각",
 ] as const;
 
+// ─── 결과물 형용사 (50개) ────────────────────────────────
+const PRODUCT_ADJECTIVES = [
+  "눅눅한", "사회생활 먹은", "울컥한", "꾸깃한", "새벽감성",
+  "멘탈 바삭", "혼자 삭힌", "눈물맛", "버티다 부서진", "감정 과부하",
+  "눌린", "절여진", "우울 흡수한", "인간관계 맛", "멘탈 와장창",
+  "참다가 퍽", "번아웃 직전", "오래 묵은", "발효된", "으깨진",
+  "흐물흐물한", "찌그러진", "비린 감정 먹은", "억울함에 절인",
+  "서운함 코팅된", "피곤함이 배어든", "쪼그라든", "굳어버린",
+  "무기력이 스민", "곰팡이 직전의", "퇴근 직전의", "헛헛한",
+  "텅 빈", "가라앉은", "꽉꽉 눌린", "짓이겨진", "탄 냄새 나는",
+  "산산조각난", "참은 만큼 묵은", "소외감 흡수한", "삐걱거리는",
+  "쪄든", "묽어진", "기름진", "눅진눅진한", "무너진",
+  "비가 온 날의", "흘린 눈물 먹은", "쪼그라들다 터진", "세상에 치인",
+] as const;
+
+// ─── 결과물 음식/사물 (50개) ─────────────────────────────
+const PRODUCT_FOODS = [
+  { name: "오징어칩 바나나",        emoji: "🍌", type: "banana" },
+  { name: "딸기우유",               emoji: "🥛", type: "milk" },
+  { name: "콘치즈",                 emoji: "🧀", type: "cheese" },
+  { name: "형광펜",                 emoji: "🖊", type: "pen" },
+  { name: "삼각김밥",               emoji: "🍙", type: "riceball" },
+  { name: "감자칩",                 emoji: "🥔", type: "chip" },
+  { name: "마카롱",                 emoji: "🍪", type: "cookie" },
+  { name: "초코송이",               emoji: "🍫", type: "cookie" },
+  { name: "새우깡",                 emoji: "🦐", type: "chip" },
+  { name: "붕어빵",                 emoji: "🐟", type: "bread" },
+  { name: "참치김밥",               emoji: "🍱", type: "riceball" },
+  { name: "요구르트",               emoji: "🥛", type: "milk" },
+  { name: "식빵",                   emoji: "🍞", type: "bread" },
+  { name: "젤리",                   emoji: "🍬", type: "jelly" },
+  { name: "요거트",                 emoji: "🥛", type: "milk" },
+  { name: "편의점 핫도그",          emoji: "🌭", type: "bread" },
+  { name: "떡볶이",                 emoji: "🍢", type: "jelly" },
+  { name: "도넛",                   emoji: "🍩", type: "cookie" },
+  { name: "구미젤리",               emoji: "🐻", type: "jelly" },
+  { name: "팝콘",                   emoji: "🍿", type: "chip" },
+  { name: "다 녹은 아이스크림",     emoji: "🍦", type: "milk" },
+  { name: "혼자 먹는 치킨 한 조각", emoji: "🍗", type: "bread" },
+  { name: "자판기 커피",            emoji: "☕", type: "milk" },
+  { name: "눌러붙은 라면",          emoji: "🍜", type: "bread" },
+  { name: "식어버린 피자",          emoji: "🍕", type: "bread" },
+  { name: "찌그러진 캔",            emoji: "🥤", type: "milk" },
+  { name: "반만 먹은 샌드위치",     emoji: "🥪", type: "bread" },
+  { name: "끝물 딸기",              emoji: "🍓", type: "banana" },
+  { name: "상한 것 같은 바나나",    emoji: "🍌", type: "banana" },
+  { name: "먹다 남긴 아이스크림",   emoji: "🍨", type: "milk" },
+  { name: "혼자 마신 맥주캔",       emoji: "🍺", type: "milk" },
+  { name: "구겨진 봉지과자",        emoji: "🛍", type: "chip" },
+  { name: "호떡",                   emoji: "🥞", type: "bread" },
+  { name: "묵은지",                 emoji: "🥬", type: "jelly" },
+  { name: "쿠키",                   emoji: "🍪", type: "cookie" },
+  { name: "크래커",                 emoji: "🫙", type: "chip" },
+  { name: "솜사탕",                 emoji: "🍭", type: "jelly" },
+  { name: "소시지",                 emoji: "🌭", type: "bread" },
+  { name: "타코야끼",               emoji: "🐙", type: "jelly" },
+  { name: "컵라면",                 emoji: "🍜", type: "bread" },
+  { name: "참깨빵",                 emoji: "🍔", type: "bread" },
+  { name: "감자전",                 emoji: "🥔", type: "chip" },
+  { name: "케이크 한 조각",         emoji: "🎂", type: "cookie" },
+  { name: "찐빵",                   emoji: "🥟", type: "bread" },
+  { name: "오레오",                 emoji: "🍪", type: "cookie" },
+  { name: "비스킷",                 emoji: "🫙", type: "chip" },
+  { name: "망고젤리",               emoji: "🥭", type: "jelly" },
+  { name: "복숭아 통조림",          emoji: "🍑", type: "jelly" },
+  { name: "탕후루",                 emoji: "🍡", type: "jelly" },
+  { name: "왕새우과자",             emoji: "🦐", type: "chip" },
+] as const;
+
+// ─── 결과물 설명 (50개) ──────────────────────────────────
+const PRODUCT_DESCRIPTIONS = [
+  "혼자 참다가 식감이 이상해짐.",
+  "사회생활 데미지로 변형됨.",
+  "우걱이가 먹다가 뱉어낸 것.",
+  "감정 파쇄 후 응고된 결과물.",
+  "오래 묵힌 감정이 발효되어 나옴.",
+  "눈물 성분이 다수 검출됨.",
+  "버티다가 식감이 바뀜.",
+  "인간관계에 절여진 흔적 있음.",
+  "멘탈 과부하로 형태가 바뀜.",
+  "서운함 코팅이 두껍게 쌓임.",
+  "혼자 삭히다가 이렇게 됨.",
+  "우걱이도 이건 좀 이상하다고 함.",
+  "감정 파쇄 부산물임. 먹지 말것.",
+  "생각보다 오래 참은 흔적 있음.",
+  "억울함에 젤라틴화됨.",
+  "새벽에 혼자 있다 보면 이렇게 됨.",
+  "괜찮은 척 하다가 무게가 변함.",
+  "말 못 한 것들이 굳어서 나옴.",
+  "사회생활 흔적이 깊이 배어있음.",
+  "AI가 처리하다가 이 형태로 나옴.",
+  "꾸깃꾸깃 접어뒀다가 펼쳤더니 이 모양.",
+  "감정이 수분을 잃어 이렇게 됨.",
+  "우걱이 위장에서 2시간 숙성 후 배출됨.",
+  "감정 CPU 과부하로 형태 붕괴.",
+  "울컥 성분이 과도하게 섞임.",
+  "혼자 감당하다 보니 이렇게 굳음.",
+  "참을수록 무거워지더니 이렇게 됨.",
+  "눈물로 희석된 후 재응고됨.",
+  "번아웃 직전 감정의 잔여물.",
+  "오늘의 감정 총합이 이 형태로 나옴.",
+] as const;
+
 // ─── 우걱이 행동 상태 (20개, 애니메이션 용) ──────────────
 export const UGEGI_BEHAVIORS = [
   "우걱우걱 씹는 중",
@@ -586,7 +689,7 @@ export interface ResultData {
   grade: { text: string; sub: string };
   prescription: string;
   seed: number;
-  cardStyle: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+  cardStyle: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   stamp: string;
   ugMemo: string;
   resultGrade: string;
@@ -597,9 +700,13 @@ export interface ResultData {
   warningMessage: string;
   retryButtonText: string;
   closeButtonText: string;
+  productName: string;
+  productEmoji: string;
+  productType: string;
+  productDescription: string;
 }
 
-const CARD_STYLES_POOL = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11] as const;
+const CARD_STYLES_POOL = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12] as const;
 
 export function generateResult(emotions: string[], seed?: number): ResultData {
   const s   = seed ?? (Date.now() % 999983);
@@ -617,7 +724,10 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
   const cardStyle = (rng() < 0.12
     ? 6
     : CARD_STYLES_POOL[Math.floor(rng() * CARD_STYLES_POOL.length)]
-  ) as 1|2|3|4|5|6|7|8|9|10|11;
+  ) as 1|2|3|4|5|6|7|8|9|10|11|12;
+
+  const food = pick(PRODUCT_FOODS, rng);
+  const adj  = pick(PRODUCT_ADJECTIVES, rng);
 
   return {
     date, serial, wasteCode,
@@ -635,10 +745,14 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     resultGrade:    pick(RESULT_GRADES,       rng),
     resultTitle:    pick(RESULT_TITLES,       rng),
     ugegiBehavior:  pick(UGEGI_BEHAVIORS,     rng),
-    errorCode:      pick(ERROR_CODES,         rng),
-    warningMessage: pick(WARNING_MESSAGES,    rng),
-    retryButtonText: pick(BUTTON_RETRY_TEXTS, rng),
-    closeButtonText: pick(BUTTON_CLOSE_TEXTS, rng),
+    errorCode:      pick(ERROR_CODES,          rng),
+    warningMessage: pick(WARNING_MESSAGES,     rng),
+    retryButtonText: pick(BUTTON_RETRY_TEXTS,  rng),
+    closeButtonText: pick(BUTTON_CLOSE_TEXTS,  rng),
+    productName:    `${adj} ${food.name}`,
+    productEmoji:   food.emoji,
+    productType:    food.type,
+    productDescription: pick(PRODUCT_DESCRIPTIONS, rng),
     bizarreStats,
   };
 }

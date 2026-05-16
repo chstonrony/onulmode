@@ -66,13 +66,29 @@ function ResultContent() {
           style={{ fontSize: 9, color: ROSE, fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 4 }}>
           ERROR: {data.errorCode}
         </motion.p>
-        <h1 style={{ fontSize: 24, fontWeight: 900, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.25 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.25 }}>
           {data.resultTitle}
         </h1>
+        {/* 오늘의 결과물 — 핵심 바이럴 요소 */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          style={{ margin: "12px auto 0", padding: "12px 16px", background: INK, borderRadius: 3, maxWidth: 300, textAlign: "center" }}
+        >
+          <p style={{ fontSize: 9, color: "#6A6258", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 4 }}>
+            오늘의 결과물
+          </p>
+          <p style={{ fontSize: 20, fontWeight: 900, color: "#FAF8F0", lineHeight: 1.2 }}>
+            {data.productEmoji} {data.productName}
+          </p>
+          <p style={{ fontSize: 10, color: "#7A7060", fontFamily: "var(--font-serif)", marginTop: 4, fontStyle: "italic" }}>
+            {data.productDescription}
+          </p>
+        </motion.div>
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          style={{ fontSize: 11, color: ROSE, marginTop: 8, fontFamily: "monospace", letterSpacing: "0.06em" }}>
+          transition={{ delay: 0.4 }}
+          style={{ fontSize: 10, color: ROSE, marginTop: 8, fontFamily: "monospace", letterSpacing: "0.06em" }}>
           {data.warningMessage}
         </motion.p>
       </motion.div>
@@ -97,6 +113,7 @@ function ResultContent() {
           cardRef={cardRef}
           shareUrl={shareUrl}
           emotions={emotions}
+          productName={data.productName}
           onRetry={handleRetry}
         />
       </motion.div>
@@ -123,8 +140,8 @@ function ResultContent() {
             ✦ 친구한테 공유하면?
           </p>
           <p style={{ fontSize: 13, color: INK, lineHeight: 1.7, fontFamily: "var(--font-serif)" }}>
-            결과지가 <strong>11종 랜덤</strong>이라 친구 결과가 달라요.<br/>
-            &ldquo;이거 나온 거 봐 ㅋㅋ 너는 뭐 나와?&rdquo;
+            결과물이 매번 다르게 나와요.<br/>
+            &ldquo;나 오늘 {data.productName} 나옴ㅋㅋ 너는?&rdquo;
           </p>
           {/* 말풍선 꼬리 */}
           <div style={{ position: "absolute", bottom: -8, left: 28, width: 0, height: 0, borderLeft: "8px solid transparent", borderRight: "8px solid transparent", borderTop: "8px solid #D8CEC0" }} />
