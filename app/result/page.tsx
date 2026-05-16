@@ -40,7 +40,9 @@ function ResultContent() {
   }
 
   return (
-    <div style={{ background: "#efe3cf", minHeight: "100vh", padding: "0 0 80px" }}>
+    <div style={{ background: "#efe3cf", minHeight: "100vh", padding: "0 0 80px", position: "relative" }}>
+      {/* CRT 스캔라인 오버레이 */}
+      <div style={{ position: "fixed", inset: 0, backgroundImage: "repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px)", pointerEvents: "none", zIndex: 100 }} />
 
       {/* 헤더 */}
       <div style={{ padding: "20px 20px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -58,18 +60,21 @@ function ResultContent() {
         transition={{ duration: 0.4 }}
         style={{ padding: "18px 20px 0", textAlign: "center" }}
       >
-        <p style={{ fontSize: 9, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 4 }}>
-          {data.errorCode}
-        </p>
-        <p style={{ fontSize: 10, color: ROSE, fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 6 }}>
-          ■ EMOTIONAL WASTE DISPOSAL COMPLETE
-        </p>
-        <h1 style={{ fontSize: 22, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.3 }}>
+        <motion.p
+          animate={{ opacity: [1, 0.6, 1, 0.8, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          style={{ fontSize: 9, color: ROSE, fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 4 }}>
+          ERROR: {data.errorCode}
+        </motion.p>
+        <h1 style={{ fontSize: 24, fontWeight: 900, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.25 }}>
           {data.resultTitle}
         </h1>
-        <p style={{ fontSize: 11, color: "#A89880", marginTop: 6, fontFamily: "monospace" }}>
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          style={{ fontSize: 11, color: ROSE, marginTop: 8, fontFamily: "monospace", letterSpacing: "0.06em" }}>
           {data.warningMessage}
-        </p>
+        </motion.p>
       </motion.div>
 
       {/* 카드 */}

@@ -7,18 +7,57 @@ import Link from "next/link";
 import { buildResultUrl } from "@/lib/resultCard";
 
 type Mode = "chew" | "grind" | "burn" | "press";
-type Phase = "write" | "animating" | "done";
+type Phase = "write" | "animating" | "loading" | "done";
 
 const ROSE = "#C8607A";
 const INK  = "#1A1410";
 
-// placeholder 랜덤 풀
+// ── 병맛 로딩 메시지 풀 (감정 처리 중 보여줄 것들) ──
+const LOADING_MSGS = [
+  "감정 불러오는 중...",
+  "눈물 압축 중...",
+  "멘탈 조각 수집 중...",
+  "우걱이 출동 중...",
+  "AI 당황 중...",
+  "사회생활 흔적 수집 중...",
+  "괜찮은 척 해제 중...",
+  "감정 CPU 과부하...",
+  "울컥.dll 실행 중...",
+  "비린맛 분석 중...",
+  "감정 곰팡이 감지 중...",
+  "혼자 삭힌 것들 추출 중...",
+  "버티기 모드 해제 중...",
+  "마음 삐걱 소리 측정 중...",
+  "감정 발효도 체크 중...",
+  "묵은 감정 채취 중...",
+  "AI도 잠시 당황 중...",
+  "인간관계.exe 로드 중...",
+  "괜찮음 거짓말 탐지 중...",
+  "감정 잔류물 처리 중...",
+  "억울함 계량 중...",
+  "서운함 발효도 측정 중...",
+  "말 못한 것들 추출 중...",
+  "멘탈 수분 함량 체크 중...",
+  "우걱이 위장 준비 중...",
+  "감정 바삭도 측정 중...",
+  "사회생활 데미지 계산 중...",
+  "눈물 농도 분석 중...",
+  "자책 루프 종료 중...",
+  "우걱이가 마지막으로 씹는 중...",
+] as const;
+
+// placeholder 랜덤 풀 (확장)
 const PLACEHOLDERS = [
   "여기에 감정 투입…\n안 적어도 됨. 근데 적으면 더 잘 씹힘.",
   "오늘 뭐 때문에 꾸역꾸역 버텼음?\n\n다 쏟아내도 됨. 어차피 우걱이가 씹어먹을 거임.",
   "질긴 감정은 처리 오래 걸림.\n그래도 일단 투입해봐.",
   "우걱이가 읽는 중…\n\n뭐든 괜찮음. 어차피 갈아버릴 거니까.",
   "오늘 뭐가 제일 걸렸음?\n\n솔직하게 써도 됨. 우걱이는 판단 안 함. 그냥 씹어먹음.",
+  "킹받는 거 있으면 다 써.\n우걱이가 대신 빡쳐줄 수 있음.",
+  "오늘 하루 어땠음?\n말 못 한 것들 있으면 여기에 버려.",
+  "지금 마음이 좀 복잡함?\n\n복잡한 채로 던져도 됨. 우걱이가 알아서 갈아냄.",
+  "하고 싶은 말 있는데 못 했음?\n\n여기서 하면 됨. 우걱이만 들음. 그리고 씹음.",
+  "오늘 참은 게 있음?\n\n얼마나 참았는지 모르겠지만 다 써도 됨.",
 ];
 
 // 상황별 표정 이모지
@@ -195,11 +234,26 @@ const MODES: { id: Mode; label: string; sub: string; bg: string; rot: number }[]
 ];
 
 const RESULTS = [
-  { big: "빠각 완료.",     sub: "우걱이가 다 씹어먹었음." },
-  { big: "갈렸음.",        sub: "생각보다 빨리 처리됨." },
-  { big: "처리 완료.",     sub: "오래 묵혔던 거 맞지?" },
-  { big: "삭혀버렸음.",    sub: "찌꺼기 좀 남았는데 아무튼 완료." },
-  { big: "우걱우걱 완료.", sub: "이빨에 좀 꼈는데 억지로 처리함." },
+  { big: "빠각 완료.",          sub: "우걱이가 다 씹어먹었음." },
+  { big: "갈렸음.",             sub: "생각보다 빨리 처리됨." },
+  { big: "처리 완료.",          sub: "오래 묵혔던 거 맞지?" },
+  { big: "삭혀버렸음.",         sub: "찌꺼기 좀 남았는데 아무튼 완료." },
+  { big: "우걱우걱 완료.",      sub: "이빨에 좀 꼈는데 억지로 처리함." },
+  { big: "냠.",                 sub: "생각보다 맛있었음. (좀 맵긴 했음)" },
+  { big: "꾸깃 완료.",          sub: "형태는 없어졌는데 아무튼 처리됨." },
+  { big: "와장창 완료.",        sub: "박살났는데 잘 됐음." },
+  { big: "압축 완료.",          sub: "감정 용량: 0mb (일단은)" },
+  { big: "소화됨.",             sub: "우걱이 위장이 꽤 강함." },
+  { big: "분해 완료.",          sub: "분자 단위로 갈렸음." },
+  { big: "이제 없음.",          sub: "어디 갔는지는 모름. 아무튼 없음." },
+  { big: "비워짐.",             sub: "잠깐이라도 가볍겠지." },
+  { big: "폭파 완료.",          sub: "아주 시원하게 처리됨." },
+  { big: "우걱이 만족.",        sub: "맛있다고 함. (비린 맛 났다고도 함)" },
+  { big: "증발됨.",             sub: "흔적도 없이. 잘 됐음." },
+  { big: "빠각빠각 완료.",      sub: "소리가 꽤 컸음. 우걱이 만족." },
+  { big: "처리 완료 (잠정).",   sub: "찌꺼기 조금 있는데 내일 또 와도 됨." },
+  { big: "전소됨.",             sub: "태웠음. 재도 없음." },
+  { big: "쪼개짐.",             sub: "산산조각이지만 처리됨." },
 ];
 
 /* ── 삐뚤삐뚤 이빨 SVG ── */
@@ -453,6 +507,7 @@ function ReleaseContent() {
 
   const [soHwaStop, setSoHwaStop]   = useState(false);
   const [soHwaMsg, setSoHwaMsg]     = useState("");
+  const [loadingMsg, setLoadingMsg] = useState("");
 
   const canFeed   = text.trim().length > 0 && mode !== null;
   const stressed  = text.length > 80;
@@ -477,14 +532,27 @@ function ReleaseContent() {
     setShowP(true);
     setTimeout(()=>setShowP(false), 1600);
 
-    // 18% 확률로 소화 멈춤 이벤트
-    if (Math.random() < 0.18) {
-      const msg = SOHWA_MSGS[Math.floor(Math.random() * SOHWA_MSGS.length)];
-      setSoHwaMsg(msg);
-      setTimeout(() => setSoHwaStop(true), 800);
-    } else {
-      setPhase("done");
-    }
+    // 병맛 로딩 시퀀스 — 랜덤 메시지 3개 순환 후 done
+    setPhase("loading");
+    const shuffled = [...LOADING_MSGS].sort(() => Math.random() - 0.5).slice(0, 4);
+    let i = 0;
+    setLoadingMsg(shuffled[0]);
+    const msgInterval = setInterval(() => {
+      i++;
+      if (i < shuffled.length) {
+        setLoadingMsg(shuffled[i]);
+      } else {
+        clearInterval(msgInterval);
+        // 18% 확률로 소화 멈춤 이벤트
+        if (Math.random() < 0.18) {
+          const msg = SOHWA_MSGS[Math.floor(Math.random() * SOHWA_MSGS.length)];
+          setSoHwaMsg(msg);
+          setSoHwaStop(true);
+        } else {
+          setPhase("done");
+        }
+      }
+    }, 480);
   };
 
   const reset = () => { setPhase("write"); setText(""); setMode(null); setSoHwaStop(false); };
@@ -671,7 +739,7 @@ function ReleaseContent() {
                 whileHover={canFeed?{ rotate:[-0.5,0.5,-0.5,0], x:[0,2,-2,0] }:{}}
                 transition={{ duration:0.4 }}
                 whileTap={canFeed?{ scale:0.96 }:{}}
-                onClick={handleFeed} disabled={!canFeed||phase==="animating"}
+                onClick={handleFeed} disabled={!canFeed||phase==="animating"||phase==="loading"}
                 style={{
                   width:"100%", height:54,
                   background:canFeed?ROSE:"#E0D8CC",
@@ -689,7 +757,7 @@ function ReleaseContent() {
                     <rect x="12" y="0" width="3" height="9" rx="1"/>
                   </svg>
                 )}
-                {phase==="animating" ? "우걱이 씹는 중…" : canFeed ? "우걱이한테 던지기 →" : "오늘 감정 투입 예정…"}
+                {phase==="animating"||phase==="loading" ? "우걱이 처리 중…" : canFeed ? "우걱이한테 던지기 →" : "오늘 감정 투입 예정…"}
               </motion.button>
 
               <div style={{ display:"flex", gap:8 }}>
@@ -699,6 +767,36 @@ function ReleaseContent() {
                 <Link href="/archive" style={{ flex:1, height:44, background:"#FAF8F2", border:"1.5px solid #C8BEB0", borderRadius:2, fontSize:12, fontFamily:"var(--font-serif)", color:"#7A7260", display:"flex", alignItems:"center", justifyContent:"center", textDecoration:"none" }}>
                   파쇄함 보기
                 </Link>
+              </div>
+            </motion.div>
+          )}
+
+          {/* 병맛 로딩 시퀀스 */}
+          {phase === "loading" && (
+            <motion.div key="loading"
+              initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              style={{ display:"flex", flexDirection:"column", alignItems:"center", paddingTop:40, paddingBottom:40 }}>
+              <div style={{ background:"#1A1410", border:`2px solid ${ROSE}`, borderRadius:3, padding:"28px 32px", width:"100%", maxWidth:320, textAlign:"center", boxShadow:`0 0 40px ${ROSE}33` }}>
+                {/* 우걱이 씹는 애니메이션 도트 */}
+                <div style={{ display:"flex", justifyContent:"center", gap:6, marginBottom:18 }}>
+                  {[0,1,2,3,4].map(i=>(
+                    <motion.div key={i}
+                      animate={{ scaleY:[1,2.5,1], opacity:[0.4,1,0.4] }}
+                      transition={{ duration:0.5, delay:i*0.1, repeat:Infinity }}
+                      style={{ width:5, height:16, background:ROSE, borderRadius:2 }}
+                    />
+                  ))}
+                </div>
+                <motion.p
+                  key={loadingMsg}
+                  initial={{ opacity:0, y:4 }}
+                  animate={{ opacity:1, y:0 }}
+                  style={{ fontSize:13, fontFamily:"monospace", color:"#F5EFE0", letterSpacing:"0.04em", marginBottom:8, lineHeight:1.6 }}>
+                  {loadingMsg}
+                </motion.p>
+                <p style={{ fontSize:9, color:"#5A5248", fontFamily:"monospace", letterSpacing:"0.1em" }}>
+                  UGEGI PROCESSING... PLEASE WAIT
+                </p>
               </div>
             </motion.div>
           )}
