@@ -20,10 +20,10 @@ export const translations = {
       slogan:  "temporary emotional release space",
     },
     home: {
-      headline1: "당신의 감정을",
-      headline2: "안전하게 폐기해드립니다.",
+      headline1: "오늘의 감정을",
+      headline2: "우걱우걱 갈아드립니다.",
       cta:       "감정 지금 파쇄하기",
-      caption:   "※ 파쇄된 감정은 복구되지 않습니다.",
+      caption:   "AI 감정 파쇄 서비스 — 파쇄된 감정은 복구되지 않습니다.",
       emotionLabel: "오늘 버릴",
       emotionWord:  "감정",
       emotionSuffix:"고르기",

@@ -666,6 +666,262 @@ function Style6({ data, emotions }: { data: ResultData; emotions: string[] }) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   스타일 7 — 감정 영수증
+══════════════════════════════════════════════════════════ */
+function Style7({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, ingredients, resultGrade, resultTitle, ugMemo, bizarreStats, prescription, intensity } = data;
+  return (
+    <div style={{ width:W, background:"#1A1410", fontFamily:MONO, color:"#F5EFE0", position:"relative",
+      border:`2px solid #3A3028`, boxShadow:`0 0 0 1px #2A2018` }}>
+
+      {/* 영수증 헤더 */}
+      <div style={{ textAlign:"center", padding:"16px 20px 12px", borderBottom:"1px dashed #4A4038" }}>
+        <p style={{ fontSize:10, letterSpacing:"0.3em", color:"#8A8070", marginBottom:4 }}>
+          ★ 우걱이 처리소 ★
+        </p>
+        <p style={{ fontSize:18, fontWeight:700, letterSpacing:"0.1em", marginBottom:4 }}>감정 영수증</p>
+        <p style={{ fontSize:9, color:"#6A6058" }}>{date} | No.{serial}</p>
+      </div>
+
+      <div style={{ padding:"12px 20px" }}>
+        {/* 처리 항목 */}
+        <p style={{ fontSize:8, color:"#6A6058", letterSpacing:"0.1em", marginBottom:8 }}>[ 처리 항목 ]</p>
+        {emotions.map((e, i) => (
+          <div key={e} style={{ display:"flex", justifyContent:"space-between", fontSize:12, marginBottom:5, paddingBottom:5, borderBottom:"1px dotted #3A3028" }}>
+            <span>{i+1}. {e}</span>
+            <span style={{ color:ROSE }}>{ingredients[i]?.pct ?? "??"}%</span>
+          </div>
+        ))}
+
+        {/* 성분 상세 */}
+        <div style={{ borderTop:"1px dashed #4A4038", paddingTop:10, marginTop:6, marginBottom:10 }}>
+          {ingredients.map(({label, pct}) => (
+            <div key={label} style={{ display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:4 }}>
+              <span style={{ color:"#A89880" }}>{label}</span>
+              <span>{"█".repeat(Math.floor(pct/10))}{"░".repeat(10-Math.floor(pct/10))} {pct}%</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 이상한 수치 */}
+        <div style={{ borderTop:"1px dashed #4A4038", paddingTop:10, marginBottom:10 }}>
+          <p style={{ fontSize:8, color:"#6A6058", letterSpacing:"0.1em", marginBottom:6 }}>[ 이상한 수치 ]</p>
+          {bizarreStats.map(s => (
+            <div key={s.label} style={{ display:"flex", justifyContent:"space-between", fontSize:10, marginBottom:3 }}>
+              <span style={{ color:"#8A8070" }}>{s.label}</span>
+              <span style={{ color: s.value.includes("%") && parseInt(s.value) > 70 ? ROSE : "#F5EFE0" }}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 합계 */}
+        <div style={{ borderTop:"2px solid #4A4038", borderBottom:"2px solid #4A4038", padding:"10px 0", margin:"10px 0", textAlign:"center" }}>
+          <p style={{ fontSize:9, color:"#6A6058", marginBottom:4, letterSpacing:"0.1em" }}>처리 결과</p>
+          <p style={{ fontSize:20, fontWeight:700, color:ROSE }}>{resultTitle}</p>
+          <p style={{ fontSize:11, color:"#A89880", marginTop:4 }}>{resultGrade}</p>
+        </div>
+
+        {/* 처방 */}
+        <p style={{ fontSize:10, color:"#8A8070", marginBottom:4 }}>우걱이 처방:</p>
+        <p style={{ fontSize:11, color:"#F5EFE0", marginBottom:10, lineHeight:1.6 }}>{prescription}</p>
+
+        {/* 메모 */}
+        <p style={{ fontSize:10, fontFamily:HAND, color:"#A89880", transform:"rotate(-1deg)", display:"inline-block", marginBottom:10 }}>{ugMemo}</p>
+
+        {/* 하단 바코드 느낌 */}
+        <div style={{ borderTop:"1px dashed #4A4038", paddingTop:10, textAlign:"center" }}>
+          <div style={{ display:"flex", justifyContent:"center", gap:1, marginBottom:6 }}>
+            {Array.from({length:32}, (_, i) => (
+              <div key={i} style={{ width: i%3===0?3:1, height:24, background:"#4A4038", opacity:0.8 }}/>
+            ))}
+          </div>
+          <p style={{ fontSize:8, color:"#5A5048", letterSpacing:"0.14em" }}>onulmode.vercel.app</p>
+          <p style={{ fontSize:8, color:"#5A5048", marginTop:2 }}>AI가 내 감정 먹다가 체함 ㅋㅋ</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   스타일 8 — AI 오류 보고서 (Windows 오류창 감성)
+══════════════════════════════════════════════════════════ */
+function Style8({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, resultTitle, verdict, machineComment, ugMemo, bizarreStats, intensity, stamp } = data;
+  return (
+    <div style={{ width:W, fontFamily:MONO, color:INK, position:"relative",
+      border:`2px solid #808080`, boxShadow:`3px 3px 0 #404040` }}>
+
+      {/* 타이틀 바 — Windows 느낌 */}
+      <div style={{ background:"linear-gradient(90deg, #000880 0%, #1084D0 50%, #000880 100%)", padding:"4px 8px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <div style={{ width:16, height:16, background:"#C8607A", border:"1px solid white", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <span style={{ fontSize:10, color:"white", fontWeight:700 }}>!</span>
+          </div>
+          <span style={{ color:"white", fontSize:11, fontWeight:700 }}>오류 발생 — 감정 처리 시스템</span>
+        </div>
+        <div style={{ display:"flex", gap:2 }}>
+          {["_","□","×"].map(b => (
+            <div key={b} style={{ width:16, height:14, background:"#C0C0C0", border:"1px solid #808080", display:"flex", alignItems:"center", justifyContent:"center", fontSize:9 }}>{b}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* 내용 */}
+      <div style={{ background:"#D4D0C8", padding:"16px 14px" }}>
+
+        {/* 경고 아이콘 + 메시지 */}
+        <div style={{ display:"flex", gap:14, marginBottom:14 }}>
+          <div style={{ flexShrink:0 }}>
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <polygon points="20,4 38,36 2,36" fill="#FFFF00" stroke="#000" strokeWidth="2"/>
+              <text x="20" y="30" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#000">!</text>
+            </svg>
+          </div>
+          <div>
+            <p style={{ fontSize:12, fontWeight:700, marginBottom:6, color:INK }}>
+              감정 처리 중 오류가 발생했습니다.
+            </p>
+            <p style={{ fontSize:11, color:"#3A3A3A", lineHeight:1.6 }}>
+              {emotions.join(", ")} 처리 도중 우걱이가 예상치 못한 감정 데이터를 발견했습니다.
+            </p>
+          </div>
+        </div>
+
+        {/* 오류 상자 */}
+        <div style={{ background:"white", border:"2px inset #808080", padding:"8px 10px", marginBottom:12 }}>
+          <p style={{ fontSize:9, color:"#6A6058", marginBottom:4, letterSpacing:"0.08em" }}>오류 상세 정보:</p>
+          <p style={{ fontSize:10, color:ROSE, fontWeight:700, marginBottom:4 }}>ERROR CODE: {serial}-UGEGI</p>
+          <p style={{ fontSize:11, color:INK, lineHeight:1.6, marginBottom:4 }}>{verdict}</p>
+          <p style={{ fontSize:10, color:"#5A5248", fontStyle:"italic" }}>&ldquo;{machineComment}&rdquo;</p>
+        </div>
+
+        {/* 오류 결과 */}
+        <div style={{ background:"white", border:"2px inset #808080", padding:"8px 10px", marginBottom:12 }}>
+          <p style={{ fontSize:9, color:"#6A6058", marginBottom:6, letterSpacing:"0.08em" }}>처리 결과:</p>
+          <p style={{ fontSize:16, fontWeight:700, color:INK, marginBottom:4 }}>{resultTitle}</p>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"3px 12px" }}>
+            {bizarreStats.map(s => (
+              <div key={s.label} style={{ display:"flex", justifyContent:"space-between", fontSize:10 }}>
+                <span style={{ color:"#8A8070" }}>{s.label}</span>
+                <span style={{ fontWeight:700, color: s.value.includes("%")&&parseInt(s.value)>70 ? ROSE : INK }}>{s.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 메모 */}
+        <p style={{ fontSize:10, fontFamily:HAND, color:"#5A5248", marginBottom:12, transform:"rotate(-1deg)", display:"inline-block" }}>{ugMemo}</p>
+
+        {/* 버튼들 */}
+        <div style={{ display:"flex", justifyContent:"center", gap:8 }}>
+          {["다시 파쇄하기", "그냥 닫기"].map((label, i) => (
+            <div key={label} style={{
+              padding:"4px 20px", background:"#D4D0C8",
+              border:`2px solid ${i===0?"white":"#808080"}`,
+              borderRight:`2px solid ${i===0?"#808080":"white"}`,
+              borderBottom:`2px solid ${i===0?"#808080":"white"}`,
+              fontSize:11, fontWeight:700, cursor:"default",
+            }}>
+              {label}
+            </div>
+          ))}
+        </div>
+
+        {/* 하단 */}
+        <p style={{ fontSize:8, color:"#8A8070", textAlign:"center", marginTop:10, letterSpacing:"0.06em" }}>
+          onulmode.vercel.app — AI가 내 감정 처리하다 오류남 ㅋㅋ
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   스타일 9 — 감정 CCTV 캡처본
+══════════════════════════════════════════════════════════ */
+function Style9({ data, emotions }: { data: ResultData; emotions: string[] }) {
+  const { date, serial, resultTitle, verdict, machineComment, bizarreStats, intensity } = data;
+  const time = `${String(new Date().getHours()).padStart(2,"0")}:${String(new Date().getMinutes()).padStart(2,"0")}:${String(new Date().getSeconds()).padStart(2,"0")}`;
+  return (
+    <div style={{ width:W, background:"#0A0F0A", fontFamily:MONO, color:"#00FF41", position:"relative",
+      border:`2px solid #1A2A1A`, boxShadow:`0 0 16px rgba(0,255,65,0.15)` }}>
+
+      {/* 스캔라인 효과 */}
+      <div style={{ position:"absolute", inset:0, backgroundImage:"repeating-linear-gradient(transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px)", pointerEvents:"none", zIndex:1 }}/>
+
+      <div style={{ padding:"12px 14px", position:"relative", zIndex:2 }}>
+
+        {/* CCTV 헤더 */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10, borderBottom:"1px solid #1A3A1A", paddingBottom:8 }}>
+          <div>
+            <p style={{ fontSize:8, color:"#00AA2A", letterSpacing:"0.14em" }}>UGEGI DISPOSAL CAM-01</p>
+            <p style={{ fontSize:9, color:"#00FF41", marginTop:2 }}>{date.replace(/\./g,"/")} {time}</p>
+          </div>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+            <div style={{ width:8, height:8, borderRadius:"50%", background:ROSE, boxShadow:`0 0 6px ${ROSE}` }}/>
+            <span style={{ fontSize:9, color:ROSE, letterSpacing:"0.1em" }}>REC</span>
+          </div>
+        </div>
+
+        {/* 감정 추적 데이터 */}
+        <div style={{ marginBottom:10 }}>
+          <p style={{ fontSize:8, color:"#00AA2A", letterSpacing:"0.1em", marginBottom:6 }}>[ 감정 대상 추적 ]</p>
+          {emotions.map((e, i) => (
+            <div key={e} style={{ display:"flex", gap:10, marginBottom:4, fontSize:11 }}>
+              <span style={{ color:"#00AA2A" }}>ID-{String(i+1).padStart(2,"0")}:</span>
+              <span style={{ color:"#00FF41", fontWeight:700 }}>{e}</span>
+              <span style={{ color:"#005510", marginLeft:"auto" }}>[포착]</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 분석 결과 박스 */}
+        <div style={{ border:"1px solid #1A4A1A", padding:"8px 10px", marginBottom:10, background:"#050A05" }}>
+          <p style={{ fontSize:8, color:"#00AA2A", letterSpacing:"0.12em", marginBottom:6 }}>[ 감정 분석 결과 ]</p>
+          <p style={{ fontSize:18, fontWeight:700, color:"#00FF41", marginBottom:4, letterSpacing:"0.04em" }}>{resultTitle}</p>
+          <p style={{ fontSize:10, color:"#00CC35", lineHeight:1.6, marginBottom:4 }}>{verdict}</p>
+          <p style={{ fontSize:9, color:"#005510", borderTop:"1px solid #1A3A1A", paddingTop:6, marginTop:4, fontStyle:"italic" }}>
+            우걱이: &ldquo;{machineComment}&rdquo;
+          </p>
+        </div>
+
+        {/* 이상 수치 */}
+        <div style={{ marginBottom:10 }}>
+          <p style={{ fontSize:8, color:"#00AA2A", letterSpacing:"0.1em", marginBottom:6 }}>[ 이상 수치 감지 ]</p>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"4px 16px" }}>
+            {bizarreStats.map(s => (
+              <div key={s.label} style={{ display:"flex", justifyContent:"space-between", fontSize:10 }}>
+                <span style={{ color:"#005510" }}>{s.label}</span>
+                <span style={{ color: s.value.includes("%")&&parseInt(s.value)>70 ? ROSE : "#00FF41" }}>{s.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 처리 진행 바 */}
+        <div style={{ marginBottom:10 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", fontSize:9, marginBottom:3, color:"#00AA2A" }}>
+            <span>처리 진행률</span>
+            <span>{intensity}%</span>
+          </div>
+          <div style={{ height:8, background:"#0A1A0A", border:"1px solid #1A3A1A" }}>
+            <div style={{ height:"100%", width:`${intensity}%`, background:`linear-gradient(90deg, #004410, #00FF41)` }}/>
+          </div>
+        </div>
+
+        {/* 하단 */}
+        <div style={{ borderTop:"1px solid #1A3A1A", paddingTop:8, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <p style={{ fontSize:8, color:"#005510", letterSpacing:"0.08em" }}>CAM-ID: {serial}</p>
+          <p style={{ fontSize:8, color:"#005510" }}>onulmode.vercel.app</p>
+        </div>
+        <p style={{ fontSize:9, color:"#00660F", textAlign:"center", marginTop:6 }}>AI가 내 감정 CCTV로 포착함 ㅋㅋ</p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
    메인 컴포넌트 — 스타일 라우팅
 ══════════════════════════════════════════════════════════ */
 const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) => {
@@ -678,6 +934,9 @@ const ResultCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =
       {style === 4 && <Style4 data={data} emotions={emotions} />}
       {style === 5 && <Style5 data={data} emotions={emotions} />}
       {style === 6 && <Style6 data={data} emotions={emotions} />}
+      {style === 7 && <Style7 data={data} emotions={emotions} />}
+      {style === 8 && <Style8 data={data} emotions={emotions} />}
+      {style === 9 && <Style9 data={data} emotions={emotions} />}
     </div>
   );
 });
