@@ -3,6 +3,7 @@ import { Gowun_Batang, Noto_Sans_KR, Crimson_Text } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
+import Footer from "@/components/layout/Footer";
 import { LocaleProvider } from "@/context/LocaleContext";
 
 const gowunBatang = Gowun_Batang({
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="app-shell">
             <main className="main-content">
               {children}
+              <Footer />
             </main>
           </div>
           <BottomNav />
