@@ -21,6 +21,7 @@ const crimsonText = Crimson_Text({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://onulmode.vercel.app"),
+  verification: { google: "cfO4F7I7CgH-iEUeShOV5RofN4k3vs8ixumUd_-vMIM" },
   title: "오늘무드 | 감정 파쇄기 — 오늘의 감정을 여기서 버려요",
   description: "말 못 한 마음, 짜증, 억울함, 외로움을 감정 파쇄기에 넣고 버려보세요. 기록하지 않아도 괜찮아요. 오늘 마음 조금 정리 완료.",
   keywords: ["감정일기", "감정파쇄기", "스트레스 해소", "마음정리", "오늘무드", "감정기록", "MZ감성앱"],
