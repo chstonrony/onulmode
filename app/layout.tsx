@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Gowun_Batang, Noto_Sans_KR, Crimson_Text } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
 import { LocaleProvider } from "@/context/LocaleContext";
@@ -52,18 +53,21 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+  const kakaoKey  = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
+
   return (
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
       <head>
+        {/* 카카오 SDK */}
         <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossOrigin="anonymous" async />
-        {process.env.NEXT_PUBLIC_KAKAO_JS_KEY && (
+        {kakaoKey && (
           <script dangerouslySetInnerHTML={{ __html:
-            `window.addEventListener('load',function(){var k="${process.env.NEXT_PUBLIC_KAKAO_JS_KEY}";if(k&&window.Kakao&&!window.Kakao.isInitialized())window.Kakao.init(k);});`
+            `window.addEventListener('load',function(){var k="${kakaoKey}";if(k&&window.Kakao&&!window.Kakao.isInitialized())window.Kakao.init(k);});`
           }} />
         )}
       </head>
       <body>
-        {/* 모바일: 하단 탭 / PC: 상단 네비로 전환됨 (BottomNav 내부 처리) */}
         <LocaleProvider>
           <div className="app-shell">
             <main className="main-content">
@@ -72,6 +76,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <BottomNav />
         </LocaleProvider>
+
+        {/* Google AdSense — NEXT_PUBLIC_ADSENSE_ID 설정 후 활성화 */}
+        {adsenseId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
