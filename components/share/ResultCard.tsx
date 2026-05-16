@@ -12,28 +12,228 @@ const W     = 340;
 
 interface Props { data: ResultData; emotions: string[] }
 
-/* ── 공유 낙서 SVG 요소들 ── */
+/* ── 병맛 우걱이 얼굴 — 8가지 이상한 표정 ── */
 
-// 우걱이 얼굴 낙서
-const UgegiFace = ({ x=0, y=0, size=60, angle=0 }: { x?:number; y?:number; size?:number; angle?:number }) => (
-  <g transform={`translate(${x},${y}) rotate(${angle})`}>
-    {/* 얼굴 — 삐뚤한 원 */}
-    <ellipse cx={size/2} cy={size/2} rx={size/2-2} ry={size/2} fill="none" stroke={INK} strokeWidth="2.5"/>
-    {/* 왼쪽 눈 — 약간 아래 */}
-    <ellipse cx={size*0.32} cy={size*0.42} rx="5" ry="6" fill={INK}/>
-    <circle cx={size*0.32-1} cy={size*0.38} r="2" fill="white" opacity="0.8"/>
-    {/* 오른쪽 눈 — 약간 위 */}
-    <ellipse cx={size*0.68} cy={size*0.38} rx="6" ry="5" fill={INK}/>
-    <circle cx={size*0.68+1} cy={size*0.34} r="2.2" fill="white" opacity="0.8"/>
-    {/* 입 — 웃는지 우는지 모를 선 */}
-    <path d={`M${size*0.28},${size*0.65} Q${size*0.38},${size*0.62} ${size*0.5},${size*0.68} Q${size*0.62},${size*0.74} ${size*0.72},${size*0.63}`}
-      fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
-    {/* 이빨 2개 */}
-    <rect x={size*0.41} y={size*0.65} width="6" height="8" fill={INK}/>
-    <rect x={size*0.5} y={size*0.66} width="5" height="7" fill={INK}/>
+// 시드로부터 표정 인덱스 결정 (0-7)
+function ugMoodIdx(seed: number): number {
+  return Math.floor(((seed * 16807) % 2147483647) / 2147483646 * 8);
+}
+
+// 공통 얼굴 틀 — 삐뚤한 계란형
+const FaceBase = ({ s, fill="#FAF4E0" }: { s:number; fill?:string }) => (
+  <ellipse cx={s/2} cy={s/2-1} rx={s/2-3} ry={s/2-1}
+    fill={fill} stroke={INK} strokeWidth="2.8" strokeLinejoin="round"/>
+);
+
+// 0: 체함 — X눈, 파랗게 질림, 땀
+const UgegiChoked = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s} fill="#EAF2EA"/>
+    {/* 초록 볼 */}
+    <ellipse cx={cx-16} cy={cy+4} rx={11} ry={8} fill="#80C080" opacity="0.2"/>
+    <ellipse cx={cx+16} cy={cy+4} rx={10} ry={7} fill="#80C080" opacity="0.2"/>
+    {/* X 왼쪽눈 */}
+    <line x1={cx-18} y1={cy-14} x2={cx-10} y2={cy-6} stroke={INK} strokeWidth="2.8"/>
+    <line x1={cx-10} y1={cy-14} x2={cx-18} y2={cy-6} stroke={INK} strokeWidth="2.8"/>
+    {/* X 오른쪽눈 (작음) */}
+    <line x1={cx+8}  y1={cy-12} x2={cx+16} y2={cy-4} stroke={INK} strokeWidth="2.5"/>
+    <line x1={cx+16} y1={cy-12} x2={cx+8}  y2={cy-4} stroke={INK} strokeWidth="2.5"/>
+    {/* 역U 입 */}
+    <path d={`M${cx-13},${cy+14} Q${cx},${cy+8} ${cx+13},${cy+14}`} fill="none" stroke={INK} strokeWidth="2.5" strokeLinecap="round"/>
+    <rect x={cx-5} y={cy+11} width="5" height="7" fill={INK}/>
+    <rect x={cx+1} y={cy+12} width="4" height="6" fill={INK}/>
+    {/* 땀방울 */}
+    <path d={`M${cx+22},${cy-16} Q${cx+24},${cy-22} ${cx+22},${cy-12}`} fill="#7AB8E8" opacity="0.7"/>
+    <path d={`M${cx+26},${cy-6}  Q${cx+27},${cy-10} ${cx+26},${cy-3}`}  fill="#7AB8E8" opacity="0.5"/>
+  </>;
+};
+
+// 1: 눈물 — 큰 눈에 눈물강
+const UgegiCrying = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s}/>
+    {/* 큰 눈 */}
+    <ellipse cx={cx-16} cy={cy-10} rx={10} ry={13} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx-16} cy={cy-8}  rx={6}  ry={7}  fill={INK}/>
+    <circle  cx={cx-19} cy={cy-11} r={2}   fill="white" opacity="0.9"/>
+    <ellipse cx={cx+16} cy={cy-8}  rx={9}  ry={12} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx+16} cy={cy-6}  rx={5}  ry={6}  fill={INK}/>
+    <circle  cx={cx+13} cy={cy-9}  r={1.8} fill="white" opacity="0.9"/>
+    {/* 눈물강 */}
+    <path d={`M${cx-18},${cy+3} Q${cx-16},${cy+14} ${cx-14},${cy+22}`} fill="none" stroke="#7AB8E8" strokeWidth="5" opacity="0.7"/>
+    <path d={`M${cx+14},${cy+1} Q${cx+16},${cy+12} ${cx+18},${cy+22}`} fill="none" stroke="#7AB8E8" strokeWidth="4" opacity="0.6"/>
+    {/* 울상 입 */}
+    <path d={`M${cx-11},${cy+16} Q${cx},${cy+22} ${cx+11},${cy+16}`} fill="none" stroke={INK} strokeWidth="2.5" strokeLinecap="round"/>
+  </>;
+};
+
+// 2: 멍함 — 텅 빈 눈, 일자 입
+const UgegiBlank = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s}/>
+    {/* 큰 흰눈 + 작은 동공 */}
+    <ellipse cx={cx-15} cy={cy-9} rx={10} ry={12} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx-15} cy={cy-6} rx={3.5} ry={3.5} fill={INK}/>
+    <ellipse cx={cx+16} cy={cy-11} rx={11} ry={10} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx+16} cy={cy-9}  rx={3}  ry={3}  fill={INK}/>
+    {/* 일자 입 */}
+    <line x1={cx-10} y1={cy+15} x2={cx+10} y2={cy+15} stroke={INK} strokeWidth="2.5" strokeLinecap="round"/>
+    {/* 다크서클 */}
+    <ellipse cx={cx-15} cy={cy+2}  rx={11} ry={4} fill={INK} opacity="0.1"/>
+    <ellipse cx={cx+16} cy={cy}    rx={12} ry={4} fill={INK} opacity="0.1"/>
+  </>;
+};
+
+// 3: 빡침 — 사선 눈썹, 이빨
+const UgegiAngry = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s} fill="#FFF0EC"/>
+    {/* 빨간 볼 */}
+    <ellipse cx={cx-18} cy={cy+5} rx={10} ry={7} fill="#E86050" opacity="0.2"/>
+    <ellipse cx={cx+18} cy={cy+5} rx={9}  ry={6} fill="#E86050" opacity="0.2"/>
+    {/* 화난 눈썹 */}
+    <line x1={cx-22} y1={cy-18} x2={cx-8} y2={cy-14} stroke={INK} strokeWidth="3" strokeLinecap="round"/>
+    <line x1={cx+8}  y1={cy-16} x2={cx+22} y2={cy-20} stroke={INK} strokeWidth="3" strokeLinecap="round"/>
+    {/* 눈 */}
+    <ellipse cx={cx-15} cy={cy-8} rx={7} ry={6} fill={INK}/>
+    <ellipse cx={cx+15} cy={cy-8} rx={7} ry={6} fill={INK}/>
+    <circle cx={cx-17} cy={cy-10} r={2} fill="white" opacity="0.8"/>
+    <circle cx={cx+13} cy={cy-10} r={2} fill="white" opacity="0.8"/>
+    {/* 이빨 드러낸 입 */}
+    <path d={`M${cx-14},${cy+10} L${cx+14},${cy+10}`} stroke={INK} strokeWidth="2.2"/>
+    <rect x={cx-14} y={cy+10} width="6" height="9" fill="white" stroke={INK} strokeWidth="1.5"/>
+    <rect x={cx-7}  y={cx+10} width="5" height="8" fill="white" stroke={INK} strokeWidth="1.5"/>
+    <rect x={cx-1}  y={cy+10} width="6" height="9" fill="white" stroke={INK} strokeWidth="1.5"/>
+    <rect x={cx+6}  y={cy+10} width="5" height="7" fill="white" stroke={INK} strokeWidth="1.5"/>
+  </>;
+};
+
+// 4: 정신나감 — 소용돌이눈, 큰 웃음
+const UgegiCrazy = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s}/>
+    {/* 소용돌이 왼쪽눈 */}
+    <circle cx={cx-15} cy={cy-9} r={10} fill="white" stroke={INK} strokeWidth="1.5"/>
+    <path d={`M${cx-15},${cy-9} Q${cx-10},${cy-15} ${cx-15},${cy-13} Q${cx-20},${cy-11} ${cx-15},${cy-9} Q${cx-12},${cy-7} ${cx-14},${cy-9}`} fill="none" stroke={INK} strokeWidth="1.5"/>
+    {/* 오른쪽눈 — 크고 이상함 */}
+    <ellipse cx={cx+16} cy={cy-8} rx={12} ry={11} fill="white" stroke={INK} strokeWidth="1.5"/>
+    <ellipse cx={cx+18} cy={cy-6} rx={5}  ry={6}  fill={INK}/>
+    <circle  cx={cx+15} cy={cy-9} r={2}   fill="white" opacity="0.9"/>
+    {/* 크게 웃는 입 */}
+    <path d={`M${cx-16},${cy+9} Q${cx},${cy+24} ${cx+16},${cy+9}`} fill={INK}/>
+    <path d={`M${cx-14},${cy+10} Q${cx},${cy+22} ${cx+14},${cy+10}`} fill="white"/>
+    {/* 이빨 */}
+    {[-8,-3,2,7].map(ox=><rect key={ox} x={cx+ox} y={cy+11} width="4" height="6" fill="white" stroke={INK} strokeWidth="1"/>)}
+  </>;
+};
+
+// 5: 침흘림 — 반쯤 감긴 눈, 늘어진 침
+const UgegiDrool = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s}/>
+    {/* 반쯤 감긴 눈 */}
+    <ellipse cx={cx-15} cy={cy-9} rx={9} ry={8} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx-15} cy={cy-7} rx={7} ry={5} fill={INK}/>
+    <rect x={cx-24} y={cy-17} width={18} height={7} fill="#FAF4E0" stroke="none"/>
+    <line x1={cx-25} y1={cy-10} x2={cx-5} y2={cy-10} stroke={INK} strokeWidth="2.5"/>
+    <ellipse cx={cx+15} cy={cy-9} rx={8}  ry={9} fill="white" stroke={INK} strokeWidth="2"/>
+    <ellipse cx={cx+15} cy={cy-8} rx={6}  ry={5} fill={INK}/>
+    <rect x={cx+7}  y={cy-18} width={16} height={8} fill="#FAF4E0" stroke="none"/>
+    <line x1={cx+5}  y1={cy-10} x2={cx+24} y2={cy-10} stroke={INK} strokeWidth="2.5"/>
+    {/* 벌린 입 */}
+    <path d={`M${cx-8},${cy+12} Q${cx},${cy+18} ${cx+8},${cy+12}`} fill="#CC6060" stroke={INK} strokeWidth="2"/>
+    {/* 침 */}
+    <path d={`M${cx},${cy+18} Q${cx+2},${cy+28} ${cx},${cy+36}`} fill="none" stroke="#7AB8E8" strokeWidth="4" opacity="0.75"/>
+    <ellipse cx={cx} cy={cy+37} rx="4" ry="3" fill="#7AB8E8" opacity="0.65"/>
+  </>;
+};
+
+// 6: 공포 — 동그란 눈, O입
+const UgegiScared = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s}/>
+    {/* 엄청 큰 눈 */}
+    <ellipse cx={cx-15} cy={cy-9} rx={12} ry={13} fill="white" stroke={INK} strokeWidth="2.5"/>
+    <ellipse cx={cx-15} cy={cy-9} rx={7}  ry={8}  fill={INK}/>
+    <circle  cx={cx-18} cy={cy-12} r={2.5} fill="white" opacity="0.9"/>
+    <ellipse cx={cx+16} cy={cy-9}  rx={11} ry={12} fill="white" stroke={INK} strokeWidth="2.5"/>
+    <ellipse cx={cx+16} cy={cy-9}  rx={6}  ry={7}  fill={INK}/>
+    <circle  cx={cx+13} cy={cy-12} r={2.2} fill="white" opacity="0.9"/>
+    {/* O 입 */}
+    <ellipse cx={cx} cy={cy+16} rx={7} ry={8} fill="#1A1410" stroke={INK} strokeWidth="2"/>
     {/* 땀 */}
-    <path d={`M${size*0.82},${size*0.25} Q${size*0.85},${size*0.18} ${size*0.88},${size*0.28}`}
-      fill="none" stroke={INK} strokeWidth="1.5"/>
+    <path d={`M${cx+24},${cy-20} Q${cx+26},${cy-26} ${cx+24},${cy-16}`} fill="#7AB8E8" opacity="0.65"/>
+    <path d={`M${cx-26},${cy-10} Q${cx-28},${cy-15} ${cx-26},${cy-7}`}  fill="#7AB8E8" opacity="0.5"/>
+  </>;
+};
+
+// 7: 배터리1% — X눈 처진, 거의 죽음
+const UgegiDead = ({ s }: { s:number }) => {
+  const cx=s/2, cy=s/2;
+  return <>
+    <FaceBase s={s} fill="#EEEAE0"/>
+    {/* 처진 X눈 */}
+    <g opacity="0.7">
+      <line x1={cx-19} y1={cy-13} x2={cx-11} y2={cy-6} stroke={INK} strokeWidth="2.5"/>
+      <line x1={cx-11} y1={cy-13} x2={cx-19} y2={cy-6} stroke={INK} strokeWidth="2.5"/>
+    </g>
+    <g opacity="0.6">
+      <line x1={cx+10} y1={cy-11} x2={cx+17} y2={cy-4} stroke={INK} strokeWidth="2"/>
+      <line x1={cx+17} y1={cy-11} x2={cx+10} y2={cy-4} stroke={INK} strokeWidth="2"/>
+    </g>
+    {/* 일자 입 — 힘없음 */}
+    <line x1={cx-9} y1={cy+14} x2={cx+9} y2={cy+15} stroke={INK} strokeWidth="2" strokeLinecap="round"/>
+    {/* 배터리 아이콘 */}
+    <rect x={cx+18} y={cy-22} width={12} height={7} rx="1" fill="none" stroke="#CC0000" strokeWidth="1.5"/>
+    <rect x={cx+30} y={cy-20} width={2}  height={3} fill="#CC0000"/>
+    <rect x={cx+19} y={cy-21} width={2}  height={5} fill="#CC0000"/>
+    <text x={cx+22} y={cy-16} fontSize="4.5" fill="#CC0000" fontFamily="monospace">1%</text>
+    {/* 다크서클 심함 */}
+    <ellipse cx={cx-15} cy={cy}    rx={14} ry={5} fill={INK} opacity="0.15"/>
+    <ellipse cx={cx+15} cy={cy-1}  rx={13} ry={5} fill={INK} opacity="0.12"/>
+  </>;
+};
+
+// 시드로 8가지 중 하나 선택
+const UGEGI_FACES = [UgegiChoked, UgegiCrying, UgegiBlank, UgegiAngry, UgegiCrazy, UgegiDrool, UgegiScared, UgegiDead];
+
+// UgegiFace wrapper — 기존 호환 유지
+const UgegiFace = ({ x=0, y=0, size=60, angle=0, seed=0 }: { x?:number; y?:number; size?:number; angle?:number; seed?:number }) => {
+  const FaceComp = UGEGI_FACES[ugMoodIdx(seed + 1)];
+  return (
+    <g transform={`translate(${x},${y}) rotate(${angle},${size/2},${size/2})`}>
+      <FaceComp s={size}/>
+    </g>
+  );
+};
+
+/* ── 종이 더러움 효과 (커피얼룩, 테이프, 구겨짐) ── */
+
+const CoffeeStain = ({ x=20, y=20, r=18, opacity=0.12 }: {x?:number;y?:number;r?:number;opacity?:number}) => (
+  <g opacity={opacity}>
+    <circle cx={x} cy={y} r={r} fill="none" stroke="#6A3A10" strokeWidth={r*0.18}/>
+    <circle cx={x} cy={y} r={r*0.6} fill="none" stroke="#6A3A10" strokeWidth={r*0.08} opacity="0.5"/>
+    <ellipse cx={x+r*0.3} cy={y-r*0.2} rx={r*0.15} ry={r*0.08} fill="#6A3A10" opacity="0.3"/>
+  </g>
+);
+
+const TapeStrip = ({ x=80, y=8, w=52, angle=-3 }: {x?:number;y?:number;w?:number;angle?:number}) => (
+  <rect x={x} y={y} width={w} height={13} fill="rgba(212,188,144,0.45)" rx="1"
+    transform={`rotate(${angle},${x+w/2},${y+6})`}/>
+);
+
+const PrinterGlitch = ({ y=120, w=300 }: {y?:number;w?:number}) => (
+  <g opacity="0.07">
+    {[0,4,8,14].map(dy=>(
+      <line key={dy} x1={0} y1={y+dy} x2={w} y2={y+dy} stroke={INK} strokeWidth="1"/>
+    ))}
   </g>
 );
 
@@ -82,7 +282,7 @@ const ScribbleLine = ({y=0,width=W-40,opacity=0.3}:{y?:number;width?:number;opac
    스타일 1 — 볼펜 낙서 (공책 낙서)
 ══════════════════════════════════════════════════════════ */
 function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, ingredients, resultGrade, verdict, ugMemo, bizarreStats, stamp } = data;
+  const { date, serial, ingredients, resultGrade, verdict, ugMemo, bizarreStats, stamp, viralText, seed, isRare } = data;
   return (
     <div style={{ width:W, background:"#FAF8EE", fontFamily:MONO, color:INK, position:"relative",
       border:`2px solid ${INK}`, boxShadow:`3px 3px 0 ${INK}` }}>
@@ -93,7 +293,10 @@ function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
 
       {/* SVG 낙서 오버레이 */}
       <svg style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", pointerEvents:"none" }} viewBox={`0 0 ${W} 480`}>
-        <UgegiFace x={W-85} y={8} size={70} angle={8}/>
+        <UgegiFace x={W-82} y={6} size={72} angle={9} seed={seed}/>
+        <CoffeeStain x={30} y={280} r={22}/>
+        <TapeStrip x={W/2-26} y={-5} w={52} angle={-2}/>
+        <PrinterGlitch y={130}/>
         <DoodleHeart x={50} y={38}/>
         <DoodleStar x={24} y={160} size={10}/>
         <DoodleStar x={W-22} y={220} size={8} fill={ROSE} stroke={ROSE}/>
@@ -103,6 +306,11 @@ function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
         {/* 낙서 화살표 */}
         <path d="M44,380 Q60,370 75,378" fill="none" stroke={INK} strokeWidth="1.5"/>
         <polygon points="72,374 79,378 73,384" fill={INK}/>
+        {/* 손글씨 낙서 */}
+        <text x={22} y={400} fontSize="7.5" fill={INK} opacity="0.2"
+          fontFamily="cursive" transform="rotate(-3,22,400)">이거 왜 나옴</text>
+        {isRare && <text x={W-80} y={460} fontSize="7" fill="#B89030" opacity="0.7"
+          fontFamily="monospace">★ RARE ★</text>}
       </svg>
 
       <div style={{ padding:"20px 20px 18px 48px", position:"relative" }}>
@@ -175,10 +383,18 @@ function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
           </div>
         </div>
 
+        {/* 희귀 배지 */}
+        {isRare && (
+          <div style={{ textAlign:"center", marginBottom:6 }}>
+            <span style={{ fontSize:9, color:"#B89030", border:"1px solid #B89030", padding:"2px 8px", letterSpacing:"0.1em", fontFamily:MONO }}>
+              ★ SSR 희귀 결과지 ★ 우걱이도 처음 봄
+            </span>
+          </div>
+        )}
         {/* 하단 */}
         <div style={{ borderTop:`1px dashed ${INK}30`, paddingTop:8, marginTop:4, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <p style={{ fontSize:10, fontFamily:SERIF, color:"#6A6258" }}>
-            AI가 내 감정 먹다가 체함 ㅋㅋ
+          <p style={{ fontSize:10, fontFamily:SERIF, color:ROSE, fontWeight:700 }}>
+            {viralText}
           </p>
           <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.06em" }}>
             onulmode.vercel.app
@@ -193,12 +409,15 @@ function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
    스타일 2 — 우걱이 관찰일지
 ══════════════════════════════════════════════════════════ */
 function Style2({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, resultGrade, verdict, ugMemo, bizarreStats, machineComment, stamp } = data;
+  const { date, serial, resultGrade, verdict, ugMemo, bizarreStats, machineComment, stamp, viralText, seed } = data;
   return (
     <div style={{ width:W, background:"#FAFAF5", fontFamily:MONO, color:INK, position:"relative",
       border:`2.5px solid ${INK}`, boxShadow:`4px 4px 0 #8A8070` }}>
 
       <svg style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", pointerEvents:"none" }} viewBox={`0 0 ${W} 460`}>
+        <CoffeeStain x={W-28} y={380} r={20}/>
+        <TapeStrip x={W/2-24} y={-4} w={48} angle={2}/>
+        <PrinterGlitch y={200}/>
         <DoodleStar x={W-28} y={22} size={14} fill="#FFE0A0" stroke="#C8A040"/>
         <DoodleStar x={22} y={180} size={10}/>
         <DoodleX x={W-24} y={180} size={12} color={ROSE}/>
@@ -275,7 +494,7 @@ function Style2({ data, emotions }: { data: ResultData; emotions: string[] }) {
 
         {/* 하단 */}
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:12, letterSpacing:"0.04em" }}>
-          AI가 내 감정 먹다가 체함 ㅋㅋ &nbsp;—&nbsp; onulmode.vercel.app
+          {viralText} — onulmode.vercel.app
         </p>
       </div>
     </div>
@@ -286,14 +505,16 @@ function Style2({ data, emotions }: { data: ResultData; emotions: string[] }) {
    스타일 3 — 급식표
 ══════════════════════════════════════════════════════════ */
 function Style3({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, ingredients, resultGrade, ugMemo, bizarreStats, stamp } = data;
+  const { date, serial, ingredients, resultGrade, ugMemo, bizarreStats, stamp, viralText, seed } = data;
   const stars = (n: number) => "★".repeat(n) + "☆".repeat(5-n);
   return (
     <div style={{ width:W, background:"#FAF5E8", fontFamily:MONO, color:INK, position:"relative",
       border:`3px solid ${INK}`, boxShadow:`5px 5px 0 ${INK}` }}>
 
       <svg style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", pointerEvents:"none" }} viewBox={`0 0 ${W} 440`}>
-        <UgegiFace x={W-78} y={10} size={65} angle={5}/>
+        <UgegiFace x={W-78} y={8} size={65} angle={6} seed={seed}/>
+        <CoffeeStain x={40} y={350} r={16}/>
+        <PrinterGlitch y={180}/>
         <DoodleStar x={22} y={22} size={14} fill="#FFD060" stroke="#B89030"/>
         <DoodleStar x={36} y={22} size={14} fill="#FFD060" stroke="#B89030"/>
         <DoodleHeart x={W-25} y={180} size={18}/>
@@ -353,7 +574,7 @@ function Style3({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          오늘 우걱이 판정 미쳤음 — onulmode.vercel.app
+          {viralText} — onulmode.vercel.app
         </p>
       </div>
     </div>
@@ -364,7 +585,7 @@ function Style3({ data, emotions }: { data: ResultData; emotions: string[] }) {
    스타일 4 — 시험지
 ══════════════════════════════════════════════════════════ */
 function Style4({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, intensity, resultGrade, verdict, ugMemo, bizarreStats, stamp } = data;
+  const { date, serial, intensity, resultGrade, verdict, ugMemo, bizarreStats, stamp, viralText } = data;
   const grade = intensity>=90?"A+ (과적재)":intensity>=75?"B+ (질김)":intensity>=60?"C (그럭저럭)":"D (소화 실패)";
   const choices = ["괜찮은 줄 알았음","말하기 귀찮았음","나도 몰랐음","어차피 혼자 해결함"];
   return (
@@ -456,7 +677,7 @@ function Style4({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          나 감정 소화 실패 뜸 — onulmode.vercel.app
+          {viralText} — onulmode.vercel.app
         </p>
       </div>
     </div>
@@ -467,7 +688,7 @@ function Style4({ data, emotions }: { data: ResultData; emotions: string[] }) {
    스타일 5 — 저주받은 그림일기
 ══════════════════════════════════════════════════════════ */
 function Style5({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, resultGrade, verdict, ugMemo, bizarreStats, stamp, machineComment } = data;
+  const { date, serial, resultGrade, verdict, ugMemo, bizarreStats, stamp, machineComment, viralText, seed } = data;
   return (
     <div style={{ width:W, background:"#FEFCF0", fontFamily:MONO, color:INK, position:"relative",
       border:`2.5px solid ${INK}`, boxShadow:`4px 4px 0 ${INK}` }}>
@@ -498,7 +719,7 @@ function Style5({ data, emotions }: { data: ResultData; emotions: string[] }) {
           {/* 우걱이 낙서 영역 */}
           <div style={{ width:90, flexShrink:0, border:`1.5px solid ${INK}40`, background:"#FAF8EC", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <svg width="80" height="80" viewBox="0 0 80 80">
-              <UgegiFace x={5} y={3} size={70} angle={3}/>
+              <UgegiFace x={3} y={2} size={74} angle={4} seed={seed}/>
             </svg>
           </div>
           <div style={{ flex:1 }}>
@@ -547,7 +768,7 @@ function Style5({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          우걱이가 내 우울 씹는 중 — onulmode.vercel.app
+          {viralText} — onulmode.vercel.app
         </p>
       </div>
     </div>
@@ -589,7 +810,7 @@ const TinyAngel = () => (
 );
 
 function Style6({ data, emotions }: { data: ResultData; emotions: string[] }) {
-  const { date, serial, ugMemo } = data;
+  const { date, serial, ugMemo, viralText } = data;
   const msg = SOHWA_MSGS_CARD[parseInt(serial) % SOHWA_MSGS_CARD.length];
   return (
     <div style={{ width:W, background:"#FDFBF5", fontFamily:MONO, color:INK, position:"relative",
@@ -654,7 +875,7 @@ function Style6({ data, emotions }: { data: ResultData; emotions: string[] }) {
         {/* 하단 */}
         <div style={{ borderTop:`1px dashed ${INK}25`, paddingTop:10, textAlign:"center" }}>
           <p style={{ fontSize:10, fontFamily:SERIF, color:"#6A6258", marginBottom:3 }}>
-            우걱이 돌리다가 울컥함 ㅋㅋ
+            {viralText}
           </p>
           <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.06em" }}>
             onulmode.vercel.app

@@ -157,16 +157,18 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, productName,
 
       {/* 바이럴 힌트 */}
       <div style={{
-        padding: "12px 14px",
-        background: `${INK}06`,
-        border: `1px dashed ${LINE}`,
-        borderRadius: 3,
+        padding: "10px 14px",
+        background: `${INK}08`,
+        border: `1.5px solid ${INK}20`,
+        borderRadius: 2,
         textAlign: "center",
       }}>
-        <p style={{ fontSize: 12, color: "#7A7260", fontFamily: "var(--font-serif)", lineHeight: 1.8 }}>
-          결과지 랜덤이라 매번 달라요<br/>
-          <strong style={{ color: INK }}>&ldquo;이거 나온 거 봐 ㅋㅋ&rdquo;</strong> 하고 친구한테 보내봐<br/>
-          <span style={{ fontSize: 11, color: "#A89880" }}>이미지 저장 → 카톡/스토리에 올리기</span>
+        <p style={{ fontSize: 13, color: INK, fontFamily: "var(--font-serif)", fontWeight: 700, marginBottom: 4 }}>
+          나만 당할 수 없음
+        </p>
+        <p style={{ fontSize: 11, color: "#7A7260", fontFamily: "var(--font-serif)", lineHeight: 1.7 }}>
+          야 너도 해봐ㅋㅋ — 결과 매번 달라<br/>
+          <span style={{ fontSize: 10, color: "#A89880" }}>이미지 저장 → 스토리에 박제 ㄱㄱ</span>
         </p>
       </div>
     </div>

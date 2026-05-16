@@ -653,6 +653,49 @@ const PRODUCT_DESCRIPTIONS = [
   "오늘의 감정 총합이 이 형태로 나옴.",
 ] as const;
 
+// ─── 바이럴 하단 문구 (30개) ─────────────────────────────
+const VIRAL_TEXTS = [
+  "나만 당할 수 없음",
+  "야 너도 해봐ㅋㅋ",
+  "이건 단톡감임",
+  "스토리에 박제 ㄱㄱ",
+  "우걱이 피해자 추가 모집중",
+  "씹다 보니 이런 게 나옴",
+  "프린터도 당황함",
+  "우걱이 이빨에 낀 결과",
+  "감정은 같이 와장창해야 맛임",
+  "한 명 더 꾸깃하게 만들기",
+  "우걱이가 한입 더 원함",
+  "이 결과 우걱이도 책임 못 짐",
+  "오늘 감정 폐기 완료",
+  "이거 왜 나옴",
+  "결과지 상태 안 좋음",
+  "AI가 당황함",
+  "이거 보내봐ㅋㅋ",
+  "단톡에 뿌려",
+  "감정 와장창 완료",
+  "씹다 이빨에 꼈음",
+  "우걱이도 처음 봄",
+  "새벽에 보면 더 맞음",
+  "친구한테 보내면 우정 테스트 됨",
+  "감정이 이상한 음식으로 변함",
+  "인간관계 추가 데미지",
+  "멘탈 잔여물 있음",
+  "야 이거 뭐야ㅋㅋ",
+  "우걱이 책임 안 짐",
+  "감정 폐기물 처리 완료",
+  "이거 카톡으로 박제",
+] as const;
+
+// ─── 희귀 결과물 접미사 (5% 확률) ───────────────────────
+const RARE_SUFFIXES = [
+  "SSR 에디션",
+  "전설급",
+  "우걱이도 처음 봄",
+  "세계 최초",
+  "환불 불가",
+] as const;
+
 // ─── 우걱이 행동 상태 (20개, 애니메이션 용) ──────────────
 export const UGEGI_BEHAVIORS = [
   "우걱우걱 씹는 중",
@@ -700,6 +743,8 @@ export interface ResultData {
   warningMessage: string;
   retryButtonText: string;
   closeButtonText: string;
+  viralText: string;
+  isRare: boolean;
   productName: string;
   productEmoji: string;
   productType: string;
@@ -749,6 +794,8 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     warningMessage: pick(WARNING_MESSAGES,     rng),
     retryButtonText: pick(BUTTON_RETRY_TEXTS,  rng),
     closeButtonText: pick(BUTTON_CLOSE_TEXTS,  rng),
+    viralText:       pick(VIRAL_TEXTS,          rng),
+    isRare:          rng() < 0.05,
     productName:    `${adj} ${food.name}`,
     productEmoji:   food.emoji,
     productType:    food.type,
