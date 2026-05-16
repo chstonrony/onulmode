@@ -26,17 +26,30 @@ export default function BlogPage() {
         </Link>
 
         {/* 헤더 */}
-        <div style={{ margin: "24px 0 40px" }}>
-          <p style={{ fontSize: 11, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10 }}>
-            EMOTIONAL JOURNAL
+        <div style={{ margin: "24px 0 32px" }}>
+          <p style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.14em", marginBottom: 10 }}>
+            UGEGI READING ROOM / 우걱이 씹다 남긴 글
           </p>
-          <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.3, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.3, marginBottom: 16 }}>
             감정 이야기
           </h1>
-          <p style={{ fontSize: 15, color: "#7A7260", lineHeight: 1.7, fontWeight: 300 }}>
-            지쳤을 때, 억울할 때, 외로울 때, 현타 올 때.<br/>
-            그 감정에 대해 솔직하게 이야기해요.
-          </p>
+          {/* 우걱이 코멘트 박스 */}
+          <div style={{
+            padding: "14px 18px",
+            background: "#F5EFE0",
+            border: "1.5px solid #D8CEC0",
+            borderLeft: "3px solid #C8607A",
+            borderRadius: 3,
+            marginBottom: 4,
+          }}>
+            <p style={{ fontSize: 12, color: "#7A7260", lineHeight: 1.8, fontFamily: "var(--font-serif)" }}>
+              우걱이가 씹다가 남긴 글들임.<br/>
+              읽고 감정 올라오면 파쇄하러 와.
+            </p>
+            <p style={{ fontSize: 10, color: "#B4A890", fontFamily: "monospace", marginTop: 6 }}>
+              — 우걱이 (감정 소화 전문 유기체)
+            </p>
+          </div>
         </div>
 
         {/* 카테고리 필터 */}
@@ -102,20 +115,28 @@ export default function BlogPage() {
 
         {/* CTA */}
         <div style={{
-          marginTop: 48, padding: "28px 32px", textAlign: "center",
-          background: "#F5EFE0", border: "1px solid #D8CEC0", borderRadius: 4,
+          marginTop: 48, padding: "24px 28px", textAlign: "center",
+          background: "#1A1410", borderRadius: 3,
+          position: "relative", overflow: "hidden",
         }}>
-          <p style={{ fontSize: 15, color: "#5A5248", marginBottom: 16, fontFamily: "var(--font-serif)" }}>
-            글 읽고 감정이 올라왔다면?
+          <p style={{ fontSize: 10, fontFamily: "monospace", color: "#5A5248", letterSpacing: "0.14em", marginBottom: 10 }}>
+            ■ 우걱이 처리소 광고 (무료)
           </p>
-          <Link href="/" style={{
+          <p style={{ fontSize: 16, color: "#F5EFE0", marginBottom: 6, fontFamily: "var(--font-serif)", fontWeight: 700 }}>
+            감정 올라왔음?
+          </p>
+          <p style={{ fontSize: 13, color: "#7A7260", marginBottom: 18, fontFamily: "var(--font-serif)" }}>
+            우걱이가 지금 배고픔 MAX임.
+          </p>
+          <Link href="/release" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
-            padding: "12px 28px", borderRadius: 4,
+            padding: "14px 32px", borderRadius: 3,
             fontSize: 15, fontFamily: "var(--font-serif)", fontWeight: 700,
             textDecoration: "none",
+            boxShadow: "4px 4px 0 rgba(200,96,122,0.4)",
           }}>
-            감정 버리러 가기 →
+            감정 지금 파쇄하기 →
           </Link>
         </div>
 

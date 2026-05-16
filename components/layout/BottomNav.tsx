@@ -8,17 +8,17 @@ import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 const ROSE = "#C8607A";
 const INK  = "#2A2520";
 
-const TAB_HREFS = ["/", "/blog", "/archive", "/about"] as const;
+const TAB_HREFS = ["/release", "/", "/archive", "/blog"] as const;
 
 export default function BottomNav() {
   const pathname = usePathname();
   const { t } = useLocale();
 
   const TABS = [
-    { href: "/",        label: t.nav.dump    },
-    { href: "/blog",    label: t.nav.stories },
+    { href: "/release", label: "파쇄하기" },
+    { href: "/",        label: "홈"       },
     { href: "/archive", label: t.nav.archive },
-    { href: "/about",   label: t.nav.about   },
+    { href: "/blog",    label: t.nav.stories },
   ];
 
   return (
@@ -39,7 +39,7 @@ export default function BottomNav() {
         }}>
           {TABS.map(({ href, label }) => {
             const active = pathname === href
-              || (pathname.startsWith("/release") && href === "/")
+              || (pathname.startsWith("/result") && href === "/release")
               || (pathname.startsWith("/blog") && href === "/blog");
             return (
               <Link key={href} href={href} style={{
@@ -102,7 +102,12 @@ export default function BottomNav() {
 
           {/* 네비 + 언어 */}
           <nav style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {TABS.map(({ href, label }) => {
+            {[
+              { href: "/", label: "홈" },
+              { href: "/blog", label: t.nav.stories },
+              { href: "/archive", label: t.nav.archive },
+              { href: "/about", label: t.nav.about },
+            ].map(({ href, label }) => {
               const active = pathname === href;
               return (
                 <Link key={href} href={href} style={{
@@ -123,7 +128,7 @@ export default function BottomNav() {
               textDecoration: "none", fontWeight: 700,
               boxShadow: `0 3px 12px ${ROSE}44`,
             }}>
-              {t.nav.cta}
+              감정 지금 파쇄하기
             </Link>
             <LanguageSwitcher compact />
           </nav>

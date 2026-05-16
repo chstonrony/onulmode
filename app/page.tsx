@@ -284,18 +284,23 @@ export default function MainPage() {
     <div style={{ background: "#efe3cf", minHeight: "100vh", overflowX: "hidden" }}>
 
       {/* 헤더 */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "28px 24px 0", zIndex: 10, position: "relative" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 24px 0", zIndex: 10, position: "relative" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: 20, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700 }}>오늘무드</span>
           <svg width="12" height="12" viewBox="0 0 14 14">
             <path d="M7 1L8.3 5H12.5L9.2 7.8L10.5 12L7 9.5L3.5 12L4.8 7.8L1.5 5H5.7Z" fill={ROSE} opacity="0.85" />
           </svg>
+          {/* 가동 상태 */}
+          <span style={{ fontSize: 9, fontFamily: "monospace", color: "#6A9A6A", display: "flex", alignItems: "center", gap: 4 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#6A9A6A", display: "inline-block" }} />
+            우걱이 가동 중
+          </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {count > 0 && (
             <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
               style={{ fontSize: 9, fontFamily: "monospace", color: "#7A6858", background: "#F0E8D4", border: "1px solid #C8B898", borderRadius: 2, padding: "2px 8px" }}>
-              ×{count} 파쇄
+              ×{count} 파쇄 완료
             </motion.span>
           )}
           <Link href="/archive" style={{ fontSize: 13, color: "#7A7260", fontFamily: "var(--font-serif)", textDecoration: "none" }}>
@@ -439,6 +444,22 @@ export default function MainPage() {
             {t.home.statusIdle.replace("{n}", String(count))}
           </p>
         )}
+
+        {/* 바이럴 힌트 — 처음엔 숨김 */}
+        {count === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
+            style={{ textAlign: "center", marginTop: 24 }}
+          >
+            <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "var(--font-serif)" }}>
+              ↑ 감정 카드를 파쇄기에 던져봐
+            </p>
+            <p style={{ fontSize: 10, color: "#C4BAB0", fontFamily: "monospace", marginTop: 4 }}>
+              결과지 6종 랜덤 — 매번 달라서 친구 것이랑 비교 가능
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* ── 날아가는 카드 ── */}
@@ -551,22 +572,29 @@ export default function MainPage() {
         {phase === "done" && (
           <motion.div key="done"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(26,22,18,0.68)" }}
+            style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(26,22,18,0.72)" }}
           >
             <motion.div
-              initial={{ scale: 0.85, rotate: -2 }} animate={{ scale: 1, rotate: -1 }}
-              transition={{ ease: [0.34, 1.56, 0.64, 1], duration: 0.35 }}
-              style={{ background: "#F5EFE0", border: `2px solid ${INK}`, borderRadius: 3, padding: "20px 26px 22px", textAlign: "center", boxShadow: "5px 5px 0 rgba(42,37,32,0.85)", maxWidth: 300, width: "86%" }}
+              initial={{ scale: 0.82, rotate: -3, y: 12 }} animate={{ scale: 1, rotate: -1, y: 0 }}
+              transition={{ ease: [0.34, 1.56, 0.64, 1], duration: 0.38 }}
+              style={{ background: "#F5EFE0", border: `2.5px solid ${INK}`, borderRadius: 3, padding: "22px 26px 22px", textAlign: "center", boxShadow: "7px 7px 0 rgba(42,37,32,0.9)", maxWidth: 300, width: "88%", position: "relative" }}
             >
-              <p style={{ fontSize: 10, fontFamily: "monospace", color: ROSE, letterSpacing: "0.1em", marginBottom: 10 }}>✓ COMPLETE</p>
-              <p style={{ fontSize: 20, fontFamily: "var(--font-serif)", color: INK, fontWeight: 700, lineHeight: 1.4, marginBottom: 18, whiteSpace: "pre-line" }}>
+              {/* 테이프 */}
+              <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", width: 54, height: 12, background: "rgba(212,188,144,0.55)", borderRadius: 1 }} />
+              <p style={{ fontSize: 9, fontFamily: "monospace", color: ROSE, letterSpacing: "0.14em", marginBottom: 8 }}>
+                ■ BAGAK COMPLETE ■
+              </p>
+              <p style={{ fontSize: 36, fontFamily: "var(--font-serif)", color: INK, fontWeight: 900, lineHeight: 1, marginBottom: 6 }}>
                 {t.home.completeTitle}
               </p>
-              <button onClick={goToResult} style={{ width: "100%", height: 44, background: ROSE, border: "none", borderRadius: 3, fontSize: 13, fontFamily: "var(--font-serif)", color: "#F5EFE0", fontWeight: 700, cursor: "pointer", marginBottom: 8, boxShadow: `0 3px 12px ${ROSE}55` }}>
-                결과 카드 만들기 →
+              <p style={{ fontSize: 11, color: "#9A8E80", fontFamily: "monospace", marginBottom: 18 }}>
+                {currentLabel} — 처리 완료
+              </p>
+              <button onClick={goToResult} style={{ width: "100%", height: 48, background: ROSE, border: "none", borderRadius: 3, fontSize: 14, fontFamily: "var(--font-serif)", color: "#F5EFE0", fontWeight: 700, cursor: "pointer", marginBottom: 8, boxShadow: `4px 4px 0 ${ROSE}66`, letterSpacing: "0.02em" }}>
+                결과지 뽑기 (랜덤) →
               </button>
-              <button onClick={resetMachine} style={{ width: "100%", height: 34, background: "transparent", border: `1px solid ${INK}22`, borderRadius: 3, fontSize: 12, fontFamily: "var(--font-serif)", color: "#8A8270", cursor: "pointer" }}>
-                또 있음 → 추가 투입
+              <button onClick={resetMachine} style={{ width: "100%", height: 36, background: "transparent", border: `1px dashed ${INK}30`, borderRadius: 3, fontSize: 12, fontFamily: "var(--font-serif)", color: "#9A9080", cursor: "pointer" }}>
+                또 있음 — 추가 투입
               </button>
             </motion.div>
           </motion.div>
