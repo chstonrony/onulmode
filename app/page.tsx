@@ -75,6 +75,7 @@ interface FlyingCard {
   dx: number;
   dy: number;
   initRot: number;
+  chipKey: string;
 }
 
 /* ── Web Audio 파쇄음 ── */
@@ -112,6 +113,7 @@ export default function MainPage() {
   const [shaking, setShaking]         = useState(false);
   const [flyingCards, setFlyingCards] = useState<FlyingCard[]>([]);
   const [particles, setParticles]     = useState<Particle[]>([]);
+  const [eatenKeys, setEatenKeys]     = useState<Set<string>>(new Set()); // 먹힌 카드
 
   /* 파쇄기 입 좌표 */
   function getMouthPos() {
@@ -143,8 +145,9 @@ export default function MainPage() {
   }
 
   /* 카드가 입에 도착 */
-  function onCardArrived(cardId: number, label: string, tc: string) {
+  function onCardArrived(cardId: number, label: string, tc: string, chipKey: string) {
     setFlyingCards(p => p.filter(c => c.id !== cardId));
+    setEatenKeys(prev => new Set([...prev, chipKey])); // 먹힌 카드 기록
     const mouth = getMouthPos();
     playShredSound();
     spawnParticles(mouth.x, mouth.y, tc);
@@ -169,8 +172,9 @@ export default function MainPage() {
   /* 칩 클릭 */
   function handleChipClick(
     e: React.MouseEvent<HTMLButtonElement>,
-    label: string, bg: string, tc: string, initRot: number,
+    chipKey: string, label: string, bg: string, tc: string, initRot: number,
   ) {
+    if (eatenKeys.has(chipKey)) return; // 이미 먹힌 카드는 무시
     const rect  = e.currentTarget.getBoundingClientRect();
     const mouth = getMouthPos();
     setFlyingCards(prev => [...prev, {
@@ -180,6 +184,7 @@ export default function MainPage() {
       dx: mouth.x - rect.left - rect.width  / 2,
       dy: mouth.y - rect.top  - rect.height / 2,
       initRot,
+      chipKey,  // 어느 칩인지 추적
     }]);
   }
 
@@ -187,7 +192,7 @@ export default function MainPage() {
     const seed = Date.now() % 999983;
     router.push(buildResultUrl(dumpedLabels.length ? dumpedLabels : [currentLabel], seed));
   }
-  function resetMachine() { setPhase(null); }
+  function resetMachine() { setPhase(null); } // eatenKeys는 유지 (먹힌 카드 그대로)
 
   return (
     <div style={{ background: "#efe3cf", minHeight: "100vh", overflowX: "hidden" }}>
@@ -281,10 +286,13 @@ export default function MainPage() {
                   zIndex: sc.z,
                   transform: `translate(${sc.tx}px, ${sc.ty}px) rotate(${sc.rot}deg)`,
                   display: "inline-block",
+                  opacity: eatenKeys.has(em.k) ? 0 : 1,
+                  pointerEvents: eatenKeys.has(em.k) ? "none" : "auto",
+                  transition: "opacity 0.3s ease",
                 }}
               >
                 <button
-                  onClick={e => handleChipClick(e, label, em.bg, em.tc, sc.rot)}
+                  onClick={e => handleChipClick(e, em.k, label, em.bg, em.tc, sc.rot)}
                   style={{
                     background: em.bg,
                     border: "none",
@@ -386,7 +394,7 @@ export default function MainPage() {
               times:    [0, 0.08, 0.2, 0.65, 0.88, 1],
               ease:     "easeInOut",
             }}
-            onAnimationComplete={() => onCardArrived(card.id, card.label, card.tc)}
+            onAnimationComplete={() => onCardArrived(card.id, card.label, card.tc, card.chipKey)}
           >
             {card.label}
           </motion.div>
@@ -466,7 +474,7 @@ export default function MainPage() {
                 결과 카드 만들기 →
               </button>
               <button onClick={resetMachine} style={{ width: "100%", height: 34, background: "transparent", border: `1px solid ${INK}22`, borderRadius: 3, fontSize: 12, fontFamily: "var(--font-serif)", color: "#8A8270", cursor: "pointer" }}>
-                다시 파쇄하기
+                또 있음 → 추가 투입
               </button>
             </motion.div>
           </motion.div>
