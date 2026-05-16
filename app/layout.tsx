@@ -56,6 +56,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
   const kakaoKey  = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
+  const gaId      = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
@@ -77,6 +78,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <BottomNav />
         </LocaleProvider>
+
+        {/* Google Analytics GA4 */}
+        {gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Google AdSense — NEXT_PUBLIC_ADSENSE_ID 설정 후 활성화 */}
         {adsenseId && (
