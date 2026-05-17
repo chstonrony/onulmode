@@ -173,16 +173,16 @@ function ResultContent() {
         </motion.p>
       </motion.div>
 
-      {/* ─── 2. 상태 경고 — 담백하게 ─── */}
+      {/* ─── 2. 상태 경고 — 공문서 경고 스타일 ─── */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }}
-        style={{ padding: "12px 22px 14px", borderBottom: `1px solid ${LINE}` }}
+        style={{ padding: "12px 22px 14px", borderBottom: `1px solid ${LINE}`, background: "#FAF5EC" }}
       >
         <p style={{ fontSize: 10, fontFamily: "monospace", color: "#8A8070", letterSpacing: "0.06em", lineHeight: 1.6 }}>
-          ⚠ {data.resultTitle}
+          ⚠ {data.adminWarning}
         </p>
         <p style={{ fontSize: 9, fontFamily: "monospace", color: "#B4A890", letterSpacing: "0.04em", marginTop: 2 }}>
-          {data.warningMessage}
+          감정 위험 코드 {data.errorCode} — 즉시 처리됨
         </p>
       </motion.div>
 
@@ -259,29 +259,67 @@ function ResultContent() {
         </div>
       </motion.div>
 
-      {/* ─── 5. 최종 분석 한 줄 — 킬포 ─── */}
+      {/* ─── 5-A. 체크박스 감정 보고서 ─── */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.45 }}
+        style={{ padding: "0 22px 0", marginBottom: 0 }}
+      >
+        <div style={{
+          background: "#FAF5EC", border: `1px solid ${LINE}`,
+          padding: "14px 16px",
+        }}>
+          <p style={{ fontSize: 8, fontFamily: "monospace", color: MUTED, letterSpacing: "0.14em", marginBottom: 10 }}>
+            감정 상태 점검 결과 — 자동 감지됨
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {data.checkboxItems.map((item, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{
+                  width: 13, height: 13, border: `1.5px solid ${INK}`,
+                  flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <span style={{ fontSize: 9, color: ROSE, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                </div>
+                <p style={{ fontSize: 11, fontFamily: "monospace", color: INK, letterSpacing: "0.02em" }}>
+                  {item}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 8, fontFamily: "monospace", color: "#C4BAB0", marginTop: 10, letterSpacing: "0.08em" }}>
+            ※ 우걱이는 전문 훈련을 받은 괴생명체입니다
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ─── 5-B. 최종 분석 한 줄 — 킬포 ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.55 }}
         style={{
-          padding: "28px 28px 32px",
+          padding: "32px 28px 32px",
           borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`,
-          textAlign: "center",
+          textAlign: "center", marginTop: 16,
         }}
       >
-        <p style={{ fontSize: 9, fontFamily: "monospace", color: LINE, letterSpacing: "0.14em", marginBottom: 16 }}>
-          우걱이 최종 판정
+        <p style={{ fontSize: 8, fontFamily: "monospace", color: "#C4BAB0", letterSpacing: "0.14em", marginBottom: 18 }}>
+          우걱이 처리소 / 최종 판정 결과
         </p>
         <p style={{
-          fontSize: 20, fontWeight: 700,
+          fontSize: 21, fontWeight: 700,
           fontFamily: "var(--font-serif)",
-          color: INK, lineHeight: 1.45,
+          color: INK, lineHeight: 1.5,
         }}>
           {data.killerLine}
         </p>
-        <p style={{ fontSize: 9, fontFamily: "monospace", color: LINE, letterSpacing: "0.1em", marginTop: 16 }}>
-          — UGEGI DISPOSAL CO. —
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 18 }}>
+          <div style={{ height: 1, width: 32, background: LINE }} />
+          <p style={{ fontSize: 8, fontFamily: "monospace", color: "#C4BAB0", letterSpacing: "0.1em" }}>
+            UGEGI DISPOSAL CO.
+          </p>
+          <div style={{ height: 1, width: 32, background: LINE }} />
+        </div>
       </motion.div>
 
       {/* ─── 6. 공유 버튼 영역 ─── */}
