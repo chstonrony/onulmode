@@ -653,6 +653,82 @@ const PRODUCT_DESCRIPTIONS = [
   "오늘의 감정 총합이 이 형태로 나옴.",
 ] as const;
 
+// ─── 킬포 문장 (30개) — 캡쳐 욕구 유발 ──────────────────
+const KILLER_LINES = [
+  "오늘 잘 버텼음. 진짜로.",
+  "안 무너진 게 신기한 상태",
+  "우걱이도 처리하다 잠깐 울었음",
+  "괜찮은 척 오래 했네",
+  "이건 감정보다 생존기록에 가까움",
+  "오늘 하루 꽤 독했음",
+  "AI도 차마 뭐라 못함",
+  "감정 처리 중 시스템이 한숨 쉼",
+  "인간 참 힘들게 산다...",
+  "이건 좀 마음 아픈 데이터임",
+  "우걱이가 천천히 삼킴...",
+  "이 정도면 국가대표급 버티기",
+  "시스템도 처음 보는 감정임",
+  "이게 다 오늘 하루에 있었던 거임?",
+  "우걱이가 이건 좀 찡했다고 함",
+  "혼자 다 감당했네",
+  "이 감정 오래 묵혔음. 우걱이가 느낌",
+  "말 안 해서 이렇게 된 거임",
+  "우걱이 처리하다 잠깐 멈췄음",
+  "내일도 버티면 됨. 오늘처럼.",
+  "이 정도면 사실 꽤 힘들었던 거임",
+  "우걱이도 이건 처음임. 솔직히.",
+  "감정을 이렇게 오래 들고 있었구나",
+  "아무튼 잘 버텼음. 우걱이가 인정함.",
+  "시스템 오류: 감정이 너무 인간적임",
+  "우걱이가 삼키다가 멈칫했음",
+  "이 감정 꽤 오래된 거 같은데",
+  "AI가 처리하다 잠시 생각에 잠김",
+  "오늘 이 정도면 충분히 힘들었음",
+  "우걱이가 마지막에 조용해짐...",
+] as const;
+
+// ─── 감정 상태 진단 라벨 (이상한 수치 레이블 전용) ────────
+const DIAGNOSIS_LABELS = [
+  "멘탈 상태",
+  "감정 점도",
+  "인간 포기률",
+  "사회성 신호",
+  "눈물 농도",
+  "우울 숙성도",
+  "버티기 내구도",
+  "감정 유통기한",
+  "마음 구겨짐",
+  "현실 체감온도",
+  "정신 상태",
+  "감정 바스러기",
+  "생존 가능성",
+  "공감 수신율",
+  "괜찮은 척 농도",
+] as const;
+
+const DIAGNOSIS_VALUES = [
+  "김 빠진 콜라 상태",
+  "눅눅한 오징어칩 단계",
+  "와이파이 한 칸 수준",
+  "냉장고 뒤편 감정",
+  "멘탈 배터리 방전",
+  "인간 기능 절전모드",
+  "꾸깃꾸깃",
+  "과몰입 위험군",
+  "울컥 직전",
+  "조용히 무너지는 중",
+  "생각보다 오래 버팀",
+  "시스템도 놀람",
+  "비상 전원 작동 중",
+  "배터리 3% 유지",
+  "정상 범위 살짝 벗어남",
+  "희미하게 버팀",
+  "묵은지 급 숙성",
+  "이슬비 단계",
+  "수분 부족 상태",
+  "미세하게 흔들림",
+] as const;
+
 // ─── 바이럴 하단 문구 (30개) ─────────────────────────────
 const VIRAL_TEXTS = [
   "나만 당할 수 없음",
@@ -744,6 +820,9 @@ export interface ResultData {
   retryButtonText: string;
   closeButtonText: string;
   viralText: string;
+  killerLine: string;
+  diagnosisLabel: string;
+  diagnosisValue: string;
   isRare: boolean;
   productName: string;
   productEmoji: string;
@@ -795,6 +874,9 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     retryButtonText: pick(BUTTON_RETRY_TEXTS,  rng),
     closeButtonText: pick(BUTTON_CLOSE_TEXTS,  rng),
     viralText:       pick(VIRAL_TEXTS,          rng),
+    killerLine:      pick(KILLER_LINES,         rng),
+    diagnosisLabel:  pick(DIAGNOSIS_LABELS,     rng),
+    diagnosisValue:  pick(DIAGNOSIS_VALUES,     rng),
     isRare:          rng() < 0.05,
     productName:    `${adj} ${food.name}`,
     productEmoji:   food.emoji,
