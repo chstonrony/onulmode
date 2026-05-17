@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateResult, parseResultUrl, buildResultUrl } from "@/lib/resultCard";
 import ResultCard from "@/components/share/ResultCard";
+import ShareCard from "@/components/share/ShareCard";
 import ShareButtons from "@/components/share/ShareButtons";
 import Link from "next/link";
 
@@ -248,14 +249,28 @@ function ResultContent() {
         </div>
       </motion.div>
 
-      {/* ─── 4. 감정 결과 카드 ─── */}
+      {/* ─── 4. 공유용 ShareCard (캡처 대상) ─── */}
       <motion.div
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.35 }}
-        style={{ padding: "32px 14px" }}
+        style={{ padding: "28px 14px 0" }}
       >
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <ResultCard ref={cardRef} data={data} emotions={emotions} />
+          <ShareCard ref={cardRef} data={data} emotions={emotions} />
+        </div>
+      </motion.div>
+
+      {/* ─── 4-B. 결과 카드 상세 (스타일 카드) ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        style={{ padding: "16px 14px 0" }}
+      >
+        <p style={{ fontSize: 8, fontFamily: "monospace", color: MUTED, letterSpacing: "0.14em", textAlign: "center", marginBottom: 10 }}>
+          상세 결과지
+        </p>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <ResultCard data={data} emotions={emotions} />
         </div>
       </motion.div>
 
