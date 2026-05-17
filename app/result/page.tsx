@@ -38,20 +38,21 @@ function ProcessingScreen({ onDone }: { onDone: () => void }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    const MAX_MSGS = 5; // 5개만 보여주고 끝
     const msgTimer = setInterval(() => {
       setMsgIdx(i => {
-        if (i >= PROCESSING_MSGS.length - 1) {
+        if (i >= MAX_MSGS - 1) {
           clearInterval(msgTimer);
-          setTimeout(onDone, 500);
+          setTimeout(onDone, 300);
           return i;
         }
         return i + 1;
       });
-    }, 660);
+    }, 420);
 
     const progTimer = setInterval(() => {
-      setProgress(p => p >= 97 ? 97 : p + 1.6);
-    }, 55);
+      setProgress(p => p >= 97 ? 97 : p + 4);
+    }, 50);
 
     return () => { clearInterval(msgTimer); clearInterval(progTimer); };
   }, [onDone]);
