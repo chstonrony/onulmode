@@ -7,7 +7,7 @@ const ROSE = "#C8607A";
 const INK  = "#2A2520";
 const BG   = "#F5EFE0";
 const LINE = "#D8CEC0";
-const OG_IMAGE_URL = "https://onulmode.vercel.app/opengraph-image";
+const OG_IMAGE_URL = "https://onulmood.com/opengraph-image";
 
 interface Props {
   cardRef: RefObject<HTMLDivElement | null>;

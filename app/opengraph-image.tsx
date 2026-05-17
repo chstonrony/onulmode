@@ -120,7 +120,7 @@ export default function Image() {
 
       {/* URL */}
       <div style={{ position: "absolute", bottom: 36, left: 52, fontSize: 13, color: "#B4A890", display: "flex" }}>
-        onulmode.vercel.app
+        onulmood.com
       </div>
 
       {/* 일련번호 */}

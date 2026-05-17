@@ -360,7 +360,7 @@ const ShareCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =>
         {/* ── 어설픈 도장 + 브랜딩 ── */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 14 }}>
           <p style={{ fontSize: 9, color: "#B4A890", letterSpacing: "0.06em" }}>
-            onulmode.vercel.app
+            onulmood.com
           </p>
           <div style={{
             border: "1.8px solid #C8607A",

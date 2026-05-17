@@ -397,7 +397,7 @@ function Style1({ data, emotions }: { data: ResultData; emotions: string[] }) {
             {viralText}
           </p>
           <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.06em" }}>
-            onulmode.vercel.app
+            onulmood.com
           </p>
         </div>
       </div>
@@ -494,7 +494,7 @@ function Style2({ data, emotions }: { data: ResultData; emotions: string[] }) {
 
         {/* 하단 */}
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:12, letterSpacing:"0.04em" }}>
-          {viralText} — onulmode.vercel.app
+          {viralText} — onulmood.com
         </p>
       </div>
     </div>
@@ -574,7 +574,7 @@ function Style3({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          {viralText} — onulmode.vercel.app
+          {viralText} — onulmood.com
         </p>
       </div>
     </div>
@@ -677,7 +677,7 @@ function Style4({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          {viralText} — onulmode.vercel.app
+          {viralText} — onulmood.com
         </p>
       </div>
     </div>
@@ -768,7 +768,7 @@ function Style5({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:9, color:"#A89880", textAlign:"center", marginTop:10 }}>
-          {viralText} — onulmode.vercel.app
+          {viralText} — onulmood.com
         </p>
       </div>
     </div>
@@ -878,7 +878,7 @@ function Style6({ data, emotions }: { data: ResultData; emotions: string[] }) {
             {viralText}
           </p>
           <p style={{ fontSize:8, color:"#C4BAB0", letterSpacing:"0.06em" }}>
-            onulmode.vercel.app
+            onulmood.com
           </p>
         </div>
       </div>
@@ -956,7 +956,7 @@ function Style7({ data, emotions }: { data: ResultData; emotions: string[] }) {
               <div key={i} style={{ width: i%3===0?3:1, height:24, background:"#4A4038", opacity:0.8 }}/>
             ))}
           </div>
-          <p style={{ fontSize:8, color:"#5A5048", letterSpacing:"0.14em" }}>onulmode.vercel.app</p>
+          <p style={{ fontSize:8, color:"#5A5048", letterSpacing:"0.14em" }}>onulmood.com</p>
           <p style={{ fontSize:8, color:"#5A5048", marginTop:2 }}>AI가 내 감정 먹다가 체함 ㅋㅋ</p>
         </div>
       </div>
@@ -1057,7 +1057,7 @@ function Style8({ data, emotions }: { data: ResultData; emotions: string[] }) {
 
         {/* 하단 */}
         <p style={{ fontSize:8, color:"#8A8070", textAlign:"center", marginTop:10, letterSpacing:"0.06em" }}>
-          onulmode.vercel.app — AI가 내 감정 처리하다 오류남 ㅋㅋ
+          onulmood.com — AI가 내 감정 처리하다 오류남 ㅋㅋ
         </p>
       </div>
     </div>
@@ -1140,7 +1140,7 @@ function Style9({ data, emotions }: { data: ResultData; emotions: string[] }) {
         {/* 하단 */}
         <div style={{ borderTop:"1px solid #1A3A1A", paddingTop:8, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
           <p style={{ fontSize:8, color:"#005510", letterSpacing:"0.08em" }}>CAM-ID: {serial}</p>
-          <p style={{ fontSize:8, color:"#005510" }}>onulmode.vercel.app</p>
+          <p style={{ fontSize:8, color:"#005510" }}>onulmood.com</p>
         </div>
         <p style={{ fontSize:9, color:"#00660F", textAlign:"center", marginTop:6 }}>AI가 내 감정 CCTV로 포착함 ㅋㅋ</p>
       </div>
@@ -1376,7 +1376,7 @@ function Style12({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:7, color:"#C4BAB0", textAlign:"center", marginTop:6, letterSpacing:"0.08em" }}>
-          {errorCode} · onulmode.vercel.app
+          {errorCode} · onulmood.com
         </p>
       </div>
     </div>
@@ -1458,7 +1458,7 @@ function Style10({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:8, color:"#C0B8B0", textAlign:"center", marginTop:8 }}>
-          {errorCode} · onulmode.vercel.app
+          {errorCode} · onulmood.com
         </p>
       </div>
     </div>
@@ -1541,7 +1541,7 @@ function Style11({ data, emotions }: { data: ResultData; emotions: string[] }) {
         </div>
 
         <p style={{ fontSize:8, color:"#8A7000", textAlign:"center", marginTop:12, letterSpacing:"0.06em" }}>
-          {errorCode} · onulmode.vercel.app
+          {errorCode} · onulmood.com
         </p>
       </div>
 

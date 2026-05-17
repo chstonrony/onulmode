@@ -394,7 +394,7 @@ function ResultContent() {
       {/* ─── 시스템 서명 ─── */}
       <div style={{ padding: "28px 24px 0", textAlign: "center" }}>
         <p style={{ fontSize: 8, fontFamily: "monospace", color: LINE, letterSpacing: "0.08em" }}>
-          UGEGI DISPOSAL CO. · {data.errorCode} · onulmode.vercel.app
+          UGEGI DISPOSAL CO. · {data.errorCode} · onulmood.com
         </p>
       </div>
     </div>

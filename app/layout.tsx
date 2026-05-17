@@ -21,7 +21,7 @@ const crimsonText = Crimson_Text({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://onulmode.vercel.app"),
+  metadataBase: new URL("https://onulmood.com"),
   verification: { google: "cfO4F7I7CgH-iEUeShOV5RofN4k3vs8ixumUd_-vMIM" },
   title: "오늘무드 | 감정 파쇄기 — 오늘의 감정을 여기서 버려요",
   description: "말 못 한 마음, 짜증, 억울함, 외로움을 감정 파쇄기에 넣고 버려보세요. 기록하지 않아도 괜찮아요. 오늘 마음 조금 정리 완료.",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    url: "https://onulmode.vercel.app",
+    url: "https://onulmood.com",
     title: "오늘무드 | 감정 파쇄기",
     description: "말 못 한 마음도, 짜증도, 억울함도 그냥 던져버려. 우걱이가 씹어먹음.",
     siteName: "오늘무드",

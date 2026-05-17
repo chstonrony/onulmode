@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { ARTICLES } from "@/lib/articles";
 
-const BASE = "https://onulmode.vercel.app";
+const BASE = "https://onulmood.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
