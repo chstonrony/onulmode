@@ -410,9 +410,9 @@ body {
   .mobile-video {
     display: block;
     width: 100%;
-    height: 38vh;
-    object-fit: cover;
-    object-position: center 20%;
+    height: 48vh;
+    object-fit: contain;
+    background: #efe3cf;
   }
 
   .hero-overlay {
