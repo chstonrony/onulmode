@@ -334,7 +334,7 @@ export default function MainPage() {
             <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
           </video>
           <video autoPlay muted loop playsInline className="mobile-video">
-            <source src="/videos/shredder-desktop.mp4" type="video/mp4" />
+            <source src="/videos/shredder-mobile-new.mp4" type="video/mp4" />
           </video>
 
           {/* 파쇄기 입 타겟 — 위치 조정 시 top % 변경 */}
