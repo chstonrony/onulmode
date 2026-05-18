@@ -363,6 +363,8 @@ function ResultContent() {
           shareUrl={shareUrl}
           emotions={emotions}
           productName={data.productName}
+          productEmoji={data.productEmoji}
+          killerLine={data.killerLine}
           onRetry={handleRetry}
         />
       </motion.div>

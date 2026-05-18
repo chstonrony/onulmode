@@ -14,10 +14,12 @@ interface Props {
   shareUrl: string;
   emotions: string[];
   productName?: string;
+  productEmoji?: string;
+  killerLine?: string;
   onRetry: () => void;
 }
 
-export default function ShareButtons({ cardRef, shareUrl, emotions, productName, onRetry }: Props) {
+export default function ShareButtons({ cardRef, shareUrl, emotions, productName, productEmoji, killerLine, onRetry }: Props) {
   const [saving, setSaving]   = useState(false);
   const [copied, setCopied]   = useState(false);
   const [imgBlob, setImgBlob] = useState<string | null>(null);
@@ -57,18 +59,24 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, productName,
       alert("카카오 SDK가 준비되지 않았어요. 링크 복사를 이용해주세요.");
       return;
     }
+    const emoji = productEmoji ?? "🫠";
+    const kakaoTitle = productName
+      ? `${emoji} 우걱이가 내 감정을 "${productName}"으로 만들어버림`
+      : `우걱이가 내 ${emotionStr} 이렇게 갈아버림`;
+    const kakaoDesc = killerLine
+      ? `"${killerLine}" — 나는 뭐 나오나 궁하면 해봐`
+      : "감정 던지면 우걱이가 씹어먹음. 결과 매번 달라.";
+
     kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: productName
-          ? `우걱이가 내 감정을 "${productName}"으로 만들어버림ㅋㅋ`
-          : `우걱이가 내 ${emotionStr} 이렇게 갈아버림ㅋㅋ`,
-        description: "나는 뭐 나오나 궁하면 해봐. 매번 달라 — 오늘무드",
+        title: kakaoTitle,
+        description: kakaoDesc,
         imageUrl: OG_IMAGE_URL,
         link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
       },
       buttons: [{
-        title: "나도 감정 파쇄하기",
+        title: "나도 파쇄당하기",
         link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
       }],
     });
@@ -76,9 +84,11 @@ export default function ShareButtons({ cardRef, shareUrl, emotions, productName,
 
   /* ── 트위터/X 공유 ── */
   function handleTwitter() {
-    const text = `AI가 내 ${emotionStr} 이렇게 갈아버림ㅋㅋ\n우걱이 처리 완료. 너도 해봐\n#오늘무드 #감정파쇄기`;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(fullUrl)}`;
-    window.open(tweetUrl, "_blank", "width=600,height=400");
+    const emoji = productEmoji ?? "🫠";
+    const tweetText = productName
+      ? `${emoji} 우걱이가 내 감정을 "${productName}"으로 만들어버림ㅋㅋ\n${killerLine ? `"${killerLine}"\n` : ""}너도 해봐 — 결과 매번 달라\n#오늘무드 #감정파쇄기 #우걱이`
+      : `우걱이가 내 ${emotionStr} 이렇게 갈아버림ㅋㅋ\n나만 당할 수 없음\n#오늘무드 #감정파쇄기`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(fullUrl)}`, "_blank", "width=600,height=400");
   }
 
   /* ── 링크 복사 ── */
