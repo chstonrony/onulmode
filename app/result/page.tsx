@@ -189,10 +189,46 @@ function ResultContent() {
         </motion.p>
       </motion.div>
 
-      {/* ─── 2. 상태 경고 — 공문서 경고 스타일 ─── */}
+      {/* ─── 2. 투입된 감정 확인 — 히어로 ─── */}
       <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }}
-        style={{ padding: "12px 22px 14px", borderBottom: `1px solid ${LINE}`, background: "#FAF5EC" }}
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        style={{ padding: "24px 22px 20px", background: INK, borderBottom: `3px solid ${ROSE}` }}
+      >
+        <p style={{ fontSize: 8, fontFamily: "monospace", color: "#5A5248", letterSpacing: "0.14em", marginBottom: 12 }}>
+          ▼ 투입된 감정 — 처리 완료
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+          {emotions.slice(0, 4).map((e, i) => (
+            <motion.span
+              key={e}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 + i * 0.08 }}
+              style={{
+                fontSize: 15, fontFamily: "var(--font-serif)", fontWeight: 700,
+                color: "#FAF8F2", background: `${ROSE}22`,
+                padding: "6px 14px", border: `1.5px solid ${ROSE}60`,
+                borderRadius: 2, letterSpacing: "0.02em",
+              }}
+            >
+              {e}
+            </motion.span>
+          ))}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ height: 1, flex: 1, background: "#2A2520" }} />
+          <p style={{ fontSize: 9, fontFamily: "monospace", color: ROSE, letterSpacing: "0.1em" }}>
+            ↓ 우걱이 처리 결과물
+          </p>
+          <div style={{ height: 1, flex: 1, background: "#2A2520" }} />
+        </div>
+      </motion.div>
+
+      {/* ─── 2-B. 상태 경고 ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.15 }}
+        style={{ padding: "10px 22px 10px", borderBottom: `1px solid ${LINE}`, background: "#FAF5EC" }}
       >
         <p style={{ fontSize: 10, fontFamily: "monospace", color: "#8A8070", letterSpacing: "0.06em", lineHeight: 1.6 }}>
           ⚠ {data.adminWarning}
@@ -202,26 +238,26 @@ function ResultContent() {
         </p>
       </motion.div>
 
-      {/* ─── 3. 결과 이름 — 히어로 ─── */}
+      {/* ─── 3. 결과 이름 — 제품 ─── */}
       <motion.div
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        style={{ padding: "44px 24px 36px", textAlign: "center", borderBottom: `1px solid ${LINE}` }}
+        transition={{ duration: 0.6, delay: 0.25 }}
+        style={{ padding: "36px 24px 32px", textAlign: "center", borderBottom: `1px solid ${LINE}` }}
       >
         <p style={{ fontSize: 9, fontFamily: "monospace", color: MUTED, letterSpacing: "0.18em", marginBottom: 18 }}>
-          오늘의 결과물
+          {emotions[0] ? `${emotions[0]} 외 ${emotions.length - 1}종 → 처리 결과물` : "처리 결과물"}
         </p>
 
         {/* 이모지 */}
         <motion.p
           animate={{ y: [0, -4, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ fontSize: 48, marginBottom: 16, display: "block" }}
+          style={{ fontSize: 52, marginBottom: 16, display: "block" }}
         >
           {data.productEmoji}
         </motion.p>
 
-        {/* 결과 이름 — 가장 크게 */}
+        {/* 결과 이름 */}
         <h1 style={{
           fontSize: 26, fontWeight: 700,
           fontFamily: "var(--font-serif)",
@@ -249,19 +285,6 @@ function ResultContent() {
             </span>
           </div>
         )}
-
-        {/* 감정 태그 */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 18, flexWrap: "wrap" }}>
-          {emotions.slice(0, 3).map(e => (
-            <span key={e} style={{
-              fontSize: 11, color: ROSE, background: `${ROSE}12`,
-              padding: "2px 10px", border: `1px solid ${ROSE}30`,
-              fontFamily: "var(--font-serif)",
-            }}>
-              {e}
-            </span>
-          ))}
-        </div>
       </motion.div>
 
       {/* ─── 4. 공유용 ShareCard (캡처 대상) ─── */}
@@ -379,7 +402,7 @@ function ResultContent() {
           나만 당할 수 없음
         </p>
         <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: MUTED, lineHeight: 1.7 }}>
-          &ldquo;나 오늘 {data.productName} 나옴ㅋㅋ 너는?&rdquo;
+          &ldquo;{emotions[0] ? `내 ${emotions[0]}` : "내 감정"} 넣었더니 {data.productName} 나옴ㅋㅋ 너는?&rdquo;
         </p>
 
         {/* X 공유 + 감정 더 버리기 */}
