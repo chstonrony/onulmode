@@ -372,10 +372,22 @@ export default function MainPage() {
         transition={{ delay: 0.45, duration: 0.5 }}
         style={{ padding: "28px 16px 96px", background: "#efe3cf" }}
       >
-        <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#9A9080", textAlign: "center", marginBottom: 18 }}>
-          {t.home.emotionLabel}
-          {t.home.emotionWord ? ` ${t.home.emotionWord}` : ""}
-          {t.home.emotionSuffix ? ` ${t.home.emotionSuffix}` : ""}
+        {/* 기계 상태 헤더 */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "7px 12px", background: INK, borderRadius: 2 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 0.9, repeat: Infinity }}
+              style={{ width: 6, height: 6, borderRadius: "50%", background: "#6A9A6A", display: "inline-block" }} />
+            <span style={{ fontSize: 9, fontFamily: "monospace", color: "#6A9A6A", letterSpacing: "0.12em" }}>
+              EMOTION INPUT TERMINAL
+            </span>
+          </div>
+          <span style={{ fontSize: 9, fontFamily: "monospace", color: "#3A3028", letterSpacing: "0.08em" }}>
+            {eatenKeys.size > 0 ? `${eatenKeys.size}개 투입됨` : "대기 중"}
+          </span>
+        </div>
+
+        <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#7A7060", textAlign: "center", marginBottom: 16 }}>
+          {t.home.emotionLabel} <strong style={{ color: INK }}>{t.home.emotionWord}</strong>{t.home.emotionSuffix ? ` ${t.home.emotionSuffix}` : ""}
         </p>
 
         {/* 흩어진 그리드 */}
@@ -459,18 +471,19 @@ export default function MainPage() {
           </p>
         )}
 
-        {/* 바이럴 힌트 — 처음엔 숨김 */}
+        {/* 힌트 */}
         {count === 0 && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 2 }}
-            style={{ textAlign: "center", marginTop: 24 }}
+            transition={{ delay: 0.5 }}
+            style={{ textAlign: "center", marginTop: 20, padding: "12px 16px", border: "1px dashed #C8BEB0", borderRadius: 2 }}
           >
-            <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "var(--font-serif)" }}>
-              ↑ 감정 카드를 파쇄기에 던져봐
-            </p>
-            <p style={{ fontSize: 10, color: "#C4BAB0", fontFamily: "monospace", marginTop: 4 }}>
-              결과지 11종 랜덤 — 매번 달라서 친구 것이랑 비교 가능
+            <motion.p animate={{ y: [-2, 2, -2] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{ fontSize: 13, color: ROSE, fontFamily: "var(--font-serif)", fontWeight: 700, marginBottom: 4 }}>
+              ↑ 카드 눌러봐 — 우걱이가 씹어먹음
+            </motion.p>
+            <p style={{ fontSize: 10, color: "#B4A890", fontFamily: "monospace" }}>
+              결과 매번 달라 · 친구 것이랑 비교 가능 · 공유 가능
             </p>
           </motion.div>
         )}
@@ -605,7 +618,7 @@ export default function MainPage() {
                 {currentLabel} — 처리 완료
               </p>
               <button onClick={goToResult} style={{ width: "100%", height: 48, background: ROSE, border: "none", borderRadius: 3, fontSize: 14, fontFamily: "var(--font-serif)", color: "#F5EFE0", fontWeight: 700, cursor: "pointer", marginBottom: 8, boxShadow: `4px 4px 0 ${ROSE}66`, letterSpacing: "0.02em" }}>
-                결과지 뽑기 (랜덤) →
+                내 결과지 받기 →
               </button>
               <button onClick={resetMachine} style={{ width: "100%", height: 36, background: "transparent", border: `1px dashed ${INK}30`, borderRadius: 3, fontSize: 12, fontFamily: "var(--font-serif)", color: "#9A9080", cursor: "pointer" }}>
                 또 있음 — 추가 투입
