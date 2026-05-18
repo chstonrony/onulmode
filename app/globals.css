@@ -394,25 +394,39 @@ body {
     display: none;
   }
 
-  .hero-media {
-    border-radius: 20px;
-    width: 100%;
-    max-width: 420px;
+  .hero-section {
+    min-height: auto;
+    padding: 8px 16px 0;
+    justify-content: flex-start;
+    gap: 0;
   }
 
-  .desktop-video {
-    display: none;
+  .hero-media {
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
   }
 
   .mobile-video {
     display: block;
     width: 100%;
-    height: 68vh;
+    height: 38vh;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: center 20%;
+  }
+
+  .hero-overlay {
+    margin-top: 10px;
+    padding-bottom: 4px;
   }
 
   .hero-overlay h1 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-cta {
+    padding: 11px 22px;
+    font-size: 0.9rem;
   }
 }

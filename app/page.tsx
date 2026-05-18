@@ -370,7 +370,7 @@ export default function MainPage() {
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.45, duration: 0.5 }}
-        style={{ padding: "28px 16px 96px", background: "#efe3cf" }}
+        style={{ padding: "12px 16px 96px", background: "#efe3cf" }}
       >
         {/* 기계 상태 헤더 */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "7px 12px", background: INK, borderRadius: 2 }}>
