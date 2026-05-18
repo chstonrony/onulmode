@@ -10,8 +10,8 @@ const INK    = "#2A2520";
 const PURPLE = "#7A70A8";
 
 const MOBILE_TABS = [
-  { href: "/release", label: "파쇄시작",    color: ROSE,   cta: true  },
   { href: "/",        label: "우걱이",      color: INK,    cta: false },
+  { href: "/release", label: "파쇄시작",    color: ROSE,   cta: true  },
   { href: "/archive", label: "감정파쇄함",  color: INK,    cta: false },
   { href: "/blog",    label: "감정보관소",  color: PURPLE, cta: false },
 ] as const;
