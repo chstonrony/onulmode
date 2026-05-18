@@ -4,6 +4,7 @@ import { useRef, useMemo, Suspense, useState, useEffect, useCallback } from "rea
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateResult, parseResultUrl, buildResultUrl } from "@/lib/resultCard";
+import { saveShredRecord } from "@/lib/shredRecords";
 import ResultCard from "@/components/share/ResultCard";
 import ShareCard from "@/components/share/ShareCard";
 import ShareButtons from "@/components/share/ShareButtons";
@@ -140,6 +141,20 @@ function ResultContent() {
     [parsed?.seed]
   );
   const shareUrl = buildResultUrl(emotions, data.seed);
+
+  useEffect(() => {
+    if (phase === "result") {
+      saveShredRecord({
+        emotions,
+        productName: data.productName,
+        productEmoji: data.productEmoji,
+        killerLine: data.killerLine,
+        errorCode: data.errorCode,
+        warningMessage: data.warningMessage ?? "",
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   function handleRetry() { router.push("/release"); }
 
