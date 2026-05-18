@@ -49,62 +49,39 @@ export default function BottomNav() {
           maxWidth: 480, margin: "0 auto",
           padding: "0 4px",
         }}>
-          {MOBILE_TABS.map(({ href, label, color, cta }) => {
+          {MOBILE_TABS.map(({ href, label, color }) => {
             const active = isActive(href);
-
-            if (cta) {
-              return (
-                <motion.div
-                  key={href}
-                  whileTap={{ scale: 0.92, rotate: -2 }}
-                  style={{ display: "flex" }}
-                >
-                  <Link href={href} style={{
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    background: ROSE, color: "#FAF8F2",
-                    padding: "7px 14px",
-                    fontSize: 11, fontFamily: "var(--font-serif)", fontWeight: 700,
-                    textDecoration: "none", letterSpacing: "0.04em",
-                    border: `1.5px solid ${INK}`,
-                    boxShadow: `2px 2px 0 ${INK}`,
-                    transform: "rotate(-1.5deg)",
-                    whiteSpace: "nowrap",
-                  }}>
-                    파쇄시작
-                  </Link>
-                </motion.div>
-              );
-            }
-
-            const tabColor = active ? color : "#A89880";
 
             return (
               <motion.div
                 key={href}
-                whileTap={{ rotate: [-2, 2, -1, 0], transition: { duration: 0.25 } }}
+                whileTap={{ scale: 0.92, rotate: -1.5, transition: { duration: 0.15 } }}
                 style={{ display: "flex" }}
               >
                 <Link href={href} style={{
                   display: "flex", flexDirection: "column",
-                  alignItems: "center", gap: 3, padding: "4px 8px",
+                  alignItems: "center", justifyContent: "center",
+                  gap: 2, padding: "4px 8px",
                   textDecoration: "none",
+                  ...(active ? {
+                    background: color === ROSE ? ROSE : INK,
+                    color: "#FAF8F2",
+                    border: `1.5px solid ${INK}`,
+                    boxShadow: `2px 2px 0 ${INK}`,
+                    transform: "rotate(-1.5deg)",
+                    padding: "5px 10px",
+                  } : {}),
                 }}>
                   <span style={{
                     fontSize: active ? 10 : 9,
                     fontFamily: "var(--font-serif)",
-                    color: tabColor,
+                    color: active ? "#FAF8F2" : "#A89880",
                     fontWeight: active ? 700 : 400,
-                    letterSpacing: "0.01em",
+                    letterSpacing: "0.02em",
                     whiteSpace: "nowrap",
                   }}>
                     {label}
                   </span>
-                  {active && (
-                    <span style={{
-                      width: 4, height: 4, borderRadius: "50%",
-                      background: color, display: "block",
-                    }}/>
-                  )}
                 </Link>
               </motion.div>
             );
