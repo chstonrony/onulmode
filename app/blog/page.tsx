@@ -101,11 +101,21 @@ export default function BlogPage() {
                   }}>
                     {article.title}
                   </h2>
-                  <p style={{ fontSize: 13, color: "#7A7260", lineHeight: 1.7, fontWeight: 300 }}>
+                  <p style={{ fontSize: 13, color: "#7A7260", lineHeight: 1.7, fontWeight: 300, marginBottom: 10 }}>
                     {article.description}
                   </p>
-                  <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "monospace", marginTop: 12 }}>
-                    {article.date}
+                  {article.authorNote && (
+                    <p style={{
+                      fontSize: 11, color: "#9A8878", fontFamily: "var(--font-serif)",
+                      fontStyle: "italic", lineHeight: 1.6,
+                      borderLeft: "2px solid #D8CEC0", paddingLeft: 10,
+                      marginBottom: 10,
+                    }}>
+                      &ldquo;{article.authorNote.slice(0, 60)}…&rdquo;
+                    </p>
+                  )}
+                  <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "monospace" }}>
+                    {article.date} · {article.readingTime}분
                   </p>
                 </article>
               </Link>

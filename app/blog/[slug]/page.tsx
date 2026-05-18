@@ -147,20 +147,32 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* CTA */}
         <div style={{
-          margin: "32px 0", padding: "24px 28px", textAlign: "center",
-          background: "#F5EFE0", border: "1px dashed #D8CEC0", borderRadius: 4,
+          margin: "32px 0",
+          background: "#1A1410",
+          border: "2px solid #C8607A",
+          padding: "24px 28px",
+          textAlign: "center",
+          position: "relative",
         }}>
-          <p style={{ fontSize: 14, color: "#5A5248", marginBottom: 14, fontFamily: "var(--font-serif)" }}>
-            읽고 나서 감정이 올라왔다면, 여기 버려도 돼요.
+          <p style={{ fontSize: 9, fontFamily: "monospace", color: "#5A5248", letterSpacing: "0.14em", marginBottom: 12 }}>
+            ■ 우걱이 처리소 — 감정 투입 대기 중
+          </p>
+          <p style={{ fontSize: 16, color: "#FAF8F2", fontFamily: "var(--font-serif)", fontWeight: 700, marginBottom: 6 }}>
+            이 글 읽고 감정 올라왔어?
+          </p>
+          <p style={{ fontSize: 13, color: "#7A7260", fontFamily: "var(--font-serif)", marginBottom: 18 }}>
+            우걱이가 지금 배고픔 MAX임. 던져.
           </p>
           <Link href="/release" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "#C8607A", color: "#F5EFE0",
-            padding: "11px 24px", borderRadius: 4,
+            border: "2px solid #C8607A",
+            padding: "12px 28px",
             fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
             textDecoration: "none",
+            boxShadow: "4px 4px 0 rgba(200,96,122,0.4)",
           }}>
-            감정 버리러 가기 →
+            우걱이한테 던지기 →
           </Link>
         </div>
 
