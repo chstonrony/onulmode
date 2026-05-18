@@ -16,7 +16,7 @@ export default function BottomNav() {
 
   const TABS = [
     { href: "/release", label: "파쇄하기" },
-    { href: "/",        label: "홈"       },
+    { href: "/",        label: "우걱이"   },
     { href: "/archive", label: t.nav.archive },
     { href: "/blog",    label: t.nav.stories },
   ];
@@ -103,7 +103,7 @@ export default function BottomNav() {
           {/* 네비 + 언어 */}
           <nav style={{ display: "flex", alignItems: "center", gap: 20 }}>
             {[
-              { href: "/", label: "홈" },
+              { href: "/", label: "우걱이" },
               { href: "/blog", label: t.nav.stories },
               { href: "/archive", label: t.nav.archive },
               { href: "/about", label: t.nav.about },
