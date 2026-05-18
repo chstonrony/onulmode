@@ -314,15 +314,15 @@ const ShareCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =>
             감정 분석 수치
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-              <span style={{ color: "#6A6258" }}>{diagnosisLabel}</span>
-              <span style={{ fontWeight: 700, color: "#1A1410" }}>{diagnosisValue}</span>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, gap: 8 }}>
+              <span style={{ color: "#6A6258", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{diagnosisLabel}</span>
+              <span style={{ fontWeight: 700, color: "#1A1410", flexShrink: 0, whiteSpace: "nowrap" }}>{diagnosisValue}</span>
             </div>
             {bizarreStats.slice(0, 2).map(s => (
-              <div key={s.label} style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-                <span style={{ color: "#6A6258" }}>{s.label}</span>
+              <div key={s.label} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, gap: 8 }}>
+                <span style={{ color: "#6A6258", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.label}</span>
                 <span style={{
-                  fontWeight: 700,
+                  fontWeight: 700, flexShrink: 0, whiteSpace: "nowrap",
                   color: s.value.includes("%") && parseInt(s.value) > 70 ? "#C8607A" : "#1A1410"
                 }}>{s.value}</span>
               </div>
@@ -337,7 +337,7 @@ const ShareCard = forwardRef<HTMLDivElement, Props>(({ data, emotions }, ref) =>
               <div style={{ width: 11, height: 11, border: "1.5px solid #1A1410", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontSize: 8, color: "#C8607A", fontWeight: 900, lineHeight: 1 }}>✓</span>
               </div>
-              <p style={{ fontSize: 10, color: "#5A5248", letterSpacing: "0.02em" }}>{item}</p>
+              <p style={{ fontSize: 10, color: "#5A5248", letterSpacing: "0.02em", wordBreak: "keep-all", lineHeight: 1.4 }}>{item}</p>
             </div>
           ))}
         </div>
