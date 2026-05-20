@@ -1,14 +1,18 @@
 import Link from "next/link";
+import OnulSeries from "@/components/series/OnulSeries";
 
 export default function Footer() {
   return (
     <footer style={{
       borderTop: "1px solid #D8CEC0",
       background: "#efe3cf",
-      padding: "32px 24px 100px", // 100px: 모바일 하단 탭 공간 확보
+      padding: "32px 24px 100px",
       textAlign: "center",
     }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>
+
+        {/* 오늘 시리즈 */}
+        <OnulSeries style={{ marginBottom: 24, textAlign: "left" }} />
 
         {/* 브랜드 */}
         <p style={{
