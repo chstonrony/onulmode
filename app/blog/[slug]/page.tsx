@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${article.title} | 오늘무드`,
     description: article.description,
+    authors: [{ name: "Sharon", url: "https://onulmood.com/about" }],
   };
 }
 
@@ -73,9 +74,29 @@ export default async function ArticlePage({ params }: Props) {
           <p style={{ fontSize: 15, color: "#7A7260", lineHeight: 1.7, fontWeight: 300, marginBottom: 16 }}>
             {article.description}
           </p>
-          <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "monospace" }}>
-            {article.date}
-          </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
+            <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "monospace" }}>
+              {article.date}
+            </p>
+            {/* 저자 byline */}
+            <Link href="/about" style={{
+              display: "flex", alignItems: "center", gap: 8,
+              textDecoration: "none",
+            }}>
+              <div style={{
+                width: 26, height: 26, borderRadius: "50%",
+                background: "#C8607A",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12, color: "#F5EFE0", fontWeight: 700,
+                fontFamily: "var(--font-serif)",
+                flexShrink: 0,
+              }}>S</div>
+              <div>
+                <p style={{ fontSize: 12, color: "#5A5248", fontFamily: "var(--font-serif)", fontWeight: 700 }}>Sharon</p>
+                <p style={{ fontSize: 10, color: "#A89880", fontFamily: "monospace" }}>오늘무드 운영자</p>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* 구분선 */}
@@ -119,6 +140,39 @@ export default async function ArticlePage({ params }: Props) {
             );
           })}
         </article>
+
+        {/* 저자 바이오 카드 */}
+        <div style={{
+          margin: "40px 0 0",
+          padding: "20px 22px",
+          background: "#F5EFE0",
+          border: "1px solid #D8CEC0",
+          borderRadius: 4,
+          display: "flex", alignItems: "flex-start", gap: 16,
+        }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: "50%",
+            background: "#C8607A", flexShrink: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20, color: "#F5EFE0", fontWeight: 700,
+            fontFamily: "var(--font-serif)",
+          }}>S</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>Sharon</p>
+              <span style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.08em" }}>오늘무드 운영자</span>
+            </div>
+            <p style={{ fontSize: 13, color: "#6A6258", lineHeight: 1.8, fontWeight: 300, fontFamily: "var(--font-serif)", marginBottom: 10 }}>
+              감정을 이상한 방식으로 처리하는 서비스를 만들었어요. 우걱이가 제일 열심히 일하고 있습니다. 감정 관련 글을 씁니다.
+            </p>
+            <Link href="/about" style={{
+              fontSize: 11, color: "#C8607A", fontFamily: "monospace",
+              letterSpacing: "0.04em", textDecoration: "none",
+            }}>
+              오늘무드 소개 보기 →
+            </Link>
+          </div>
+        </div>
 
         {/* 저자 코멘트 */}
         {article.authorNote && (
