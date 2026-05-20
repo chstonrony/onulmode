@@ -1,9 +1,20 @@
 @import "tailwindcss";
 
+/* ── Pretendard variable font (CDN) ── */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.woff2') format('woff2-variations');
+}
+
 @theme {
   --font-serif: var(--font-serif), "Gowun Batang", serif;
   --font-sans:  var(--font-sans),  "Noto Sans KR", sans-serif;
   --font-en:    var(--font-en),    "Crimson Text", "Georgia", serif;
+  --font-maru:  var(--font-maru),  "Noto Serif KR", serif;
+  --font-prose: "Pretendard", "Noto Sans KR", -apple-system, sans-serif;
 
   --color-bg:    #EDE4D0;
   --color-paper: #F5EFE0;
@@ -130,6 +141,44 @@ body {
 /* ── 타이포 ── */
 .font-serif { font-family: var(--font-serif) !important; }
 .font-en    { font-family: var(--font-en) !important; }
+.font-maru  { font-family: var(--font-maru) !important; }
+.font-prose { font-family: var(--font-prose) !important; }
+
+/* ── 감정보관소 아티클 타이포그래피 ── */
+.article-title {
+  font-family: var(--font-maru), "Maru Buri", serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.5;
+}
+
+.article-h2 {
+  font-family: var(--font-maru), "Maru Buri", serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.55;
+}
+
+.article-body {
+  font-family: var(--font-prose);
+  font-weight: 300;
+  line-height: 2.1;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.article-meta {
+  font-family: var(--font-prose);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.article-wrap {
+  max-width: 620px;
+  margin-inline: auto;
+  padding-inline: 22px;
+}
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -137,7 +186,135 @@ body {
 
 :focus-visible { outline: 1.5px solid #C8607A; outline-offset: 3px; border-radius: 2px; }
 
+/* ══════════════════════════════════════════════
+   우걱이 감정 처리 시설 — 공통 미학 CSS
+   ══════════════════════════════════════════════ */
+
+/* ── 종이 질감 카드 ── */
+.facility-card {
+  background: #F8F1E6;
+  background-image: repeating-linear-gradient(
+    transparent, transparent 23px,
+    rgba(178,162,140,0.07) 23px, rgba(178,162,140,0.07) 24px
+  );
+  box-shadow:
+    2px 3px 14px rgba(42,37,32,0.1),
+    0 1px 0 rgba(255,255,255,0.55) inset;
+  border: 1px solid #D8CEC0;
+}
+
+/* ── 영수증 찢긴 가장자리 ── */
+.receipt-top {
+  height: 10px;
+  background:
+    radial-gradient(circle at 50% 150%, #EDE4D0 10px, transparent 10px) 0 0 / 20px 10px repeat-x,
+    radial-gradient(circle at 50% -50%,  #F8F1E6 10px, transparent 10px) 0 0 / 20px 10px repeat-x;
+  background-color: #F8F1E6;
+}
+.receipt-bottom {
+  height: 10px;
+  background:
+    radial-gradient(circle at 50% -50%,  #EDE4D0 10px, transparent 10px) 0 0 / 20px 10px repeat-x,
+    radial-gradient(circle at 50% 150%,  #F8F1E6 10px, transparent 10px) 0 0 / 20px 10px repeat-x;
+  background-color: #F8F1E6;
+}
+
+/* ── 우걱이 도장 ── */
+.ugogi-stamp {
+  display: inline-block;
+  border: 2px solid #C8607A;
+  border-radius: 2px;
+  padding: 2px 10px;
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: #C8607A;
+  font-weight: 700;
+  opacity: 0.75;
+  transform: rotate(-2deg);
+}
+
+/* ── 도장 등장 애니메이션 ── */
+@keyframes stamp-in {
+  0%   { transform: scale(1.35) rotate(var(--stamp-rot, -2deg)); opacity: 0; }
+  55%  { transform: scale(0.94) rotate(calc(var(--stamp-rot, -2deg) * 0.5)); opacity: 0.9; }
+  100% { transform: scale(1)    rotate(var(--stamp-rot, -2deg)); opacity: 0.75; }
+}
+.stamp-appear {
+  animation: stamp-in 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── 시설 버튼 (눌림감) ── */
+.facility-btn {
+  position: relative;
+  transition: all 0.12s ease;
+  box-shadow: 0 3px 0 rgba(42,37,32,0.35), 0 4px 8px rgba(42,37,32,0.12);
+}
+.facility-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(42,37,32,0.35), 0 2px 4px rgba(42,37,32,0.1);
+}
+
+/* ── 우걱이 트레이스 뱃지 ── */
+.ugogi-trace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(200,96,122,0.06);
+  border: 1px solid rgba(200,96,122,0.2);
+  border-left: 2px solid #C8607A;
+  border-radius: 0 3px 3px 0;
+  font-family: monospace;
+  font-size: 11px;
+  color: #C8607A;
+  letter-spacing: 0.04em;
+}
+
+/* ── 점선 구분자 ── */
+.facility-divider {
+  border: none;
+  border-top: 1px dashed #C8BAA4;
+  margin: 16px 0;
+}
+
 /* ── ANIMATIONS ── */
+
+/* 종이 부유 — 카드/노트에 적용 */
+@keyframes paper-float {
+  0%, 100% { transform: rotate(var(--rot, -0.5deg)) translateY(0px); }
+  50%       { transform: rotate(var(--rot, -0.5deg)) translateY(-4px); }
+}
+.paper-float {
+  animation: paper-float 5s ease-in-out infinite;
+}
+
+/* 상태 표시등 깜빡임 — 우걱이 상태/처리중 표시 */
+@keyframes status-blink {
+  0%, 80%, 100% { opacity: 1; }
+  90%           { opacity: 0.3; }
+}
+.status-blink {
+  animation: status-blink 2.4s ease-in-out infinite;
+}
+
+/* 느린 노이즈 흔들림 — 배경 워드에 활용 */
+@keyframes noise-drift {
+  0%, 100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  25%       { transform: translate(1px, -2px) rotate(calc(var(--r, 0deg) + 0.3deg)); }
+  75%       { transform: translate(-1px, 2px) rotate(calc(var(--r, 0deg) - 0.3deg)); }
+}
+.noise-drift {
+  animation: noise-drift 8s ease-in-out infinite;
+}
+
+/* 도장 찍힘 — stamp-appear와 조합 가능 */
+@keyframes stamp-press {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.93) rotate(var(--stamp-rot, -2deg)); }
+  100% { transform: scale(1)    rotate(var(--stamp-rot, -2deg)); }
+}
+
 @keyframes float-paper {
   0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
   50%       { transform: translateY(-6px) rotate(calc(var(--r, 0deg) + 1deg)); }

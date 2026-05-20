@@ -10,6 +10,7 @@ import { useMoodStore } from "@/hooks/useMoodStore";
 import EmotionWheel from "@/components/mood/EmotionWheel";
 import EmotionSignatureCard from "@/components/mood/EmotionSignatureCard";
 import TopBar from "@/components/layout/TopBar";
+import UgogiTrace from "@/components/ugogi/UgogiTrace";
 import { Pencil, CalendarDays } from "lucide-react";
 import Link from "next/link";
 
@@ -198,43 +199,66 @@ export default function TodayPage() {
           {/* DONE */}
           {step === "done" && saved && (
             <motion.div key="done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-              <p style={{ fontSize: 11, color: ROSE, fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 16 }}>
-                TODAY&apos;S RECORD
-              </p>
+
+              {/* 접수 확인 헤더 */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <p style={{ fontSize: 11, color: ROSE, fontFamily: "monospace", letterSpacing: "0.1em" }}>
+                  오늘 감정 접수 완료
+                </p>
+                <p style={{ fontSize: 9, color: "#B4A890", fontFamily: "monospace", letterSpacing: "0.08em" }}>
+                  {format(new Date(), "HH:mm")} · UGOGI-LAB
+                </p>
+              </div>
 
               <EmotionSignatureCard entry={saved} />
 
               {saved.body && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-                  style={{ marginTop: 14, padding: "18px 20px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
-                  <p style={{ fontSize: 15, color: "#5A5248", lineHeight: 1.85, whiteSpace: "pre-wrap", fontWeight: 300 }}>
+                  style={{ marginTop: 12, padding: "16px 18px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 3 }}>
+                  <p style={{
+                    fontSize: 14, color: "#5A5248", lineHeight: 1.95,
+                    whiteSpace: "pre-wrap", fontFamily: "var(--font-prose)", fontWeight: 300, letterSpacing: "-0.01em",
+                  }}>
                     {saved.body}
                   </p>
                 </motion.div>
               )}
 
+              {/* 우걱이 처리 메시지 */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                style={{ marginTop: 14, padding: "12px 16px", borderLeft: `3px solid ${ROSE}` }}>
-                <p style={{ fontSize: 13, color: "#7A7260", lineHeight: 1.7, fontWeight: 300 }}>
+                style={{ marginTop: 12 }}>
+                <UgogiTrace variant="rose" />
+              </motion.div>
+
+              {/* 우걱이 감정별 코멘트 */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+                style={{
+                  marginTop: 10, padding: "11px 16px",
+                  background: `${ROSE}08`, border: `1px dashed #D8CEC0`, borderRadius: 3,
+                }}>
+                <p style={{
+                  fontSize: 13, color: "#7A7260", lineHeight: 1.8,
+                  fontFamily: "var(--font-prose)", fontWeight: 300, letterSpacing: "-0.01em",
+                }}>
                   {getMsg(saved.emotion)}
                 </p>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                style={{ display: "flex", gap: 10, marginTop: 20 }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                style={{ display: "flex", gap: 10, marginTop: 16 }}>
                 <Link href="/archive" style={{
                   flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  height: 44, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4,
-                  color: "#5A5248", fontSize: 13, fontFamily: "var(--font-serif)", fontWeight: 700,
-                  textDecoration: "none",
+                  height: 44, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 3,
+                  color: "#5A5248", fontSize: 13, fontFamily: "var(--font-prose)", fontWeight: 300,
+                  textDecoration: "none", letterSpacing: "-0.01em",
                 }}>
-                  <CalendarDays size={14} strokeWidth={1.5} /> 기록장
+                  <CalendarDays size={14} strokeWidth={1.5} /> 파쇄함 보기
                 </Link>
                 <button onClick={reset} style={{
                   flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-                  height: 44, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4,
-                  color: "#A89880", fontSize: 13, fontFamily: "var(--font-serif)",
-                  cursor: "pointer",
+                  height: 44, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 3,
+                  color: "#A89880", fontSize: 13, fontFamily: "var(--font-prose)", fontWeight: 300,
+                  cursor: "pointer", letterSpacing: "-0.01em",
                 }}>
                   수정하기
                 </button>
@@ -249,14 +273,14 @@ export default function TodayPage() {
 
 function getMsg(emotion: EmotionType): string {
   const m: Record<EmotionType, string> = {
-    joy:      "기쁨을 기록해둔 오늘. 이 순간은 시간이 지나도 남아 있을 거예요.",
-    calm:     "고요한 하루를 보냈군요. 평온함도 충분히 소중한 감정이에요.",
-    excited:  "설레는 에너지가 느껴지는 하루. 그 두근거림을 잊지 마세요.",
-    grateful: "감사한 마음을 느꼈다는 것만으로도 오늘은 충분히 좋은 날이에요.",
-    sad:      "슬픔도 감정의 일부예요. 충분히 느끼고, 충분히 쉬어가도 괜찮아요.",
-    anxious:  "불안한 마음, 알아요. 지금 이 순간 기록한 것만으로도 용감한 일이에요.",
-    angry:    "화가 난 감정을 외면하지 않고 기록한 것, 잘 하셨어요.",
-    tired:    "많이 지쳤군요. 오늘은 충분히 쉬어도 괜찮아요.",
+    joy:      "기쁨 접수 완료. 우걱이가 이상하게 부끄러워함. 자주 와도 됨.",
+    calm:     "평온 상태 확인됨. 특이사항 없음. 이 상태 유지 권장.",
+    excited:  "설렘 감정 접수됨. 에너지 과부하 주의. 잘 쓸 것.",
+    grateful: "감사 감정 처리됨. 우걱이가 조용히 좋아함. 상태 양호.",
+    sad:      "슬픔 접수됨. 삭히지 말고 이쪽에 두고 가세요. 처리 중.",
+    anxious:  "불안 감정 접수됨. 혼자 들고 있지 말 것. 우걱이 처리 대기열 추가 완료.",
+    angry:    "분노 감정 접수 완료. 처리 온도 높음. 잘 던졌음.",
+    tired:    "피로 감정 확인됨. 많이 지쳤음 인정. 오늘은 쉬는 게 처방임.",
   };
   return m[emotion];
 }
