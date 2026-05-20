@@ -6,7 +6,7 @@ export default function Footer() {
     <footer style={{
       borderTop: "1px solid #D8CEC0",
       background: "#efe3cf",
-      padding: "32px 24px 100px",
+      padding: "28px 24px 80px",
       textAlign: "center",
     }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>

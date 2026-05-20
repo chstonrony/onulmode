@@ -295,7 +295,7 @@ export default function MainPage() {
   function resetMachine() { setPhase(null); } // eatenKeys는 유지 (먹힌 카드 그대로)
 
   return (
-    <div style={{ background: "#efe3cf", minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ background: "#efe3cf", overflowX: "hidden" }}>
 
       {/* 헤더 */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 24px 0", zIndex: 10, position: "relative" }}>
