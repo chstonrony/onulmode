@@ -39,6 +39,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const setLocale = (l: Locale) => {
     setLocaleState(l);
     localStorage.setItem("onulmode_locale", l);
+    document.cookie = `onulmode_locale=${l};path=/;max-age=31536000;SameSite=Lax`;
     document.documentElement.lang = l;
   };
 
