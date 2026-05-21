@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ARTICLES, getArticle } from "@/lib/articles";
+import { ARTICLES } from "@/lib/articles";
+import { getLocalizedArticle, getLocalizedArticles } from "@/lib/getLocalizedArticle";
+import { getLocale } from "@/lib/getLocale";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,34 +15,38 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const locale = await getLocale();
+  const article = getLocalizedArticle(slug, locale);
   if (!article) return {};
   return {
-    title: `${article.title} | 오늘무드`,
-    description: article.description,
+    title: `${article.localizedTitle} | OnulMood`,
+    description: article.localizedDescription,
     authors: [{ name: "Sharon", url: "https://onulmood.com/about" }],
   };
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
   "감정 이야기": "#C8607A",
-  "MZ 감성": "#8B6FAB",
-  "감정 처리": "#5A8FA8",
+  "새벽 감정":   "#7070A8",
+  "MZ 감성":    "#8B6FAB",
+  "감정 처리":   "#5A8FA8",
   "관계와 감정": "#7A9E6A",
-  "자기 돌봄": "#C4874A",
+  "자기 돌봄":   "#C4874A",
 };
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const locale = await getLocale();
+  const article = getLocalizedArticle(slug, locale);
   if (!article) notFound();
 
   const catColor = CATEGORY_COLORS[article.category] ?? "#A89880";
-  const related = ARTICLES.filter(
+  const localizedArticles = getLocalizedArticles(locale);
+  const related = localizedArticles.filter(
     (a) => a.category === article.category && a.slug !== slug
   ).slice(0, 3);
 
-  const paragraphs = article.content.split("\n\n").filter(Boolean);
+  const paragraphs = article.localizedContent.split("\n\n").filter(Boolean);
 
   return (
     <div style={{ background: "#efe3cf", minHeight: "100vh" }}>
@@ -69,10 +75,10 @@ export default async function ArticlePage({ params }: Props) {
             fontSize: 28, fontWeight: 700, fontFamily: "var(--font-serif)",
             color: "#2A2520", lineHeight: 1.4, marginBottom: 12,
           }}>
-            {article.title}
+            {article.localizedTitle}
           </h1>
           <p style={{ fontSize: 15, color: "#7A7260", lineHeight: 1.7, fontWeight: 300, marginBottom: 16 }}>
-            {article.description}
+            {article.localizedDescription}
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
             <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "monospace" }}>
@@ -248,10 +254,10 @@ export default async function ArticlePage({ params }: Props) {
                     border: "1px solid #D8CEC0", borderRadius: 4,
                   }}>
                     <p style={{ fontSize: 14, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 4 }}>
-                      {a.title}
+                      {a.localizedTitle}
                     </p>
                     <p style={{ fontSize: 12, color: "#7A7260", fontWeight: 300 }}>
-                      {a.description}
+                      {a.localizedDescription}
                     </p>
                   </div>
                 </Link>
