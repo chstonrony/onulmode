@@ -43,7 +43,7 @@ export const translations = {
       headline1: "말 못 한 것들,",
       headline2: "여기다 버려.",
       cta:       "우걱이한테 던지기",
-      caption:   "파쇄된 감정은 오늘의 기록으로 남길 수 있어요.",
+      caption:   "오늘무드는 감정을 기록하고 가볍게 돌아보는 감정 콘텐츠 서비스입니다.",
       emotionLabel: "아무 거나",
       emotionWord:  "눌러봐",
       emotionSuffix:"— 우걱이가 처리함",

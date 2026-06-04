@@ -4,8 +4,29 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { getShredRecords, type ShredRecord } from "@/lib/shredRecords";
+import { findSeedByEmotions } from "@/lib/emotionSeeds";
 import { useLocale } from "@/context/LocaleContext";
 import UgogiGarden from "@/components/ugogi/UgogiGarden";
+
+/* 구형 기록에 퇴비화 결과 실시간 생성 */
+function getCompostForRecord(record: ShredRecord) {
+  if (record.compostNoun) {
+    return {
+      noun: record.compostNoun,
+      emoji: record.compostEmoji || "🌱",
+      translation: record.ugogitranslation || "",
+      seed: record.seedQuestion || "",
+    };
+  }
+  /* 구형 기록 — emotions 기반으로 추론 */
+  const seed = findSeedByEmotions(record.emotions);
+  return {
+    noun: seed.compostNoun,
+    emoji: seed.compostEmoji,
+    translation: seed.ugogitranslation,
+    seed: seed.seedQuestion,
+  };
+}
 
 const INK  = "#1A1410";
 const ROSE = "#C8607A";
@@ -128,9 +149,9 @@ function StatsBar({ records }: { records: ShredRecord[] }) {
   );
 }
 
-/* ── 기록 카드 — 감정 여정을 전체 표시, accordion 없음 ── */
+/* ── 기록 카드 — 감정 여정 전체 표시 (구형 기록도 퇴비화 결과 표시) ── */
 function RecordCard({ record, index, locale }: { record: ShredRecord; index: number; locale: string }) {
-  const hasCompost = !!(record.compostNoun || record.compostName);
+  const compost = getCompostForRecord(record);
 
   return (
     <motion.div
@@ -139,17 +160,11 @@ function RecordCard({ record, index, locale }: { record: ShredRecord; index: num
       transition={{ delay: index * 0.06, duration: 0.4 }}
       style={{ marginBottom: 14 }}
     >
-      <div style={{
-        background: PAPER,
-        border: "1.5px solid #C4D8BC",
-        borderRadius: 8,
-        overflow: "hidden",
-      }}>
+      <div style={{ background: PAPER, border: "1.5px solid #C4D8BC", borderRadius: 8, overflow: "hidden" }}>
+
         {/* 카드 상단 — 날짜 */}
         <div style={{ background: "#0E1A0E", padding: "7px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em" }}>
-            🌱 감정퇴비실
-          </span>
+          <span style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em" }}>🌱 감정퇴비실</span>
           <span style={{ fontSize: 9, color: "#5A7A5A", fontFamily: "monospace", letterSpacing: "0.06em" }}>
             {formatDate(record.savedAt, locale)}
           </span>
@@ -157,33 +172,32 @@ function RecordCard({ record, index, locale }: { record: ShredRecord; index: num
 
         <div style={{ padding: "16px 16px" }}>
 
-          {/* ① 원래 감정 — 가장 크게 */}
+          {/* ① 원래 감정 */}
           <div style={{ marginBottom: 12 }}>
-            <p style={{ fontSize: 9, color: "#7A9A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>
-              😔 원래 감정
-            </p>
+            <p style={{ fontSize: 9, color: "#7A9A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>😔 원래 감정</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {record.emotions.map((e, i) => (
                 <span key={i} style={{
-                  fontSize: 16, color: "#2A3A2A", background: "#EFF6EC",
-                  border: "2px solid #C4D8BC", padding: "4px 12px",
+                  fontSize: 15, color: "#2A3A2A", background: "#EFF6EC",
+                  border: "2px solid #C4D8BC", padding: "3px 11px",
                   borderRadius: 20, fontFamily: "var(--font-maru)", fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                }}>{e}</span>
+                }}>
+                  {e}
+                </span>
               ))}
             </div>
           </div>
 
-          {/* 화살표 구분선 */}
+          {/* 화살표 */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
             <div style={{ flex: 1, height: 1, background: "#D4E8CC" }} />
-            <span style={{ fontSize: 12, color: "#7A9A7A" }}>↓</span>
+            <span style={{ fontSize: 11, color: "#7A9A7A" }}>↓</span>
             <div style={{ flex: 1, height: 1, background: "#D4E8CC" }} />
           </div>
 
           {/* ② 파쇄 결과 */}
           <div style={{ marginBottom: 12 }}>
-            <p style={{ fontSize: 9, color: "#7A9A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>
+            <p style={{ fontSize: 9, color: "#7A9A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 5 }}>
               {record.productEmoji} 파쇄 결과
             </p>
             <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#3A3028", fontStyle: "italic", lineHeight: 1.5 }}>
@@ -191,65 +205,45 @@ function RecordCard({ record, index, locale }: { record: ShredRecord; index: num
             </p>
           </div>
 
-          {/* 퇴비화 있을 때만 아래 섹션 표시 */}
-          {hasCompost && (
-            <>
-              {/* 화살표 */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <div style={{ flex: 1, height: 1, background: "#A8CCA0" }} />
-                <span style={{ fontSize: 12, color: "#6A9B7A" }}>↓</span>
-                <div style={{ flex: 1, height: 1, background: "#A8CCA0" }} />
-              </div>
+          {/* 화살표 */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <div style={{ flex: 1, height: 1, background: "#A8CCA0" }} />
+            <span style={{ fontSize: 11, color: "#6A9B7A" }}>↓</span>
+            <div style={{ flex: 1, height: 1, background: "#A8CCA0" }} />
+          </div>
 
-              {/* ③ 퇴비화 결과 — 핵심 발견 */}
-              <div style={{ background: "#1A2A1A", borderRadius: 6, padding: "12px 14px", marginBottom: 10 }}>
-                <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 8 }}>
-                  🌱 퇴비화 결과
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                  <span style={{ fontSize: 22 }}>{record.compostEmoji || "🌱"}</span>
-                  <span style={{ fontSize: 20, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#A8CCA0", letterSpacing: "-0.02em" }}>
-                    {record.compostNoun || record.compostName}
-                  </span>
-                </div>
-                {record.ugogitranslation && (
-                  <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#7A9A7A", lineHeight: 1.75, fontStyle: "italic" }}>
-                    {record.ugogitranslation}
-                  </p>
-                )}
-              </div>
+          {/* ③ 퇴비화 결과 — 항상 표시 */}
+          <div style={{ background: "#1A2A1A", borderRadius: 6, padding: "12px 14px", marginBottom: 10 }}>
+            <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 8 }}>🌱 퇴비화 결과</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: compost.translation ? 8 : 0 }}>
+              <span style={{ fontSize: 20 }}>{compost.emoji}</span>
+              <span style={{ fontSize: 18, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#A8CCA0", letterSpacing: "-0.02em" }}>
+                {compost.noun}
+              </span>
+            </div>
+            {compost.translation && (
+              <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#7A9A7A", lineHeight: 1.75, fontStyle: "italic" }}>
+                {compost.translation}
+              </p>
+            )}
+          </div>
 
-              {/* ④ 감정씨앗 */}
-              {record.seedQuestion && (
-                <div style={{ background: "#EFF6EC", border: "1px dashed #A8CCA0", borderRadius: 4, padding: "10px 12px", marginBottom: 10 }}>
-                  <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>
-                    🌿 감정씨앗
-                  </p>
-                  <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#2A3A2A", lineHeight: 1.75 }}>
-                    {record.seedQuestion}
-                  </p>
-                </div>
-              )}
-            </>
+          {/* ④ 감정씨앗 — 항상 표시 */}
+          {compost.seed && (
+            <div style={{ background: "#EFF6EC", border: "1px dashed #A8CCA0", borderRadius: 4, padding: "10px 12px", marginBottom: 10 }}>
+              <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>🌿 감정씨앗</p>
+              <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#2A3A2A", lineHeight: 1.75 }}>
+                {compost.seed}
+              </p>
+            </div>
           )}
 
           {/* ⑤ 내가 남긴 한 줄 */}
           {record.userNote && (
             <div style={{ background: "rgba(42,37,32,0.04)", border: "1px solid #D8CEC0", borderRadius: 4, padding: "10px 12px" }}>
-              <p style={{ fontSize: 9, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 5 }}>
-                ✏ 내가 남긴 한 줄
-              </p>
+              <p style={{ fontSize: 9, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 5 }}>✏ 내가 남긴 한 줄</p>
               <p style={{ fontSize: 13, color: INK, fontFamily: "var(--font-serif)", lineHeight: 1.75 }}>
                 {record.userNote}
-              </p>
-            </div>
-          )}
-
-          {/* 퇴비화 없는 구형 기록 — 안내 */}
-          {!hasCompost && (
-            <div style={{ marginTop: 8, padding: "8px 10px", background: "rgba(106,155,122,0.06)", border: "1px dashed #C4D8BC", borderRadius: 4 }}>
-              <p style={{ fontSize: 10, color: "#7A9A7A", fontFamily: "monospace", letterSpacing: "0.06em" }}>
-                이 기록은 퇴비화 전 기록입니다.
               </p>
             </div>
           )}
@@ -312,10 +306,13 @@ export default function ArchivePage() {
         </div>
         {locale === "ko" && (
           <div style={{ borderTop: "1px solid #2A4A2A", paddingTop: 10 }}>
-            <p style={{ fontSize: 11, fontFamily: "var(--font-serif)", color: "#A8CCA0", lineHeight: 1.7, marginBottom: 4 }}>
+            <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#A8CCA0", lineHeight: 1.8, marginBottom: 6 }}>
               감정은 사라지지 않습니다. 모양만 바뀔 뿐입니다.
             </p>
-            <p style={{ fontSize: 11, fontFamily: "var(--font-serif)", color: "#7A9A7A", lineHeight: 1.7 }}>
+            <p style={{ fontSize: 11, fontFamily: "var(--font-serif)", color: "#7A9A7A", lineHeight: 1.8, marginBottom: 6 }}>
+              우걱이는 감정을 씹고,<br />감정은 퇴비가 되고,<br />퇴비는 작은 씨앗으로 남습니다.
+            </p>
+            <p style={{ fontSize: 10, fontFamily: "var(--font-serif)", color: "#5A7A5A", lineHeight: 1.7 }}>
               버린 감정도, 지나고 보면 내 하루의 기록이 됩니다.
             </p>
           </div>

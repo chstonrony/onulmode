@@ -512,21 +512,25 @@ export default function MainPage() {
             </p>
             {locale === "ko" ? (
               <>
-                <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 6 }}>
-                  우걱이는 감정을 그냥 먹지 않습니다.
+                <p style={{ fontSize: 13, color: "#E8F4E4", fontFamily: "var(--font-maru)", fontWeight: 600, lineHeight: 1.7, marginBottom: 8, letterSpacing: "-0.01em" }}>
+                  오늘의 감정은 사라지지 않습니다.
                 </p>
-                <p style={{ fontSize: 12, color: "#A8CCA0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 6 }}>
-                  오래 씹고, 천천히 발효시키고,<br />작은 씨앗으로 남겨둡니다.
+                <p style={{ fontSize: 12, color: "#A8CCA0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 8 }}>
+                  우걱이가 씹고,<br />퇴비로 만들고,<br />씨앗으로 남겨둡니다.
                 </p>
-                <p style={{ fontSize: 11, color: "#7A9A7A", fontFamily: "var(--font-serif)", lineHeight: 1.8, fontStyle: "italic" }}>
-                  진지한 상담은 아니고,<br />감정을 조금 덜 무겁게 만드는 이상한 감정처리소입니다.
+                <p style={{ fontSize: 11, color: "#7A9A7A", fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.8 }}>
+                  오늘무드는 감정을 기록하고<br />가볍게 돌아보는 감정 콘텐츠 서비스입니다.
                 </p>
               </>
             ) : (
-              <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
-                Ugogi doesn&apos;t just eat feelings.<br />
-                It chews slowly, ferments them,<br />and leaves behind a tiny seed.
-              </p>
+              <>
+                <p style={{ fontSize: 12, color: "#E8F4E4", fontFamily: "var(--font-maru)", fontWeight: 600, lineHeight: 1.7, marginBottom: 6 }}>
+                  Today&apos;s feelings don&apos;t disappear.
+                </p>
+                <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
+                  Ugogi chews them,<br />turns them into compost,<br />and leaves a tiny seed.
+                </p>
+              </>
             )}
           </div>
 
