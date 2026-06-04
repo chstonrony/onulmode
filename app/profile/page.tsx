@@ -6,8 +6,8 @@ import { getEmotion } from "@/lib/emotions";
 import { EmotionType } from "@/types";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { ko } from "date-fns/locale";
 import Link from "next/link";
+import { useLocale } from "@/context/LocaleContext";
 
 const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
@@ -16,18 +16,22 @@ const ROSE = "#C8607A";
 
 export default function ProfilePage() {
   const { entries, loaded } = useMoodStore();
+  const { t, locale } = useLocale();
+
   const top = (() => {
     if (!entries.length) return null;
     const c: Record<string, number> = {};
     entries.forEach(e => { c[e.emotion] = (c[e.emotion] || 0) + 1; });
     return getEmotion(Object.entries(c).sort(([,a],[,b]) => b - a)[0][0] as EmotionType);
   })();
+
   const first = entries.length ? [...entries].sort((a,b) => a.date.localeCompare(b.date))[0] : null;
   const thisMonth = entries.filter(e => e.date.startsWith(format(new Date(), "yyyy-MM"))).length;
+  const isKo = locale === "ko";
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title="나" />
+      <TopBar title={t.profile.title} />
       <div style={{ padding: "20px 20px 80px" }}>
 
         {/* 프로필 카드 */}
@@ -48,11 +52,14 @@ export default function ProfilePage() {
             }
           </div>
           <p style={{ fontSize: 20, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>
-            나의 감정 기록
+            {t.profile.title}
           </p>
           {first && (
             <p style={{ fontSize: 12, color: "#A89880", marginTop: 6, fontFamily: "monospace" }}>
-              {format(new Date(first.date), "yyyy.MM.dd", { locale: ko })}부터
+              {isKo
+                ? `${format(new Date(first.date), "yyyy.MM.dd")}${t.profile.since}`
+                : `${t.profile.since} ${format(new Date(first.date), "MMM d, yyyy")}`
+              }
             </p>
           )}
           {top && (
@@ -61,14 +68,14 @@ export default function ProfilePage() {
               padding: "6px 16px", background: top.bg, border: `1px solid ${top.border}`, borderRadius: 4,
             }}>
               <span style={{ fontSize: 13, color: top.color, fontWeight: 700, fontFamily: "var(--font-serif)" }}>
-                대표 감정 — {top.label}
+                {t.profile.topEmotion} — {isKo ? top.label : top.labelEn}
               </span>
             </div>
           )}
           {entries.length === 0 && (
             <div style={{ marginTop: 20 }}>
               <p style={{ fontSize: 13, color: "#A89880", marginBottom: 14, fontWeight: 300 }}>
-                아직 기록이 없어요.<br/>오늘의 감정을 처음으로 남겨보세요.
+                {t.profile.emptyText.split("\n").map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
               </p>
               <Link href="/today" style={{
                 display: "inline-flex", alignItems: "center",
@@ -77,7 +84,7 @@ export default function ProfilePage() {
                 fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
                 textDecoration: "none",
               }}>
-                첫 기록 시작하기
+                {t.profile.emptyBtn}
               </Link>
             </div>
           )}
@@ -87,8 +94,8 @@ export default function ProfilePage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
           {[
-            { label: "총 기록 일수", value: entries.length, unit: "일", color: ROSE },
-            { label: "이번 달 기록", value: thisMonth, unit: "일", color: "#B8860B" },
+            { label: t.profile.totalDays,  value: entries.length, unit: t.profile.dayUnit, color: ROSE },
+            { label: t.profile.thisMonth,  value: thisMonth,       unit: t.profile.dayUnit, color: "#B8860B" },
           ].map(s => (
             <div key={s.label} style={{ padding: "18px 16px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
               <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
@@ -105,8 +112,7 @@ export default function ProfilePage() {
           style={{ padding: "18px 20px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, marginBottom: 14 }}>
           <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 10 }}>ABOUT</p>
           <p style={{ fontSize: 14, color: "#5A5248", lineHeight: 1.85, fontWeight: 300 }}>
-            오늘무드는 오늘의 감정을 기록하고, 쌓인 마음을 버리는 감성 웹 서비스예요.
-            감정을 쓰고 버리는 행위 자체가 작은 돌봄이 돼요.
+            {t.profile.aboutText}
           </p>
         </motion.div>
 
@@ -114,9 +120,9 @@ export default function ProfilePage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18 }}
           style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {[
-            { href: "/about", label: "서비스 소개" },
-            { href: "/blog", label: "감정 이야기" },
-            { href: "/privacy", label: "개인정보처리방침" },
+            { href: "/about",   label: t.profile.linkAbout   },
+            { href: "/blog",    label: t.profile.linkBlog    },
+            { href: "/privacy", label: t.profile.linkPrivacy },
           ].map(({ href, label }) => (
             <Link key={href} href={href} style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",

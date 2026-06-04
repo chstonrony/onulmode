@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useAnimate } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { buildResultUrl } from "@/lib/resultCard";
+import { useLocale } from "@/context/LocaleContext";
 
 type Mode = "shred" | "compress" | "boil" | "report" | "upload" | "grind" | "dispose";
 type Phase = "write" | "animating" | "loading" | "done";
@@ -13,7 +14,7 @@ const ROSE = "#C8607A";
 const INK  = "#1A1410";
 const PAPER = "#FEFDF5";
 
-const LOADING_MSGS = [
+const LOADING_MSGS_KO = [
   "감정 불러오는 중...", "눈물 압축 중...", "멘탈 조각 수집 중...", "우걱이 출동 중...",
   "AI 당황 중...", "사회생활 흔적 수집 중...", "괜찮은 척 해제 중...", "감정 CPU 과부하...",
   "울컥.dll 실행 중...", "비린맛 분석 중...", "감정 곰팡이 감지 중...", "혼자 삭힌 것들 추출 중...",
@@ -25,9 +26,21 @@ const LOADING_MSGS = [
   "눈물 농도 분석 중...", "자책 루프 종료 중...", "우걱이가 마지막으로 씹는 중...",
 ] as const;
 
+const LOADING_MSGS_EN = [
+  "Loading emotions...", "Compressing tears...", "Collecting mental fragments...", "Deploying Ugogi...",
+  "AI confused...", "Collecting social residue...", "Disabling 'I'm fine' mode...", "Emotion CPU overloaded...",
+  "Running ulkkeok.dll...", "Analyzing bitter taste...", "Detecting emotional mold...", "Extracting bottled-up things...",
+  "Disabling endurance mode...", "Measuring heart creak...", "Checking emotion fermentation...",
+  "Harvesting old emotions...", "AI momentarily confused...", "Loading relationships.exe...",
+  "Detecting 'I'm fine' lie...", "Processing emotional residue...", "Quantifying resentment...",
+  "Measuring bitterness...", "Extracting unsaid things...", "Checking mental moisture...",
+  "Prepping Ugogi's stomach...", "Measuring emotion crunchiness...", "Calculating social damage...",
+  "Analyzing tear concentration...", "Terminating self-blame loop...", "Ugogi taking final chew...",
+] as const;
+
 const FAKE_PERCENTAGES = [1, 14, 98, 32, 61, 7, 44, 83, 22, 67, 91, 38, 55, 12, 76, 3, 88, 47, 19, 72];
 
-const PLACEHOLDERS = [
+const PLACEHOLDERS_KO = [
   "여기에 감정 투입…\n안 적어도 됨. 근데 적으면 더 잘 씹힘.",
   "오늘 뭐 때문에 꾸역꾸역 버텼음?\n\n다 쏟아내도 됨. 어차피 우걱이가 씹어먹을 거임.",
   "질긴 감정은 처리 오래 걸림.\n그래도 일단 투입해봐.",
@@ -35,7 +48,15 @@ const PLACEHOLDERS = [
   "킹받는 거 있으면 다 써.\n우걱이가 대신 빡쳐줄 수 있음.",
 ];
 
-const SOHWA_MSGS = [
+const PLACEHOLDERS_EN = [
+  "Drop your emotions here…\nYou don't have to write. But it processes better when you do.",
+  "What did you gut through today?\n\nPour it all out. Ugogi will chew it anyway.",
+  "Tough emotions take longer to process.\nDrop them in anyway.",
+  "What's been stuck in your head today?\nBe honest. Ugogi doesn't judge. Just chews.",
+  "Got something frustrating? Write it all.\nUgogi can get mad on your behalf.",
+];
+
+const SOHWA_MSGS_KO = [
   "괜찮은 척 오래해서 좀 굳어있었음.",
   "혼자 해결하려고 너무 오래 들고 있었네.",
   "오늘은 강한 사람 안 해도 됨.",
@@ -47,6 +68,20 @@ const SOHWA_MSGS = [
   "씹다가 울컥함.",
   "혼자 너무 오래 버텨서 우걱이도 좀 마음 아팠음.",
   "오늘 감정은 안 갈고 그냥 안아줌.",
+];
+
+const SOHWA_MSGS_EN = [
+  "You've been 'fine' for too long. It hardened a bit.",
+  "You've been carrying it alone for too long.",
+  "You don't have to be the strong one today.",
+  "Even Ugogi chewed on this one for a while.",
+  "You held it too long. It got stiff.",
+  "Good job holding it without saying anything.",
+  "This one needs comfort before digestion.",
+  "Just being alive today is enough.",
+  "Got a bit emotional while chewing.",
+  "You held on alone too long. Ugogi felt it too.",
+  "Not grinding this one. Just gonna hold it.",
 ];
 
 /* ── 감정 영수증 키워드 ── */
@@ -80,27 +115,7 @@ const KEYWORD_REACTIONS = [
   { words: ["죽고싶", "사라지고싶"], level: "sad" as const, msg: "우걱이가 멈췄습니다.", sub: "오늘 많이 힘든 것 같음. 잠깐 쉬어도 됨." },
 ];
 
-const MODES: { id: Mode; label: string; sub: string; bg: string; rot: number; win?: boolean }[] = [
-  { id: "shred",   label: "감정 파쇄하기",       sub: "잘게 갈아버림",      bg: "#F0E0DC", rot: -8,  win: true  },
-  { id: "compress",label: "감정 압축하기",        sub: "원자 단위 압축",     bg: "#D8E8DC", rot:  6              },
-  { id: "boil",    label: "오늘 하루 삶기",       sub: "푹 삶아버릴 것",     bg: "#F0DDD0", rot: -4,  win: true  },
-  { id: "report",  label: "오늘 하루 신고하기",   sub: "허위신고 포함 가능", bg: "#E4DCED", rot:  5              },
-  { id: "upload",  label: "흑역사 업로드",         sub: "삭제 불가",          bg: "#EDE8D0", rot: -7,  win: true  },
-  { id: "grind",   label: "인간관계 갈아버리기",  sub: "전처리 필요",        bg: "#D0E0E8", rot:  9              },
-  { id: "dispose", label: "현타 폐기 요청",       sub: "3영업일 소요",        bg: "#E8D8E8", rot: -3,  win: true  },
-];
-
-const MODE_SUBMIT_LABELS: Record<Mode, string> = {
-  shred:    "파쇄 요청 →",
-  compress: "원자 단위 압축 →",
-  boil:     "푹 삶아버리기 →",
-  report:   "정식 신고 접수 →",
-  upload:   "흑역사 업로드 →",
-  grind:    "갈아버리기 →",
-  dispose:  "폐기 신청 →",
-};
-
-const RESULTS = [
+const RESULTS_KO = [
   { big: "빠각 완료.",       sub: "우걱이가 다 씹어먹었음." },
   { big: "갈렸음.",          sub: "생각보다 빨리 처리됨." },
   { big: "처리 완료.",       sub: "오래 묵혔던 거 맞지?" },
@@ -121,6 +136,29 @@ const RESULTS = [
   { big: "전소됨.",          sub: "태웠음. 재도 없음." },
   { big: "신고 접수됨.",     sub: "처리 결과는 3영업일 내 통보 예정 (안 옴)" },
   { big: "업로드 완료.",     sub: "삭제 요청은 받지 않습니다." },
+];
+
+const RESULTS_EN = [
+  { big: "Crunch done.",    sub: "Ugogi chewed it all." },
+  { big: "Shredded.",       sub: "Processed faster than expected." },
+  { big: "Done.",           sub: "You'd been holding that for a while, huh?" },
+  { big: "Digested.",       sub: "Some residue left, but it's done." },
+  { big: "Chew complete.",  sub: "Got stuck in the teeth a bit, but processed." },
+  { big: "Nom.",            sub: "Turned out kinda tasty. (A bit spicy though.)" },
+  { big: "Crumpled done.",  sub: "No form left. Processed anyway." },
+  { big: "Smashed.",        sub: "Blown to bits. Good." },
+  { big: "Compressed.",     sub: "Emotion size: 0mb (for now)" },
+  { big: "Digested.",       sub: "Ugogi's stomach is pretty strong." },
+  { big: "Broken down.",    sub: "Reduced to molecules." },
+  { big: "Gone now.",       sub: "No idea where it went. Just gone." },
+  { big: "Emptied.",        sub: "Should feel lighter for a bit." },
+  { big: "Blasted.",        sub: "Very satisfyingly processed." },
+  { big: "Ugogi satisfied.",sub: "Said it was tasty. (Also said it was fishy.)" },
+  { big: "Evaporated.",     sub: "Without a trace. Good." },
+  { big: "Done (tentative).",sub: "Some residue left. Come back tomorrow." },
+  { big: "Incinerated.",    sub: "Burned it. No ash." },
+  { big: "Report filed.",   sub: "Result to be notified within 3 business days (won't be)." },
+  { big: "Uploaded.",       sub: "Deletion requests not accepted." },
 ];
 
 /* ── 감정 영수증 컴포넌트 ── */
@@ -148,7 +186,6 @@ function EmotionReceipt({ text }: { text: string }) {
         position: "relative",
       }}
     >
-      {/* 가위선 표시 */}
       <div style={{ position: "absolute", top: -9, right: 10, fontSize: 12, color: "#C8C0A0" }}>✂</div>
 
       <div style={{ textAlign: "center", borderBottom: "1px dashed #C8C0A0", paddingBottom: 6, marginBottom: 6 }}>
@@ -368,7 +405,12 @@ function SoHwaAngel() {
   );
 }
 
-function SoHwaStopOverlay({ msg, onContinue, onKeep }: { msg: string; onContinue: () => void; onKeep: () => void }) {
+function SoHwaStopOverlay({ msg, onContinue, onKeep, t }: {
+  msg: string;
+  onContinue: () => void;
+  onKeep: () => void;
+  t: { soHwaContinue: string; soHwaKeep: string };
+}) {
   return (
     <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
       style={{ position:"fixed", inset:0, zIndex:80, background:"#FDFBF5", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"32px 28px" }}>
@@ -388,10 +430,10 @@ function SoHwaStopOverlay({ msg, onContinue, onKeep }: { msg: string; onContinue
         </motion.div>
         <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.7 }} style={{ display:"flex", flexDirection:"column", gap:10, width:"100%" }}>
           <button onClick={onContinue} style={{ height:48, background:INK, border:`2px solid ${INK}`, borderRadius:2, fontSize:14, fontFamily:"var(--font-serif)", color:"#FAF8F2", fontWeight:700, cursor:"pointer", boxShadow:`3px 3px 0 #6A6258` }}>
-            ...고마움 (빠각 결과지 받기)
+            {t.soHwaContinue}
           </button>
           <button onClick={onKeep} style={{ height:42, background:"#FAF8F2", border:`1.5px dashed ${INK}50`, borderRadius:2, fontSize:13, fontFamily:"var(--font-serif)", color:"#8A8070", cursor:"pointer" }}>
-            오늘은 안 갈래. 그냥 들고 있을게.
+            {t.soHwaKeep}
           </button>
         </motion.div>
         <p style={{ fontSize:9, color:"#C4BAB0", fontFamily:"monospace", marginTop:16, letterSpacing:"0.06em" }}>— 우걱이 처리소 —</p>
@@ -402,8 +444,36 @@ function SoHwaStopOverlay({ msg, onContinue, onKeep }: { msg: string; onContinue
 
 /* ── 메인 ── */
 function ReleaseContent() {
+  const { t, locale } = useLocale();
   const params = useSearchParams();
   const router = useRouter();
+
+  const isKo = locale === "ko";
+  const LOADING_MSGS = isKo ? LOADING_MSGS_KO : LOADING_MSGS_EN;
+  const PLACEHOLDERS  = isKo ? PLACEHOLDERS_KO  : PLACEHOLDERS_EN;
+  const SOHWA_MSGS   = isKo ? SOHWA_MSGS_KO   : SOHWA_MSGS_EN;
+  const RESULTS      = isKo ? RESULTS_KO      : RESULTS_EN;
+
+  const MODES: { id: Mode; label: string; sub: string; bg: string; rot: number; win?: boolean }[] = [
+    { id: "shred",    label: t.release.shredLabel,    sub: t.release.shredSub,    bg: "#F0E0DC", rot: -8, win: true  },
+    { id: "compress", label: t.release.compressLabel, sub: t.release.compressSub, bg: "#D8E8DC", rot:  6             },
+    { id: "boil",     label: t.release.boilLabel,     sub: t.release.boilSub,     bg: "#F0DDD0", rot: -4, win: true  },
+    { id: "report",   label: t.release.reportLabel,   sub: t.release.reportSub,   bg: "#E4DCED", rot:  5             },
+    { id: "upload",   label: t.release.uploadLabel,   sub: t.release.uploadSub,   bg: "#EDE8D0", rot: -7, win: true  },
+    { id: "grind",    label: t.release.grindLabel,    sub: t.release.grindSub,    bg: "#D0E0E8", rot:  9             },
+    { id: "dispose",  label: t.release.disposeLabel,  sub: t.release.disposeSub,  bg: "#E8D8E8", rot: -3, win: true  },
+  ];
+
+  const MODE_SUBMIT_LABELS: Record<Mode, string> = {
+    shred:    t.release.submitShred,
+    compress: t.release.submitCompress,
+    boil:     t.release.submitBoil,
+    report:   t.release.submitReport,
+    upload:   t.release.submitUpload,
+    grind:    t.release.submitGrind,
+    dispose:  t.release.submitDispose,
+  };
+
   const [text, setText]   = useState(params.get("text") ?? "");
   const [mode, setMode]   = useState<Mode | null>(null);
   const [phase, setPhase] = useState<Phase>("write");
@@ -420,7 +490,6 @@ function ReleaseContent() {
   const stressed = text.length > 80;
   const overload = text.length > 140;
 
-  /* 가짜 진행률 — 로딩 중에만 */
   useEffect(() => {
     if (phase !== "loading") return;
     let idx = 0;
@@ -487,7 +556,7 @@ function ReleaseContent() {
                 UGEGI EMOTIONAL DISPOSAL v0.0.3
               </p>
               <Link href="/" style={{ textDecoration:"none" }}>
-                <p style={{ fontSize:14, fontFamily:"var(--font-serif)", color:"#FAF8F2", fontWeight:700 }}>← 우걱이 처리소</p>
+                <p style={{ fontSize:14, fontFamily:"var(--font-serif)", color:"#FAF8F2", fontWeight:700 }}>{t.release.backHome}</p>
               </Link>
             </div>
             <div style={{ textAlign:"right" }}>
@@ -495,10 +564,10 @@ function ReleaseContent() {
                 animate={overload ? { color:[ROSE,"#FF8070",ROSE], scale:[1,1.05,1] } : { opacity:[1,0.6,1] }}
                 transition={{ duration:overload?0.5:1.4, repeat:Infinity }}
                 style={{ fontSize:10, fontFamily:"monospace", fontWeight:700, letterSpacing:"0.06em", color:overload?ROSE:"#8A9E78" }}>
-                {overload ? "⚠ 용량 초과" : phase==="animating" ? "씹는 중 🦷" : "배고픔 MAX"}
+                {overload ? t.release.statusOverload : phase==="animating" ? t.release.statusChewing : t.release.statusHungry}
               </motion.p>
               {stressed && !overload && (
-                <p style={{ fontSize:8, fontFamily:"monospace", color:"#B87050", marginTop:2 }}>질긴 감정 감지됨</p>
+                <p style={{ fontSize:8, fontFamily:"monospace", color:"#B87050", marginTop:2 }}>{t.release.toughEmotion}</p>
               )}
             </div>
           </div>
@@ -536,10 +605,10 @@ function ReleaseContent() {
                 transition={{ duration:0.25, repeat:overload?Infinity:0 }}
                 style={{ marginBottom:12 }}>
                 <h2 style={{ fontSize:20, fontFamily:"var(--font-serif)", color:INK, lineHeight:1.35, marginBottom:4 }}>
-                  {overload ? "우걱이 꾸역꾸역 먹는 중…" : "감정 폐기물 투입구"}
+                  {overload ? t.release.inputOverloadTitle : t.release.inputTitle}
                 </h2>
                 <p style={{ fontSize:11, fontFamily:"monospace", color:overload?ROSE:"#A89880", letterSpacing:"0.05em" }}>
-                  {overload ? "⚠ 소화 실패 가능성 있음. 그래도 넣어도 됨." : stressed ? "질긴 감정 — 처리 오래 걸릴 수 있음." : "뭘 적든 우걱이가 다 씹어먹음. 걱정 말고 투입해."}
+                  {overload ? t.release.inputOverloadSub : stressed ? t.release.inputStressedSub : t.release.inputNormalSub}
                 </p>
               </motion.div>
 
@@ -550,22 +619,20 @@ function ReleaseContent() {
 
               {/* 감정 영수증 미리보기 */}
               <AnimatePresence>
-                {text.length > 5 && <EmotionReceipt text={text} />}
+                {text.length > 5 && isKo && <EmotionReceipt text={text} />}
               </AnimatePresence>
 
               {/* 투입구 */}
               <div style={{ position:"relative", marginBottom:8 }}>
-                {/* 기계 라벨 */}
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:5 }}>
                   <p style={{ fontSize:9, fontFamily:"monospace", color:"#A89880", letterSpacing:"0.1em" }}>
-                    ▼ 감정 투입구 — 오늘의 폐기물 입력
+                    {t.release.inputLabel}
                   </p>
                   <p style={{ fontSize:8, fontFamily:"monospace", color: overload ? "#B84040" : "#C8BEB0" }}>
-                    {text.length > 0 ? `${text.length}자 투입됨` : "대기 중"}
+                    {text.length > 0 ? `${text.length}${t.release.inputInserted}` : t.release.inputWaiting}
                   </p>
                 </div>
 
-                {/* 기계 테두리 + textarea */}
                 <div style={{ position:"absolute", top:0, right:-4, zIndex:3, background:overload?"#B84040":ROSE, color:"#F5EFE0", fontSize:8, fontFamily:"monospace", letterSpacing:"0.1em", padding:"3px 7px", transform:"rotate(90deg)", transformOrigin:"right center", whiteSpace:"nowrap", transition:"background 0.3s" }}>
                   {overload ? "⚠ 과적재" : "▼ 투입구"}
                 </div>
@@ -581,11 +648,8 @@ function ReleaseContent() {
                     overflow:"hidden", position:"relative",
                     transition:"border-color 0.3s, box-shadow 0.3s",
                   }}>
-                  {/* 줄 노트 배경 */}
                   <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:"repeating-linear-gradient(transparent,transparent 27px,rgba(180,170,150,0.18) 27px,rgba(180,170,150,0.18) 28px)", backgroundPosition:"0 40px" }}/>
-                  {/* 왼쪽 여백선 */}
                   <div style={{ position:"absolute", left:40, top:0, bottom:0, width:1, background:"rgba(220,160,140,0.25)", pointerEvents:"none" }}/>
-                  {/* 상단 기계 헤더 */}
                   <div style={{ borderBottom:`1px dashed #D0C8B8`, padding:"6px 10px 5px", display:"flex", justifyContent:"space-between", background:"#F5F0E4" }}>
                     <span style={{ fontSize:8, fontFamily:"monospace", color:"#A09080", letterSpacing:"0.1em" }}>EMOTION INPUT TERMINAL v0.0.3</span>
                     <motion.span animate={{ opacity:[1,0.3,1] }} transition={{ duration:1.1, repeat:Infinity }} style={{ fontSize:8, fontFamily:"monospace", color:"#8A9E78" }}>● REC</motion.span>
@@ -603,13 +667,12 @@ function ReleaseContent() {
                       position:"relative", zIndex:1, letterSpacing:"0.01em",
                     }}
                   />
-                  {/* 하단 상태바 */}
                   <div style={{ borderTop:`1px dashed #D0C8B8`, padding:"4px 10px", display:"flex", justifyContent:"space-between", background:"#F5F0E4" }}>
                     <span style={{ fontSize:8, fontFamily:"monospace", color:"#A09080" }}>
-                      {overload ? "⚠ 처리 한계 초과" : stressed ? "질긴 감정 감지됨" : "감정 냄새 감지 중..."}
+                      {overload ? t.release.inputOverloadSub : stressed ? t.release.toughEmotion : "감정 냄새 감지 중..."}
                     </span>
                     <span style={{ fontSize:8, fontFamily:"monospace", color:overload?"#B84040":stressed?ROSE:"#C8BEB0" }}>
-                      {overload ? `${text.length}자 — 우걱이 힘들어함 ⚠` : text.length > 0 ? `${text.length}자` : ""}
+                      {overload ? `${text.length}${t.release.inputInserted} ⚠` : text.length > 0 ? `${text.length}${t.release.inputInserted}` : ""}
                     </span>
                   </div>
                 </motion.div>
@@ -617,7 +680,7 @@ function ReleaseContent() {
 
               {/* ── 처리 방식 선택 ── */}
               <p style={{ fontSize:9, fontFamily:"monospace", color:"#A89880", letterSpacing:"0.12em", marginBottom:8, marginTop:10 }}>
-                ▶ 처리 방식 선택 — 어떻게 폐기할지
+                {t.release.modeLabel}
               </p>
               <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:14 }}>
                 {MODES.map(m => {
@@ -646,7 +709,7 @@ function ReleaseContent() {
                       }}>
                       {active && (
                         <div style={{ position:"absolute", top:-8, right:4, background:ROSE, color:"#F5EFE0", fontSize:7, fontFamily:"monospace", padding:"1px 4px", borderRadius:1, letterSpacing:"0.06em" }}>
-                          선택됨
+                          {t.release.modeSelected}
                         </div>
                       )}
                       <p style={{ fontSize:12, fontFamily: m.win ? "monospace" : "var(--font-serif)", color:INK, fontWeight:active?700:400, marginBottom:2, letterSpacing: m.win ? "0.02em" : 0 }}>
@@ -684,18 +747,18 @@ function ReleaseContent() {
                   </svg>
                 )}
                 {phase==="animating"||phase==="loading"
-                  ? "우걱이 처리 중…"
+                  ? t.release.processingBtn
                   : canFeed && mode
                   ? MODE_SUBMIT_LABELS[mode]
-                  : "처리 방식 + 감정 투입 후 활성화"}
+                  : t.release.inactiveBtn}
               </motion.button>
 
               <div style={{ display:"flex", gap:8 }}>
                 <Link href="/" style={{ flex:1, height:44, background:INK, border:`2px solid ${INK}`, borderRadius:2, fontSize:13, fontFamily:"var(--font-serif)", fontWeight:700, color:"#FAF8F2", display:"flex", alignItems:"center", justifyContent:"center", textDecoration:"none", boxShadow:`3px 3px 0 #6A6258` }}>
-                  하나 더 먹여줄게 ♥
+                  {t.release.feedMore}
                 </Link>
                 <Link href="/archive" style={{ flex:1, height:44, background:"#FAF8F2", border:"1.5px solid #C8BEB0", borderRadius:2, fontSize:12, fontFamily:"var(--font-serif)", color:"#7A7260", display:"flex", alignItems:"center", justifyContent:"center", textDecoration:"none" }}>
-                  파쇄함 보기
+                  {t.release.viewArchive}
                 </Link>
               </div>
             </motion.div>
@@ -706,7 +769,6 @@ function ReleaseContent() {
             <motion.div key="loading" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
               style={{ display:"flex", flexDirection:"column", alignItems:"center", paddingTop:40, paddingBottom:40 }}>
               <div style={{ background:"#1A1410", border:`2px solid ${ROSE}`, borderRadius:3, padding:"28px 28px 22px", width:"100%", maxWidth:320, boxShadow:`0 0 40px ${ROSE}33` }}>
-                {/* 씹는 애니메이션 */}
                 <div style={{ display:"flex", justifyContent:"center", gap:6, marginBottom:18 }}>
                   {[0,1,2,3,4].map(i=>(
                     <motion.div key={i} animate={{ scaleY:[1,2.5,1], opacity:[0.4,1,0.4] }} transition={{ duration:0.5, delay:i*0.1, repeat:Infinity }}
@@ -719,7 +781,6 @@ function ReleaseContent() {
                   {loadingMsg}
                 </motion.p>
 
-                {/* 가짜 진행률 */}
                 <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:8 }}>
                   <div style={{ flex:1, height:4, background:"#2A2520", borderRadius:2, overflow:"hidden" }}>
                     <motion.div animate={{ width:`${fakePct}%` }} transition={{ duration:0.3 }} style={{ height:"100%", background:ROSE, borderRadius:2 }}/>
@@ -761,13 +822,13 @@ function ReleaseContent() {
               </motion.div>
               <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.6 }} style={{ display:"flex", flexDirection:"column", gap:10, width:"100%" }}>
                 <button onClick={goToResult} style={{ height:52, background:ROSE, border:`2px solid ${INK}`, borderRadius:2, fontSize:15, fontFamily:"var(--font-serif)", color:"#F5EFE0", fontWeight:700, cursor:"pointer", boxShadow:`4px 4px 0 #8A3050` }}>
-                  빠각 결과지 받기 →
+                  {t.release.getResult}
                 </button>
                 <button onClick={reset} style={{ height:46, background:INK, border:`2px solid ${INK}`, borderRadius:2, fontSize:13, fontFamily:"var(--font-serif)", color:"#FAF8F2", cursor:"pointer", fontWeight:700, boxShadow:`3px 3px 0 #6A6258` }}>
-                  하나 더 먹여줄게
+                  {t.release.feedMore}
                 </button>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-                  {[{href:"/archive",label:"파쇄함 보기"},{href:"/",label:"홈으로"}].map(b=>(
+                  {[{href:"/archive",label:t.release.viewArchive},{href:"/",label:t.release.home}].map(b=>(
                     <Link key={b.href} href={b.href} style={{ height:42, background:"#FAF8F2", border:"1.5px solid #C8BEB0", borderRadius:2, fontSize:12, fontFamily:"var(--font-serif)", color:"#5A5248", display:"flex", alignItems:"center", justifyContent:"center", textDecoration:"none" }}>{b.label}</Link>
                   ))}
                 </div>
@@ -784,9 +845,13 @@ function ReleaseContent() {
             msg={soHwaMsg}
             onContinue={() => { setSoHwaStop(false); setPhase("done"); }}
             onKeep={() => { setSoHwaStop(false); reset(); }}
+            t={{ soHwaContinue: t.release.soHwaContinue, soHwaKeep: t.release.soHwaKeep }}
           />
         )}
       </AnimatePresence>
+
+      {/* showP is used to prevent unused variable warning */}
+      {showP && <div style={{ display: "none" }} />}
     </div>
   );
 }

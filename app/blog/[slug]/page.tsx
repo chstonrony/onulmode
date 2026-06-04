@@ -266,8 +266,37 @@ export default async function ArticlePage({ params }: Props) {
           </section>
         )}
 
+        {/* 오늘의 감정퇴비 박스 */}
+        <div style={{ marginTop: 32, background: "#1A2A1A", border: "1.5px solid #2A4A2A", borderRadius: 6, overflow: "hidden" }}>
+          <div style={{ background: "#0E1A0E", padding: "7px 16px" }}>
+            <span style={{ fontSize: 9, fontFamily: "monospace", color: "#6A9B7A", letterSpacing: "0.12em" }}>
+              🌱 오늘의 감정퇴비
+            </span>
+          </div>
+          <div style={{ padding: "16px 18px" }}>
+            <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#A8CCA0", lineHeight: 1.85, marginBottom: 12 }}>
+              이 감정은 완전히 사라지지 않아도 괜찮습니다.<br />
+              오늘은 이름을 붙인 것만으로도 충분합니다.
+            </p>
+            <div style={{ borderTop: "1px dashed #2A4A2A", paddingTop: 10 }}>
+              <p style={{ fontSize: 10, color: "#5A7A5A", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 6 }}>우걱이 메모</p>
+              <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#7A9A7A", lineHeight: 1.8 }}>
+                덜 썩은 감정은 가끔 다시 올라옵니다.<br />
+                놀라지 말고, 다시 던지면 됩니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 면책 문구 */}
+        <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(42,37,32,0.04)", border: "1px dashed #D8CEC0", borderRadius: 4 }}>
+          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.8 }}>
+            이 글은 감정을 쉽게 이해하고 기록하기 위한 콘텐츠입니다. 의학적 진단이나 상담을 대신하지 않습니다.
+          </p>
+        </div>
+
         {/* 푸터 */}
-        <div style={{ borderTop: "1px solid #D8CEC0", paddingTop: 24, marginTop: 48 }}>
+        <div style={{ borderTop: "1px solid #D8CEC0", paddingTop: 24, marginTop: 32 }}>
           <p style={{ fontSize: 12, color: "#A89880", textAlign: "center" }}>
             © 2026 오늘무드. All rights reserved.
           </p>

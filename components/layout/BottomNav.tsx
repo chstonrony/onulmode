@@ -4,27 +4,32 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { useLocale } from "@/context/LocaleContext";
 
 const ROSE   = "#C8607A";
 const INK    = "#2A2520";
 const PURPLE = "#7A70A8";
 
-const MOBILE_TABS = [
-  { href: "/",        label: "우걱이",      color: INK,    cta: false },
-  { href: "/release", label: "파쇄시작",    color: ROSE,   cta: true  },
-  { href: "/archive", label: "감정파쇄함",  color: INK,    cta: false },
-  { href: "/blog",    label: "감정보관소",  color: PURPLE, cta: false },
-] as const;
-
-const DESKTOP_LINKS = [
-  { href: "/",        label: "우걱이"          },
-  { href: "/blog",    label: "감정보관소"       },
-  { href: "/archive", label: "감정 파쇄함"      },
-  { href: "/about",   label: "우걱이 사용설명서" },
-] as const;
-
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t, locale } = useLocale();
+
+  const MOBILE_TABS = [
+    { href: "/",        label: t.nav.home,    color: INK,    cta: false },
+    { href: "/release", label: t.nav.shred,   color: ROSE,   cta: true  },
+    { href: "/archive", label: t.nav.archive, color: INK,    cta: false },
+    { href: "/blog",    label: t.nav.stories, color: PURPLE, cta: false },
+  ];
+
+  const DESKTOP_LINKS = [
+    { href: "/",         label: t.nav.home    },
+    { href: "/blog",     label: t.nav.stories },
+    { href: "/magazine", label: locale === "ko" ? "매거진" : "Magazine" },
+    { href: "/feelings", label: locale === "ko" ? "감정도감" : "Almanac" },
+    { href: "/archive",  label: t.nav.archive },
+    { href: "/guide",    label: t.nav.guide   },
+    { href: "/about",    label: t.nav.about   },
+  ];
 
   function isActive(href: string) {
     if (href === "/release") return pathname === "/release" || pathname.startsWith("/result");
@@ -118,7 +123,7 @@ export default function BottomNav() {
 
           {/* 슬로건 */}
           <p style={{ fontSize: 11, color: "#B4A890", fontFamily: "var(--font-en)", fontStyle: "italic", letterSpacing: "0.04em" }}>
-            우걱이가 운영하는 감정 처리소
+            {t.nav.slogan}
           </p>
 
           {/* 네비 + CTA + 언어 */}
@@ -163,7 +168,7 @@ export default function BottomNav() {
                 transform: "rotate(-1deg)",
                 letterSpacing: "0.04em",
               }}>
-                파쇄시작
+                {t.nav.shred}
               </Link>
             </motion.div>
 

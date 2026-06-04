@@ -171,6 +171,68 @@ export default function FunnyButComfortingPage() {
           </p>
         </section>
 
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 4 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            왜 진지하게 말하기가 어려울까
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            "나 요즘 좀 힘들어"라고 말하는 것보다
+            "나 완전 번아웃인듯 ㅋㅋ"이라고 말하는 게 더 쉬운 이유가 있어요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            진지하게 말하면 그게 무거워져요. 상대방도 진지하게 반응해야 하고,
+            나도 설명을 더 해야 하고, 감정에 더 깊이 들어가야 해요.
+            근데 웃기게 말하면 — 가볍게 꺼내고 가볍게 넘길 수 있어요.
+          </p>
+
+          <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "22px 26px", marginBottom: 24 }}>
+            <p style={{ fontSize: 11, color: T3, fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>거리두기의 기능</p>
+            {[
+              { label: "자기 보호", desc: "웃음은 감정과 나 사이에 적당한 거리를 만들어줘요. 너무 깊이 빠지지 않아도 되게 해주는 장치예요." },
+              { label: "수용 촉진", desc: "웃으면서 받아들이면 방어막이 낮아져요. 진지한 내용도 더 잘 받아들여지게 돼요." },
+              { label: "연결 시작점", desc: "가볍게 꺼낸 것이 더 깊은 대화의 시작점이 되기도 해요. 웃음이 입구가 되는 거예요." },
+            ].map((item, i) => (
+              <div key={i} style={{ paddingBottom: i < 2 ? 14 : 0, marginBottom: i < 2 ? 14 : 0, borderBottom: i < 2 ? `1px solid ${LINE}` : "none" }}>
+                <p style={{ fontSize: 14, fontFamily: "var(--font-maru)", fontWeight: 600, color: AMB, marginBottom: 5, letterSpacing: "-0.02em" }}>{item.label}</p>
+                <p style={{ ...PROSE, fontSize: 13, color: T2, lineHeight: 1.8 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            병맛은 가벼운 게 아니에요. 심각한 것을 다루기 쉬운 방식으로 포장한 거예요.
+            그 포장지 아래에 진심이 있어요.
+          </p>
+        </section>
+
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 5 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            공감이 위로인 이유
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            "나만 이런 게 아니구나"라는 경험이 왜 위로가 될까요?
+            외로움이 조금 줄어들기 때문이에요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            힘들 때 가장 힘든 건 그 감정 자체보다, "나만 이런 것 같다"는 고립감인 경우가 많아요.
+            그런데 누군가 이미 같은 감정을 겪고, 그걸 표현해뒀다는 사실 하나가
+            그 고립감을 깨줘요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            그래서 병맛이든, 진지함이든, 형식은 중요하지 않아요.
+            "맞아, 나도 그랬어"라는 순간이 핵심이에요.
+            그 순간이 위로예요.
+          </p>
+        </section>
+
         {/* 우걱이 마지막 */}
         <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "24px 28px", textAlign: "center", marginBottom: 52 }}>
           <p style={{ fontSize: 12, color: T3, fontFamily: "monospace", letterSpacing: "0.06em", marginBottom: 18 }}>from. 우걱이</p>

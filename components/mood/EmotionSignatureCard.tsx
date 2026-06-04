@@ -4,12 +4,26 @@ import { motion } from "framer-motion";
 import { MoodEntry } from "@/types";
 import { getEmotion } from "@/lib/emotions";
 import { format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { ko, enUS, ja, es, zhCN, type Locale as DateLocale } from "date-fns/locale";
 import { X } from "lucide-react";
+import { useLocale } from "@/context/LocaleContext";
+
+const DATE_LOCALES: Record<string, DateLocale> = { ko, en: enUS, ja, es, zh: zhCN };
+const DATE_FORMATS: Record<string, string> = {
+  ko: "yyyy년 M월 d일 EEEE",
+  en: "EEEE, MMMM d, yyyy",
+  ja: "yyyy年M月d日 EEEE",
+  es: "EEEE, d 'de' MMMM 'de' yyyy",
+  zh: "yyyy年M月d日 EEEE",
+};
 
 export default function EmotionSignatureCard({ entry, onClose }: { entry: MoodEntry; onClose?: () => void }) {
+  const { locale, t } = useLocale();
   const em = getEmotion(entry.emotion);
   const Icon = em.icon;
+  const isKo = locale === "ko";
+  const dateLocale = DATE_LOCALES[locale] ?? enUS;
+  const dateFormat = DATE_FORMATS[locale] ?? DATE_FORMATS.en;
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -25,7 +39,7 @@ export default function EmotionSignatureCard({ entry, onClose }: { entry: MoodEn
       )}
 
       <p style={{ fontSize: 11, color: em.color, fontWeight: 500, letterSpacing: "0.08em", opacity: 0.7, marginBottom: 20 }}>
-        {format(new Date(entry.date), "yyyy년 M월 d일 EEEE", { locale: ko })}
+        {format(new Date(entry.date), dateFormat, { locale: dateLocale })}
       </p>
 
       <div className="flex items-center gap-4 mb-5">
@@ -34,8 +48,12 @@ export default function EmotionSignatureCard({ entry, onClose }: { entry: MoodEn
           <Icon size={26} strokeWidth={1.5} style={{ color: em.color }} />
         </div>
         <div>
-          <p style={{ fontSize: 28, fontWeight: 700, color: em.color, lineHeight: 1.1 }}>{em.label}</p>
-          <p style={{ fontSize: 13, color: em.color, opacity: 0.6, marginTop: 2 }}>{em.labelEn}</p>
+          <p style={{ fontSize: 28, fontWeight: 700, color: em.color, lineHeight: 1.1 }}>
+            {isKo ? em.label : em.labelEn}
+          </p>
+          <p style={{ fontSize: 13, color: em.color, opacity: 0.6, marginTop: 2 }}>
+            {isKo ? em.labelEn : em.label}
+          </p>
         </div>
       </div>
 
@@ -46,7 +64,7 @@ export default function EmotionSignatureCard({ entry, onClose }: { entry: MoodEn
       )}
 
       <div className="flex items-center gap-3">
-        <span style={{ fontSize: 11, color: em.color, opacity: 0.6 }}>강도</span>
+        <span style={{ fontSize: 11, color: em.color, opacity: 0.6 }}>{t.profile.intensity}</span>
         <div className="flex gap-1.5">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} style={{ width: i < entry.intensity ? 18 : 6, height: 4, borderRadius: 2, background: i < entry.intensity ? em.color : `${em.border}`, opacity: i < entry.intensity ? 0.7 : 0.3, transition: "all 0.3s" }} />

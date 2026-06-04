@@ -201,7 +201,7 @@ function playShredSound() {
 
 export default function MainPage() {
   const router       = useRouter();
-  const { t }        = useLocale();
+  const { t, locale } = useLocale();
   const heroMediaRef = useRef<HTMLDivElement>(null);
 
   const [toast, setToast]             = useState<string | null>(null);
@@ -357,6 +357,59 @@ export default function MainPage() {
               {t.home.headline2}
             </span>
           </h1>
+
+          {/* 서비스 설명 + 세계관 — 심사관이 3초 안에 이해할 수 있어야 함 */}
+          <div style={{ margin: "14px auto 18px", maxWidth: 320, textAlign: "left" }}>
+
+            {/* 서비스 정의 */}
+            <div style={{ background: "rgba(255,255,255,0.6)", border: "1px solid rgba(200,192,178,0.6)", borderRadius: 8, padding: "14px 16px", marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: "#3A3028", fontFamily: "var(--font-prose)", fontWeight: 400, lineHeight: 1.85, marginBottom: 0 }}>
+                {locale === "ko" ? (
+                  <>
+                    오늘무드는 하루 동안 생긴 감정을 가볍게 꺼내어,<br />
+                    우걱이와 함께 조금 웃기게 정리해보는<br />
+                    <strong style={{ fontWeight: 600, color: "#2A2520" }}>감정 콘텐츠 서비스</strong>입니다.
+                  </>
+                ) : "OnulMood is an emotional content service where you lighten today's feelings with Ugogi."}
+              </p>
+            </div>
+
+            {/* 우걱이 세계관 */}
+            <div style={{ background: "rgba(26,36,26,0.85)", border: "1px solid rgba(106,155,122,0.45)", borderRadius: 8, padding: "14px 16px", marginBottom: 8 }}>
+              <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 10 }}>
+                🌱 우걱이 감정처리소
+              </p>
+              {locale === "ko" ? (
+                <>
+                  <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 8 }}>
+                    우걱이는 감정을 그냥 먹지 않습니다.
+                  </p>
+                  <p style={{ fontSize: 12, color: "#A8CCA0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 8 }}>
+                    오래 씹고,<br />천천히 발효시키고,<br />작은 씨앗으로 남겨둡니다.
+                  </p>
+                  <p style={{ fontSize: 11, color: "#7A9A7A", fontFamily: "var(--font-serif)", lineHeight: 1.8, fontStyle: "italic" }}>
+                    진지한 상담은 아니고,<br />감정을 조금 덜 무겁게 만드는<br />이상한 감정처리소입니다.
+                  </p>
+                </>
+              ) : (
+                <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
+                  Ugogi doesn&apos;t just eat feelings.<br />
+                  It chews slowly, ferments them,<br />
+                  and leaves behind a tiny seed.
+                </p>
+              )}
+            </div>
+
+            {/* 안전 안내 */}
+            <div style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(200,192,178,0.5)", borderRadius: 6, padding: "9px 13px" }}>
+              <p style={{ fontSize: 10, color: "#9A9080", fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.65 }}>
+                {locale === "ko"
+                  ? "오늘무드는 의학적 진단이나 심리상담 서비스가 아닙니다. 감정을 가볍게 기록하고 돌아보기 위한 콘텐츠 서비스입니다."
+                  : "OnulMood is not a medical or counseling service. It's a content service for lightly recording and reflecting on emotions."}
+              </p>
+            </div>
+          </div>
+
           <Link href="/release" className="hero-cta">
             {t.home.cta} →
           </Link>
@@ -483,7 +536,7 @@ export default function MainPage() {
               ↑ 카드 눌러봐 — 우걱이가 씹어먹음
             </motion.p>
             <p style={{ fontSize: 10, color: "#B4A890", fontFamily: "monospace" }}>
-              결과 매번 달라 · 친구 것이랑 비교 가능 · 공유 가능
+              공유 가능 · 기록 가능 · 가볍게 돌아보기
             </p>
           </motion.div>
         )}
@@ -629,6 +682,43 @@ export default function MainPage() {
       </AnimatePresence>
 
       <FeedbackToast message={toast} />
+
+      {/* 서비스 소개 텍스트 — SEO용 */}
+      <div style={{ background: "#E8DDD0", borderTop: "1px solid #D0C8BC", padding: "40px 24px 60px" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          {/* 서비스 정의 — AdSense 심사관을 위한 명확한 서비스 설명 */}
+          <div style={{ background: "rgba(255,255,255,0.4)", border: "1px solid #D0C8BC", borderRadius: 6, padding: "18px 20px", marginBottom: 24 }}>
+            <p style={{ fontFamily: "var(--font-prose)", fontWeight: 400, fontSize: 13, color: "#5A5248", lineHeight: 1.85, letterSpacing: "-0.01em" }}>
+              오늘무드는 하루 동안 생긴 감정을 가볍게 고르고, 우걱이와 함께 조금 웃기게 정리해보는 캐릭터 기반 감정 콘텐츠 서비스입니다.
+            </p>
+          </div>
+
+          <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: "clamp(18px, 4vw, 22px)", color: "#2A2520", letterSpacing: "-0.025em", marginBottom: 16, lineHeight: 1.5 }}>
+            감정을 씹고, 퇴비로 만들고, 씨앗으로 남기는 공간
+          </h2>
+          <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 14, color: "#5A5248", lineHeight: 2.0, letterSpacing: "-0.01em", marginBottom: 20 }}>
+            오늘 힘들었던 감정을 우걱이한테 던지면, 우걱이가 씹고 파쇄합니다. 없애는 게 아니에요. 감정은 찌꺼기가 되고, 찌꺼기는 퇴비가 되고, 퇴비에서 아주 작은 씨앗이 남아요.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 }}>
+            {[
+              { title: "감정 파쇄", desc: "힘든 것을 글로 써서 우걱이한테 던지면 파쇄 완료됩니다." },
+              { title: "오늘 기록", desc: "오늘의 감정을 간단히 기록하고 패턴을 확인해요." },
+              { title: "파쇄 기록", desc: "버린 감정들의 기록. 이렇게 많이 버텼구나, 싶어요." },
+              { title: "감정 이야기", desc: "번아웃, 외로움, 억울함에 대한 짧은 글들." },
+            ].map((item, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.5)", border: "1px solid #D0C8B8", borderRadius: 4, padding: "14px 16px" }}>
+                <p style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 14, color: "#2A2520", marginBottom: 6, letterSpacing: "-0.02em" }}>{item.title}</p>
+                <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 12, color: "#7A7060", lineHeight: 1.7 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13, color: "#8A8070", lineHeight: 1.8, letterSpacing: "-0.01em" }}>
+            오늘무드는 모든 기록이 기기에만 저장돼요. 서버에 전송되지 않습니다. 로그인 없이, 개인정보 없이 사용할 수 있어요.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

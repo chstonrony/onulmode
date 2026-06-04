@@ -3,8 +3,16 @@ import Link from "next/link";
 import { getLocale } from "@/lib/getLocale";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | OnulMood",
-  description: "Privacy policy for OnulMood service.",
+  title: "개인정보처리방침 | 오늘무드",
+  description: "오늘무드 개인정보처리방침 안내. 수집 정보, 브라우저 로컬 저장, Google AdSense 사용, 쿠키 안내 등을 확인하세요.",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://onulmood.com/privacy",
+    title: "개인정보처리방침 | 오늘무드",
+    siteName: "오늘무드",
+  },
+  alternates: { canonical: "https://onulmood.com/privacy" },
 };
 
 const CONTENT = {

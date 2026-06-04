@@ -11,6 +11,7 @@ import EmotionWheel from "@/components/mood/EmotionWheel";
 import EmotionSignatureCard from "@/components/mood/EmotionSignatureCard";
 import TopBar from "@/components/layout/TopBar";
 import UgogiTrace from "@/components/ugogi/UgogiTrace";
+import { useLocale } from "@/context/LocaleContext";
 import { Pencil, CalendarDays } from "lucide-react";
 import Link from "next/link";
 
@@ -23,6 +24,7 @@ const TODAY = format(new Date(), "yyyy-MM-dd");
 type Step = "select" | "write" | "done";
 
 export default function TodayPage() {
+  const { t, locale } = useLocale();
   const { addEntry, getEntryByDate, loaded } = useMoodStore();
   const existing = loaded ? getEntryByDate(TODAY) : undefined;
 
@@ -59,7 +61,7 @@ export default function TodayPage() {
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
       <TopBar
-        title={format(new Date(), "M월 d일 EEEE", { locale: ko })}
+        title={locale === "ko" ? format(new Date(), "M월 d일 EEEE", { locale: ko }) : format(new Date(), "MMM d, EEEE")}
         rightAction={step === "done" ? (
           <button onClick={reset} style={{
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -82,7 +84,9 @@ export default function TodayPage() {
                   TODAY&apos;S MOOD
                 </p>
                 <h2 style={{ fontSize: 24, color: "#2A2520", lineHeight: 1.3, fontFamily: "var(--font-serif)", fontWeight: 700 }}>
-                  지금 가장 가까운<br />감정을 골라봐요
+                  {t.today.selectPrompt.split("\n").map((line, i) => (
+                    <span key={i}>{line}{i === 0 && <br />}</span>
+                  ))}
                 </h2>
               </div>
 
@@ -99,7 +103,7 @@ export default function TodayPage() {
                       fontSize: 16, fontFamily: "var(--font-serif)", fontWeight: 700,
                       borderRadius: 4, border: "none", cursor: "pointer",
                     }}>
-                    다음 — 기록하기
+                    {t.today.next}
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -125,7 +129,7 @@ export default function TodayPage() {
                   <p style={{ fontSize: 12, color: cfg.color, opacity: 0.6 }}>{cfg.labelEn}</p>
                 </div>
                 <button onClick={() => setStep("select")} style={{ fontSize: 12, color: "#A89880", fontFamily: "var(--font-serif)", background: "none", border: "none", cursor: "pointer" }}>
-                  변경
+                  {t.common.change}
                 </button>
               </div>
 
@@ -155,7 +159,7 @@ export default function TodayPage() {
                   ONE LINE
                 </label>
                 <input type="text" value={title} onChange={e => setTitle(e.target.value)}
-                  placeholder="오늘을 한 줄로 표현한다면…" maxLength={80}
+                  placeholder={t.today.inputPlaceholder} maxLength={80}
                   style={{
                     width: "100%", height: 48, padding: "0 14px",
                     background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4,
@@ -167,10 +171,10 @@ export default function TodayPage() {
               {/* 일기 */}
               <div style={{ marginBottom: 24 }}>
                 <label style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", display: "block", marginBottom: 10 }}>
-                  DIARY <span style={{ fontSize: 10, fontWeight: 400 }}>(선택)</span>
+                  {t.today.diary} <span style={{ fontSize: 10, fontWeight: 400 }}>{t.today.diaryOpt}</span>
                 </label>
                 <textarea value={body} onChange={e => setBody(e.target.value)}
-                  placeholder="오늘 있었던 일, 느낀 것을 자유롭게…" maxLength={2000} rows={6}
+                  placeholder={t.today.bodyPlaceholder} maxLength={2000} rows={6}
                   style={{
                     width: "100%", padding: "14px", resize: "none",
                     background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4,
@@ -191,7 +195,7 @@ export default function TodayPage() {
                 fontSize: 15, fontFamily: "var(--font-serif)", fontWeight: 700,
                 borderRadius: 4, cursor: saving ? "not-allowed" : "pointer",
               }}>
-                {saving ? "저장 중…" : "오늘의 무드 저장"}
+                {saving ? t.today.saving : t.today.save}
               </button>
             </motion.div>
           )}
@@ -203,7 +207,7 @@ export default function TodayPage() {
               {/* 접수 확인 헤더 */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                 <p style={{ fontSize: 11, color: ROSE, fontFamily: "monospace", letterSpacing: "0.1em" }}>
-                  오늘 감정 접수 완료
+                  {t.today.record}
                 </p>
                 <p style={{ fontSize: 9, color: "#B4A890", fontFamily: "monospace", letterSpacing: "0.08em" }}>
                   {format(new Date(), "HH:mm")} · UGOGI-LAB
@@ -252,7 +256,7 @@ export default function TodayPage() {
                   color: "#5A5248", fontSize: 13, fontFamily: "var(--font-prose)", fontWeight: 300,
                   textDecoration: "none", letterSpacing: "-0.01em",
                 }}>
-                  <CalendarDays size={14} strokeWidth={1.5} /> 파쇄함 보기
+                  <CalendarDays size={14} strokeWidth={1.5} /> {t.today.toArchive}
                 </Link>
                 <button onClick={reset} style={{
                   flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
@@ -260,7 +264,7 @@ export default function TodayPage() {
                   color: "#A89880", fontSize: 13, fontFamily: "var(--font-prose)", fontWeight: 300,
                   cursor: "pointer", letterSpacing: "-0.01em",
                 }}>
-                  수정하기
+                  {t.today.edit}
                 </button>
               </motion.div>
             </motion.div>

@@ -889,7 +889,78 @@ export interface ResultData {
   productEmoji: string;
   productType: string;
   productDescription: string;
+  /* 감정퇴비실 시스템 */
+  compostResidue: string;    // 오늘 남은 퇴비 이름 ("괜찮다고 말한 서운함")
+  fermentationDay: number;   // 발효 N일째
+  compostFertilizer: string; // 감정비료 문장
+  ugComment: string;         // 우걱이 메모 (짧고 직접적)
 }
+
+// ─── 퇴비 이름 수식어 (감정 앞에 붙는 말) ────────────────
+const RESIDUE_PREFIXES = [
+  "괜찮다고 말한",
+  "말 못 한",
+  "혼자 삭혀온",
+  "오래 눌러온",
+  "티 내지 못한",
+  "조용히 참아온",
+  "버티다 남은",
+  "억지로 넘긴",
+  "아무것도 아닌 척한",
+  "그냥 지나친",
+  "나중에 말하려던",
+  "웃으면서 삼킨",
+] as const;
+
+// ─── 퇴비 이름 생성 (감정 키워드 기반) ─────────────────
+function buildCompostResidue(emotions: string[], rng: () => number): string {
+  const prefix = RESIDUE_PREFIXES[Math.floor(rng() * RESIDUE_PREFIXES.length)];
+  const emotion = emotions[0] || "감정";
+  return `${prefix} ${emotion}`;
+}
+
+// ─── 감정비료 문장 (15개) ──────────────────────────────
+const COMPOST_FERTILIZERS = [
+  "말 못 한 서운함이 아주 작게 썩어가는 중",
+  "참았던 것들이 조금씩 부드러워지고 있음",
+  "오늘 짊어진 것의 일부가 내일의 거름이 될 예정",
+  "혼자 버텨온 게 천천히 발효되는 중",
+  "억울함의 껍데기가 벗겨지면서 뭔가 남는 중",
+  "지친 마음이 조금씩 흙이 되어가고 있음",
+  "오늘 쌓인 감정이 슬로우발효 상태로 처리 중",
+  "말하지 못한 것들이 조용히 퇴비화 중",
+  "오늘 던진 것이 작은 씨앗의 거름으로 배정됨",
+  "피곤함의 찌꺼기가 내일의 에너지로 전환 예정",
+  "오래 삭혀둔 감정이 드디어 분해 시작됨",
+  "뭔가 굳었던 것이 오늘 조금 물러진 것 같음",
+  "혼자 들고 있던 무게가 퇴비로 변환 중",
+  "오늘 참은 게 내일 조금 가벼운 뭔가가 될 예정",
+  "감정의 껍데기가 벗겨지면 아주 이상한 씨앗이 남음",
+] as const;
+
+// ─── 우걱이 메모 (짧고 직접적, 2줄 형식) ───────────────
+const UG_FINAL_COMMENTS = [
+  "이건 아직 덜 썩었어.\n가끔 생각날 수 있음.",
+  "완전히 갈리진 않았음.\n찌꺼기가 남는 게 정상임.",
+  "버린 게 아니라 보관 중.\n다른 형태로.",
+  "발효 중이야.\n나중에 뭔가 될 수도 있음.",
+  "덜 처리됐음.\n그래도 오늘치는 했음.",
+  "이게 다 퇴비가 됨.\n언제인지는 모름.",
+  "안 갈린 것들은 여기 뒀음.\n나중에 확인해봐.",
+  "이건 씹다가 걸렸음.\n억지로 삼킴.",
+  "오늘 거 여기 두고 가.\n우걱이가 계속 씹고 있을게.",
+  "전부 없애진 못했어.\n남은 게 오늘의 기록임.",
+  "아직 덜 발효됨.\n시간이 필요함.",
+  "깔끔하게 끝나진 않았음.\n그래도 조금 가벼워졌을 거임.",
+  "이 찌꺼기, 잘 두면 씨앗 됨.\n모름, 될 수도 있음.",
+  "오늘 것은 오늘 처리.\n내일 거는 내일 오면 됨.",
+  "다음에 또 가져와도 됨.\n우걱이 여기 있음.",
+  "형태가 바뀐 거야.\n없어진 게 아님.",
+  "뭔가 남는 게 있음.\n그게 오늘의 증거임.",
+  "조금 더 썩어야 함.\n지금은 여기 두고 가.",
+  "혼자 들고 있기엔 무거웠음.\n잘 던졌음.",
+  "이건 오래됐음.\n그래서 잘 안 갈렸음.",
+] as const;
 
 const CARD_STYLES_POOL = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12] as const;
 
@@ -946,6 +1017,10 @@ export function generateResult(emotions: string[], seed?: number): ResultData {
     productType:    food.type,
     productDescription: pick(PRODUCT_DESCRIPTIONS, rng),
     bizarreStats,
+    compostResidue:    buildCompostResidue(emotions.length ? emotions : ["감정"], rng),
+    fermentationDay:   Math.floor(rng() * 6) + 1,   // 1~6일
+    compostFertilizer: pick(COMPOST_FERTILIZERS, rng),
+    ugComment:         pick(UG_FINAL_COMMENTS,   rng),
   };
 }
 

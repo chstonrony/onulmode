@@ -132,6 +132,25 @@
 - `app/release/page.tsx` — done 상태에 부산물 카드 추가 (희귀도 뱃지, 냄새/잔여감정, 부분파쇄 경고, 도감 링크)
 - `app/collection/page.tsx` — 감정 부산물 도감 페이지 (희귀도 필터, 수집 통계, 미수집 카운트, 상세 토글)
 
+### 2026-05-20 세션 G — 완전 다국어(i18n) 시스템 구축
+- `middleware.ts` — 첫 방문 시 Accept-Language 헤더로 언어 자동 감지 + 쿠키 저장
+- `lib/getLocale.ts` — 서버 컴포넌트용 언어 읽기 유틸리티 (쿠키 우선)
+- `lib/i18n.ts` — about/privacy/blog/collection/insights/today/archive 섹션 5개 언어 추가 완료
+- `app/about/page.tsx` — 5개 언어 완전 번역 (한/영/일/스/중)
+- `app/privacy/page.tsx` — 5개 언어 완전 번역
+- `lib/articlesTranslations.ts` — 블로그 아티클 21편 × 영어 완전 번역 + 일/스/중 메타데이터
+- `lib/getLocalizedArticle.ts` — 로케일에 맞는 아티클 반환 유틸리티
+- `app/blog/[slug]/page.tsx` — 다국어 아티클 렌더링 적용
+- `app/today/page.tsx` — useLocale() 적용, 날짜 형식/버튼/라벨 다국어
+- `app/archive/page.tsx` — useLocale() 적용, timeAgo/formatDate/라벨 다국어
+- `app/insights/page.tsx` — useLocale() 적용, 헤더/통계/섹션 라벨 다국어
+- `app/collection/page.tsx` — useLocale() 적용, 타이틀/빈상태/CTA 다국어
+
+### 2026-05-21 세션 H — 번역 완성 (release + best-results)
+- `lib/i18n.ts` — release 섹션 54개 키 × 5개 언어 (UI 전체 커버)
+- `app/release/page.tsx` — 완전 다국어: MODES/MODE_SUBMIT_LABELS/RESULTS/LOADING_MSGS/PLACEHOLDERS/SOHWA_MSGS 로케일 분기, 모든 UI 텍스트 t.release.* 적용
+- `app/best-results/BestResultsClient.tsx` — 완전 다국어: RESULTS_KO/EN 분기, UI 객체 5개 언어, share/save 버튼/CTA/footer 다국어
+
 ### 2026-05-19 세션 E — 브랜드 디렉션 통일 (감정 처리 시설 세계관)
 - `globals.css`: `.facility-card`, `.receipt-top/bottom`, `.ugogi-stamp`, `.facility-btn`, `.ugogi-trace`, `.facility-divider` CSS 클래스 추가
 - `components/ugogi/UgogiTrace.tsx` 생성 — 랜덤 우걱이 코멘트+상태 배지 (재사용 가능)
@@ -144,7 +163,7 @@
 
 - 에드센스 미승인 상태 (콘텐츠 강화 진행 중)
 - 인증/회원가입 없음 — localStorage만 사용
-- 다국어(i18n)는 메인 페이지에만 적용됨
+- 다국어(i18n) 전체 페이지 완료 (한/영/일/스/중)
 
 ---
 

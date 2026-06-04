@@ -4,7 +4,8 @@ import { useRef, useMemo, Suspense, useState, useEffect, useCallback } from "rea
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateResult, parseResultUrl, buildResultUrl } from "@/lib/resultCard";
-import { saveShredRecord } from "@/lib/shredRecords";
+import { saveShredRecord, updateUserNote } from "@/lib/shredRecords";
+import { findSeedByEmotions, getCompostStage } from "@/lib/emotionSeeds";
 import ResultCard from "@/components/share/ResultCard";
 import ShareCard from "@/components/share/ShareCard";
 import ShareButtons from "@/components/share/ShareButtons";
@@ -131,6 +132,9 @@ function ResultContent() {
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<"processing" | "result">("processing");
+  const [savedRecordId, setSavedRecordId] = useState<string | null>(null);
+  const [userNote, setUserNote] = useState("");
+  const [noteSaved, setNoteSaved] = useState(false);
   const handleDone = useCallback(() => setPhase("result"), []);
 
   const parsed = parseResultUrl(params.toString() ? `?${params.toString()}` : "");
@@ -141,17 +145,27 @@ function ResultContent() {
     [parsed?.seed]
   );
   const shareUrl = buildResultUrl(emotions, data.seed);
+  const seed = useMemo(() => findSeedByEmotions(emotions), [emotions]);
+  const stage = getCompostStage(seed.growthPct);
 
   useEffect(() => {
     if (phase === "result") {
-      saveShredRecord({
+      const rec = saveShredRecord({
         emotions,
         productName: data.productName,
         productEmoji: data.productEmoji,
         killerLine: data.killerLine,
         errorCode: data.errorCode,
         warningMessage: data.warningMessage ?? "",
+        ugogitranslation: seed.ugogitranslation,
+        compostNoun: seed.compostNoun,
+        compostEmoji: seed.compostEmoji,
+        compostName: seed.compostName,
+        compostDesc: seed.compostDesc,
+        seedQuestion: seed.seedQuestion,
+        growthPct: seed.growthPct,
       });
+      setSavedRecordId(rec.id);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
@@ -431,8 +445,278 @@ function ResultContent() {
         </div>
       </motion.div>
 
+      {/* ─── 8. 오늘의 한 줄 위로 ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+        style={{ padding: "24px 22px 0" }}
+      >
+        <div style={{
+          background: PAPER, border: `1px solid ${LINE}`,
+          padding: "20px 22px", borderLeft: `3px solid ${ROSE}`,
+        }}>
+          <p style={{ fontSize: 8, fontFamily: "monospace", color: ROSE, letterSpacing: "0.14em", marginBottom: 10 }}>
+            오늘의 한 줄 위로
+          </p>
+          <p style={{ fontSize: 14, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.75 }}>
+            {data.prescription}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ─── 9. 자기돌봄 질문 ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.9 }}
+        style={{ padding: "12px 22px 0" }}
+      >
+        <div style={{
+          background: "#FAF5EC", border: `1px dashed ${LINE}`,
+          padding: "18px 20px",
+        }}>
+          <p style={{ fontSize: 8, fontFamily: "monospace", color: MUTED, letterSpacing: "0.14em", marginBottom: 10 }}>
+            오늘의 자기돌봄 질문
+          </p>
+          <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.8 }}>
+            {data.diagnosisLabel === "생존 가능성" || data.diagnosisLabel === "버티기 내구도"
+              ? "오늘 나를 위해 한 가지만 해준다면 무엇을 하고 싶나요?"
+              : data.diagnosisLabel === "감정 유통기한" || data.diagnosisLabel === "현실 체감온도"
+              ? "오늘 가장 무거웠던 감정, 그 감정의 이름은 무엇인가요?"
+              : "지금 이 순간, 내가 정말 필요한 것은 무엇일까요?"}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ─── 10. 감정 기록하기 버튼 ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 1.0 }}
+        style={{ padding: "20px 22px 0" }}
+      >
+        <Link href="/today" style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          height: 48, background: PAPER, border: `1.5px solid ${LINE}`,
+          fontSize: 13, fontFamily: "var(--font-serif)", color: INK,
+          textDecoration: "none", letterSpacing: "0.02em",
+        }}>
+          오늘 감정 기록하기 →
+        </Link>
+      </motion.div>
+
+      {/* ─── 11. 감정퇴비실 보고서 ─── */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.1 }}
+        style={{ padding: "24px 20px 0" }}
+      >
+        {/* 구분선 헤더 */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <div style={{ height: 1, flex: 1, background: "#C4D8BC" }} />
+          <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.14em", flexShrink: 0 }}>
+            🌱 감정퇴비실 — 발효 보고서
+          </p>
+          <div style={{ height: 1, flex: 1, background: "#C4D8BC" }} />
+        </div>
+
+        <div style={{ background: "#F5F9F2", border: "1.5px solid #C4D8BC", borderRadius: 6, overflow: "hidden" }}>
+          {/* 타이틀 바 */}
+          <div style={{ background: "#2A3A2A", padding: "8px 14px", display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontSize: 8, fontFamily: "monospace", color: "#8ABE7A", letterSpacing: "0.12em" }}>UGOGI COMPOST STATION</span>
+            <span style={{ fontSize: 8, fontFamily: "monospace", color: "#5A7A5A" }}>{data.errorCode}</span>
+          </div>
+
+          <div style={{ padding: "14px 16px", display: "flex", flexDirection: "column", gap: 0 }}>
+
+            {/* STEP 1 — 감정 */}
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingBottom: 12, marginBottom: 12, borderBottom: "1px dashed #C4D8BC" }}>
+              <div style={{ width: 20, height: 20, background: "#C4D8BC", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                <span style={{ fontSize: 9, fontFamily: "monospace", color: "#2A3A2A", fontWeight: 700 }}>1</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 9, color: "#7A8A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 4 }}>감정</p>
+                <p style={{ fontSize: 14, fontFamily: "var(--font-serif)", color: "#2A3A2A", fontWeight: 700 }}>
+                  {emotions[0] || "감정"} {emotions.length > 1 ? `외 ${emotions.length - 1}종` : ""}
+                </p>
+              </div>
+            </div>
+
+            {/* STEP 2 — 파쇄 결과 */}
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingBottom: 12, marginBottom: 12, borderBottom: "1px dashed #C4D8BC" }}>
+              <div style={{ width: 20, height: 20, background: "#C4D8BC", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                <span style={{ fontSize: 9, fontFamily: "monospace", color: "#2A3A2A", fontWeight: 700 }}>2</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 9, color: "#7A8A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 4 }}>파쇄 결과</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 20 }}>{data.productEmoji}</span>
+                  <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#2A3A2A", fontWeight: 700 }}>{data.productName}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 3 — 퇴비화 결과 (핵심 발견 순간) */}
+            <div style={{ marginBottom: 12, paddingBottom: 12, borderBottom: "1px dashed #C4D8BC" }}>
+              {/* 감정 → 퇴비 변환 시각화 */}
+              <div style={{ background: "#0E1A0E", borderRadius: 6, padding: "14px 16px" }}>
+                <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 12 }}>
+                  🌱 퇴비화 결과 — 감정의 뿌리
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {/* 원래 감정 */}
+                  <div style={{ background: "rgba(200,96,122,0.15)", border: "1px solid rgba(200,96,122,0.3)", borderRadius: 4, padding: "6px 12px" }}>
+                    <p style={{ fontSize: 13, fontFamily: "var(--font-maru)", color: "#F0A0B0", fontWeight: 600, letterSpacing: "-0.01em" }}>
+                      {emotions[0] || "감정"}
+                    </p>
+                  </div>
+                  <span style={{ color: "#3A5A3A", fontSize: 14 }}>→</span>
+                  {/* 퇴비화 결과 */}
+                  <div style={{ background: "#EFF6EC", border: "1.5px solid #6A9B7A", borderRadius: 4, padding: "8px 14px", flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontSize: 18 }}>{seed.compostEmoji}</span>
+                      <span style={{ fontSize: 17, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#2A3A2A", letterSpacing: "-0.02em" }}>
+                        {seed.compostNoun}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p style={{ fontSize: 11, color: "#5A7A5A", fontFamily: "var(--font-serif)", lineHeight: 1.7, marginTop: 10, fontStyle: "italic" }}>
+                  {seed.ugogitranslation}
+                </p>
+              </div>
+            </div>
+
+            {/* STEP 4 — 감정씨앗 */}
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingBottom: 12, marginBottom: 12, borderBottom: "1px dashed #C4D8BC" }}>
+              <div style={{ width: 20, height: 20, background: "#A8CCA0", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                <span style={{ fontSize: 10 }}>🌿</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 6 }}>오늘의 감정씨앗</p>
+                <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#2A3A2A", lineHeight: 1.8, fontWeight: 500 }}>
+                  {seed.seedQuestion}
+                </p>
+              </div>
+            </div>
+
+            {/* STEP 5 — 한줄기록 */}
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div style={{ width: 20, height: 20, background: "#C4D8BC", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                <span style={{ fontSize: 9, fontFamily: "monospace", color: "#2A3A2A", fontWeight: 700 }}>6</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 9, color: "#7A8A7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 8 }}>
+                  한 줄 기록 <span style={{ color: "#A4B8A0", fontWeight: 300 }}>(선택)</span>
+                </p>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    type="text"
+                    value={userNote}
+                    onChange={e => { setUserNote(e.target.value); setNoteSaved(false); }}
+                    placeholder="오늘 이 감정에 대해 한 마디 남기기…"
+                    maxLength={100}
+                    style={{
+                      flex: 1, height: 38, padding: "0 12px",
+                      background: "#FAFFF8", border: "1px solid #C4D8BC", borderRadius: 4,
+                      fontSize: 12, color: "#2A3A2A", outline: "none",
+                      fontFamily: "var(--font-serif)",
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (savedRecordId && userNote.trim()) {
+                        updateUserNote(savedRecordId, userNote.trim());
+                        setNoteSaved(true);
+                      }
+                    }}
+                    disabled={!userNote.trim() || noteSaved}
+                    style={{
+                      height: 38, padding: "0 12px", flexShrink: 0,
+                      background: noteSaved ? "#EFF6EC" : "#2A3A2A",
+                      border: noteSaved ? "1px solid #C4D8BC" : "none",
+                      borderRadius: 4, cursor: noteSaved ? "default" : "pointer",
+                      fontSize: 11, fontFamily: "monospace", color: noteSaved ? "#6A9B7A" : "#E8F4E4",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    {noteSaved ? "✓ 저장됨" : "저장"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 오늘 남은 퇴비 카드 */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.6 }}
+          style={{ marginTop: 12 }}
+        >
+          <div style={{ background: "#1A2A1A", border: "1.5px solid #2A4A2A", borderRadius: 6, overflow: "hidden" }}>
+            {/* 타이틀 바 */}
+            <div style={{ background: "#0E1A0E", padding: "7px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 8, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.12em" }}>
+                🌱 오늘 남은 퇴비
+              </span>
+              <span style={{ fontSize: 8, color: "#4A6A4A", fontFamily: "monospace" }}>
+                발효 {data.fermentationDay}일째
+              </span>
+            </div>
+
+            <div style={{ padding: "16px 16px" }}>
+              {/* 퇴비 이름 */}
+              <p style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 18, color: "#A8CCA0", letterSpacing: "-0.02em", lineHeight: 1.4, marginBottom: 14 }}>
+                &ldquo;{data.compostResidue}&rdquo;
+              </p>
+
+              {/* 감정비료 */}
+              <div style={{ borderLeft: "2px solid #3A5A3A", paddingLeft: 12, marginBottom: 14 }}>
+                <p style={{ fontSize: 9, color: "#4A6A4A", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 5 }}>오늘의 감정비료</p>
+                <p style={{ fontSize: 12, color: "#7A9A7A", fontFamily: "var(--font-serif)", lineHeight: 1.75, fontStyle: "italic" }}>
+                  {data.compostFertilizer}
+                </p>
+              </div>
+
+              {/* 우걱이 메모 */}
+              <div style={{ borderTop: "1px dashed #2A4A2A", paddingTop: 12 }}>
+                <p style={{ fontSize: 9, color: "#4A6A4A", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 8 }}>우걱이 메모</p>
+                <p style={{ fontSize: 13, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
+                  {data.ugComment.split("\n").map((line, i) => (
+                    <span key={i}>{line}{i === 0 && <br />}</span>
+                  ))}
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* 감정퇴비실 저장 + 공유 */}
+        <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+          {/* 저장 버튼 */}
+          <Link href="/archive" style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            height: 50, background: "#2A3A2A", border: "1.5px solid #2A4A2A",
+            borderRadius: 4, fontSize: 14, fontFamily: "var(--font-maru)", fontWeight: 600,
+            color: "#E8F4E4", textDecoration: "none", letterSpacing: "-0.01em",
+          }}>
+            🌱 감정퇴비실에 저장하기
+          </Link>
+          {/* 안내 */}
+          <p style={{ fontSize: 10, color: "#7A9A7A", fontFamily: "monospace", textAlign: "center", letterSpacing: "0.04em" }}>
+            버린 감정도, 지나고 보면 내 하루의 기록이 됩니다.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ─── 애드센스 안전 문구 ─── */}
+      <div style={{ padding: "20px 22px 0" }}>
+        <p style={{ fontSize: 10, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.7, textAlign: "center", padding: "10px 12px", background: "rgba(42,37,32,0.04)", border: `1px dashed ${LINE}`, borderRadius: 4 }}>
+          오늘무드는 감정을 쉽게 이해하고 기록하기 위한 콘텐츠 서비스입니다. 의학적 진단이나 상담을 대신하지 않습니다.
+        </p>
+      </div>
+
       {/* ─── 시스템 서명 ─── */}
-      <div style={{ padding: "28px 24px 0", textAlign: "center" }}>
+      <div style={{ padding: "20px 24px 0", textAlign: "center" }}>
         <p style={{ fontSize: 8, fontFamily: "monospace", color: LINE, letterSpacing: "0.08em" }}>
           UGEGI DISPOSAL CO. · {data.errorCode} · onulmood.com
         </p>

@@ -179,6 +179,66 @@ export default function HideEmotionsPage() {
           </p>
         </section>
 
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 4 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            혼자 삭히는 습관이 생기는 이유
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            삭히는 게 습관이 된 사람들은 대부분 그럴 만한 이유가 있어요.
+            말했다가 더 상처받은 경험이 있거나, 말해봤자 달라지지 않는다는 걸 배웠거나,
+            아니면 그냥 "내가 예민한 건가"라는 의심이 항상 먼저 오거나.
+          </p>
+
+          <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "22px 26px", marginBottom: 24 }}>
+            <p style={{ fontSize: 11, color: T3, fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>삭히게 만드는 말들</p>
+            {[
+              { said: "\"그게 왜 힘들어?\"", effect: "내 감정이 과한 것처럼 느껴지게 만들어요." },
+              { said: "\"다들 그렇게 살아.\"", effect: "내 감정을 일반화해서 무효화해요." },
+              { said: "\"또 그 얘기야?\"", effect: "같은 감정을 반복하면 안 된다는 압박이 생겨요." },
+              { said: "\"그냥 잊어버려.\"", effect: "감정을 무시하는 방법을 권유하는 거예요." },
+            ].map((item, i) => (
+              <div key={i} style={{ paddingBottom: i < 3 ? 14 : 0, marginBottom: i < 3 ? 14 : 0, borderBottom: i < 3 ? `1px solid ${LINE}` : "none" }}>
+                <p style={{ fontSize: 14, fontFamily: "var(--font-maru)", fontWeight: 600, color: ROSE, marginBottom: 5, letterSpacing: "-0.02em" }}>{item.said}</p>
+                <p style={{ ...PROSE, fontSize: 13, color: T2, lineHeight: 1.8 }}>{item.effect}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            이런 반응들을 반복적으로 경험하면, 결국 "말 안 하는 게 낫다"는 결론에 이르게 돼요.
+            그게 삭히는 습관의 시작이에요. 당신이 약해서가 아니라, 적응한 거예요.
+          </p>
+        </section>
+
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 5 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            꺼내는 것과 털어놓는 것은 달라요
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            감정을 꺼내는 게 꼭 누군가에게 털어놓는 것을 의미하지 않아요.
+            털어놓는 건 상대방이 필요하고, 그 사람이 잘 받아줄 준비가 되어있어야 해요.
+            근데 꺼내는 건 혼자서도 할 수 있어요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            일기를 쓰는 것, 메모에 적는 것, 아무도 안 보는 곳에 한 줄 쓰는 것.
+            말로 혼자 뱉어보는 것. 어딘가에 던져버리는 것.
+            이 모든 것이 "꺼내는" 행위예요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            삭힌 감정을 꺼내는 데 완벽한 방법은 없어요.
+            형식보다 "꺼냈다"는 경험 자체가 중요해요.
+            그 경험이 쌓이면, 새벽에 뚜껑이 열려도 그렇게 무겁지 않아요.
+          </p>
+        </section>
+
         {/* 우걱이 마지막 */}
         <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "24px 28px", textAlign: "center", marginBottom: 52 }}>
           <p style={{ fontSize: 12, color: T3, fontFamily: "monospace", letterSpacing: "0.06em", marginBottom: 18 }}>from. 우걱이</p>

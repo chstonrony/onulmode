@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useByproductStore } from "@/hooks/useByproductStore";
+import { useLocale } from "@/context/LocaleContext";
 import { RARITY_COLORS, ALL_BYPRODUCTS, type Rarity } from "@/lib/byproducts";
 
 const BG    = "#EDE4D0";
@@ -21,6 +22,7 @@ const RARITY_ORDER: Rarity[] = [
 const TOTAL_BYPRODUCTS = ALL_BYPRODUCTS.length;
 
 export default function CollectionPage() {
+  const { t } = useLocale();
   const { collection, loaded, totalCount, uniqueCount } = useByproductStore();
   const [filter, setFilter] = useState<Rarity | "ALL">("ALL");
   const [selected, setSelected] = useState<string | null>(null);
@@ -64,15 +66,14 @@ export default function CollectionPage() {
             color: INK, lineHeight: 1.4, letterSpacing: "-0.025em",
             marginBottom: 10,
           }}>
-            감정 부산물 도감
+            {t.collection.title}
           </h1>
           <p style={{
             fontFamily: "var(--font-prose)", fontWeight: 300,
             fontSize: 14, color: DIM,
             lineHeight: 1.8, letterSpacing: "-0.01em",
           }}>
-            파쇄된 감정은 이상한 사물로 변환됩니다.<br />
-            수집하고, 관찰하고, 잊어버리세요.
+            {t.collection.subtitle}
           </p>
         </div>
 
@@ -86,9 +87,9 @@ export default function CollectionPage() {
           display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
         }}>
           {[
-            { value: uniqueCount, label: "수집 종류", unit: `/ ${TOTAL_BYPRODUCTS}종` },
-            { value: totalCount,  label: "총 파쇄 횟수", unit: "회" },
-            { value: collection.filter(c => c.byproduct.partialCrush).length, label: "부분 파쇄", unit: "건" },
+            { value: uniqueCount, label: t.archive.topEmotion, unit: `/ ${TOTAL_BYPRODUCTS}` },
+            { value: totalCount,  label: t.archive.totalDays, unit: "" },
+            { value: collection.filter(c => c.byproduct.partialCrush).length, label: "⚠", unit: "" },
           ].map((s, i) => (
             <div key={i} style={{
               display: "flex", flexDirection: "column", alignItems: "center", padding: "8px 0",
@@ -137,10 +138,10 @@ export default function CollectionPage() {
             }}
           >
             <p style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 18, color: INK, marginBottom: 10 }}>
-              아직 수집된 부산물이 없습니다
+              {t.collection.empty}
             </p>
             <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13, color: DIM, lineHeight: 1.8, marginBottom: 24 }}>
-              감정을 파쇄하면 부산물이 생성됩니다.<br />
+              {t.collection.emptyDesc}<br />
               우걱이가 처리하는 동안 무언가 남습니다.
             </p>
             <Link href="/release" style={{
@@ -150,7 +151,7 @@ export default function CollectionPage() {
               fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 600,
               textDecoration: "none", letterSpacing: "-0.01em",
             }}>
-              첫 감정 파쇄하러 가기
+              {t.collection.emptyBtn}
             </Link>
           </motion.div>
         )}
@@ -263,10 +264,10 @@ export default function CollectionPage() {
         {uniqueCount < TOTAL_BYPRODUCTS && (
           <div style={{ marginTop: 28, padding: "14px 18px", background: "rgba(42,37,32,0.04)", border: `1px dashed ${LINE}`, borderRadius: 3 }}>
             <p style={{ fontSize: 11, color: MUTED, fontFamily: "monospace", letterSpacing: "0.06em", marginBottom: 6 }}>
-              미수집 부산물 {TOTAL_BYPRODUCTS - uniqueCount}종 남음
+              {t.collection.notCollected} ({TOTAL_BYPRODUCTS - uniqueCount})
             </p>
             <p style={{ fontSize: 12, color: DIM, fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.7 }}>
-              감정을 더 파쇄하면 새로운 부산물이 생성됩니다.<br />
+              {t.collection.notCollectedDesc}<br />
               희귀도가 높을수록 잘 나오지 않습니다.
             </p>
           </div>
@@ -281,7 +282,7 @@ export default function CollectionPage() {
             fontSize: 14, fontFamily: "var(--font-maru)", fontWeight: 600,
             textDecoration: "none", letterSpacing: "-0.01em",
           }}>
-            감정 더 파쇄하기
+            {t.collection.moreShred}
           </Link>
         </div>
 

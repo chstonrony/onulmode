@@ -175,6 +175,70 @@ export default function EmotionFatiguePage() {
           </p>
         </section>
 
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 4 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            감정 피로의 신호들
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            감정적으로 지쳐있다는 걸 모르는 채로 살아가는 사람들이 의외로 많아요.
+            "그냥 좀 피곤한 것 같다"고만 생각하는데, 사실 이런 신호들이 쌓여있는 경우가 많아요.
+          </p>
+
+          <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "22px 26px", marginBottom: 24 }}>
+            <p style={{ fontSize: 11, color: T3, fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>감정 피로 체크리스트</p>
+            {[
+              "웃어야 할 것 같아서 웃었는데, 집에 가면 아무것도 하기 싫어진다",
+              "괜찮다고 반사적으로 말하는 횟수가 늘었다",
+              "사람 만나는 게 점점 귀찮아졌다",
+              "별거 아닌 일에 갑자기 눈물이 나거나 예민하게 반응한다",
+              "쉬어도 쉬어지지 않는 느낌이 든다",
+              "뭔가 감정이 무뎌진 것 같은 느낌이 든다",
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: i < 5 ? 12 : 0 }}>
+                <span style={{ color: ROSE, flexShrink: 0, fontFamily: "monospace", fontSize: 12, marginTop: 2 }}>•</span>
+                <p style={{ ...PROSE, fontSize: 13, color: T2, lineHeight: 1.8 }}>{item}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            이 중 세 개 이상 해당된다면, 몸이 아니라 감정이 지쳐있는 거예요.
+            몸의 피로는 자면 풀리는데, 감정 피로는 자도 안 풀려요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            치료가 필요한 게 아니에요. 그냥 감정을 어딘가에 내려놓는 경험이 필요한 거예요.
+            안에 계속 들고 있으면 무거워지기만 하거든요.
+          </p>
+        </section>
+
+        <div style={{ borderTop: `1px solid ${LINE}`, marginBottom: 52 }} />
+
+        {/* 섹션 5 */}
+        <section style={{ marginBottom: 52 }}>
+          <h2 className="article-h2" style={{ fontSize: "clamp(17px, 4.5vw, 20px)", color: T1, marginBottom: 20 }}>
+            작게라도 꺼내는 것이 왜 중요한가
+          </h2>
+
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            감정을 꺼낸다는 게 꼭 누군가에게 털어놓는 것만을 의미하지 않아요.
+            "오늘 좀 지쳤어"라고 혼자 인정하는 것도 꺼내는 거예요.
+            "진짜 짜증났다"라고 속으로라도 말하는 것도요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2, marginBottom: 20 }}>
+            이 작은 행위가 감정 억제 사이클을 끊어줘요.
+            억제는 에너지가 드는 일이에요. 꺼내는 건 오히려 그 에너지를 아껴줘요.
+          </p>
+          <p style={{ ...PROSE, fontSize: 15, color: T2 }}>
+            매일 완벽하게 감정을 정리할 필요 없어요.
+            오늘 감정 하나만, 잠깐이라도 꺼내보는 것.
+            그게 감정 피로를 막는 가장 현실적인 방법이에요.
+          </p>
+        </section>
+
         {/* 우걱이 마지막 */}
         <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 6, padding: "24px 28px", marginBottom: 52, textAlign: "center" }}>
           <p style={{ fontSize: 12, color: T3, fontFamily: "monospace", letterSpacing: "0.06em", marginBottom: 18 }}>from. 우걱이</p>

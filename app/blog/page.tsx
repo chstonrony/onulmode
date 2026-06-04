@@ -1,12 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ARTICLES, CATEGORIES } from "@/lib/articles";
+import { CATEGORIES } from "@/lib/articles";
 import { UgegiStatusBar, NightOverlay } from "@/components/blog/BlogAtmosphere";
+import { getLocale } from "@/lib/getLocale";
+import { getLocalizedArticles } from "@/lib/getLocalizedArticle";
+import { translations } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "감정보관소 | 오늘무드 — 잠시 감정을 두고 가는 곳",
-  description: "별거 아닌데 자꾸 생각나는 감정들. 서운함, 새벽, 괜찮은 척. 우걱이가 운영하는 이상한 감정 보관소.",
-  keywords: ["감정 이야기", "번아웃", "새벽감성", "서운함", "MZ감성", "감정 에세이", "위로"],
+  title: "감정 이야기 | 오늘무드",
+  description: "번아웃, 외로움, 억울함, 서운함. 감정에 대해 솔직하게 쓴 글 모음. 지쳤을 때, 새벽에 혼자 있을 때 읽어보세요.",
+  keywords: ["감정 이야기", "번아웃", "외로움", "감정 표현", "마음 건강", "감정 처리", "자기 돌봄", "심리", "위로"],
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://onulmood.com/blog",
+    title: "감정 이야기 | 오늘무드",
+    description: "번아웃, 외로움, 억울함. 감정에 대해 솔직하게 쓴 글들.",
+    siteName: "오늘무드",
+  },
+  alternates: { canonical: "https://onulmood.com/blog" },
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -18,9 +30,12 @@ const CATEGORY_COLORS: Record<string, string> = {
   "자기 돌봄":  "#C4874A",
 };
 
-export default function BlogPage() {
-  const newArticles    = ARTICLES.filter(a => a.category === "새벽 감정");
-  const otherArticles  = ARTICLES.filter(a => a.category !== "새벽 감정");
+export default async function BlogPage() {
+  const locale = await getLocale();
+  const t = translations[locale] ?? translations.ko;
+  const allArticles = getLocalizedArticles(locale);
+  const newArticles    = allArticles.filter(a => a.category === "새벽 감정");
+  const otherArticles  = allArticles.filter(a => a.category !== "새벽 감정");
 
   return (
     <div style={{ background: "#efe3cf", minHeight: "100vh", position: "relative" }}>
@@ -33,31 +48,28 @@ export default function BlogPage() {
 
         {/* 뒤로 */}
         <Link href="/" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>
-          ← 오늘무드
+          ← OnulMood
         </Link>
 
         {/* ── 헤더 ── */}
         <div style={{ margin: "20px 0 28px" }}>
-          {/* 메모지 느낌 타이틀 */}
           <div style={{ position: "relative", display: "inline-block", marginBottom: 16 }}>
             <div style={{ position: "absolute", top: -8, left: -4, right: -4, bottom: -4, background: "rgba(212,188,144,0.4)", transform: "rotate(-0.8deg)", zIndex: 0 }}/>
             <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", position: "relative", zIndex: 1, padding: "2px 8px" }}>
-              감정보관소
+              {t.blog.title}
             </h1>
           </div>
 
-          {/* 우걱이 코멘트 */}
           <div style={{
             padding: "14px 18px", background: "#F5EFE0",
             border: "1.5px solid #D8CEC0", borderLeft: "3px solid #C8607A",
             marginBottom: 4,
           }}>
             <p style={{ fontSize: 13, color: "#7A7260", lineHeight: 1.8, fontFamily: "var(--font-serif)" }}>
-              이상한 감정들이 임시 보관되는 곳입니다.<br/>
-              읽고 감정이 올라오면 우걱이한테 던져도 됩니다.
+              {t.blog.subtitle}
             </p>
             <p style={{ fontSize: 9, color: "#B4A890", fontFamily: "monospace", marginTop: 6, letterSpacing: "0.08em" }}>
-              — 우걱이 처리소 / 감정 보관 담당
+              — Ugogi Disposal / Emotion Archive
             </p>
           </div>
         </div>
@@ -113,11 +125,11 @@ export default function BlogPage() {
                       </div>
 
                       <h2 style={{ fontSize: 18, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.4, marginBottom: 8 }}>
-                        {article.title}
+                        {article.localizedTitle}
                       </h2>
 
                       <p style={{ fontSize: 13, color: "#7A7260", lineHeight: 1.75, fontWeight: 300, marginBottom: 10 }}>
-                        {article.description}
+                        {article.localizedDescription}
                       </p>
 
                       {article.authorNote && (
@@ -167,11 +179,11 @@ export default function BlogPage() {
                   </div>
 
                   <h2 style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", lineHeight: 1.4, marginBottom: 6 }}>
-                    {article.title}
+                    {article.localizedTitle}
                   </h2>
 
                   <p style={{ fontSize: 12, color: "#7A7260", lineHeight: 1.7, fontWeight: 300, marginBottom: 8 }}>
-                    {article.description}
+                    {article.localizedDescription}
                   </p>
 
                   {article.authorNote && (

@@ -3,6 +3,7 @@
 import { useMoodStore } from "@/hooks/useMoodStore";
 import TopBar from "@/components/layout/TopBar";
 import { getEmotion } from "@/lib/emotions";
+import { useLocale } from "@/context/LocaleContext";
 import { EmotionType } from "@/types";
 import { motion } from "framer-motion";
 import { format, subDays } from "date-fns";
@@ -15,6 +16,7 @@ const LINE = "#D8CEC0";
 const ROSE = "#C8607A";
 
 export default function InsightsPage() {
+  const { t, locale } = useLocale();
   const { entries, loaded } = useMoodStore();
 
   if (!loaded) return (
@@ -27,14 +29,14 @@ export default function InsightsPage() {
 
   if (entries.length < 3) return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title="인사이트" />
+      <TopBar title={t.insights.title} />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "80px 24px", textAlign: "center" }}>
         <p style={{ fontSize: 32, marginBottom: 16 }}>📊</p>
         <p style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 8 }}>
-          데이터가 부족해요
+          {t.insights.notEnough}
         </p>
         <p style={{ fontSize: 13, color: "#A89880", lineHeight: 1.7, marginBottom: 24, fontWeight: 300 }}>
-          최소 3일의 기록이 있어야<br />인사이트를 볼 수 있어요.
+          {t.insights.notEnoughDesc.split("\n").map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
         </p>
         <Link href="/today" style={{
           display: "inline-flex", alignItems: "center",
@@ -42,7 +44,7 @@ export default function InsightsPage() {
           padding: "10px 24px", borderRadius: 4,
           fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
           textDecoration: "none",
-        }}>오늘 기록하기</Link>
+        }}>{t.insights.notEnoughBtn}</Link>
       </div>
     </div>
   );
@@ -60,14 +62,14 @@ export default function InsightsPage() {
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title="인사이트" />
+      <TopBar title={t.insights.title} />
       <div style={{ padding: "16px 20px 80px", display: "flex", flexDirection: "column", gap: 14 }}>
 
         {/* 대표 감정 */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           style={{ padding: 20, background: top.bg, border: `1px solid ${top.border}`, borderRadius: 4 }}>
           <p style={{ fontSize: 11, color: top.color, opacity: 0.7, fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 16 }}>
-            가장 많이 느낀 감정
+            {t.insights.topEmotion}
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             {(() => { const Icon = top.icon; return (
@@ -91,9 +93,9 @@ export default function InsightsPage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden" }}>
           {[
-            { value: total, unit: "일", label: "총 기록", color: ROSE },
-            { value: avg, unit: "/5", label: "평균 강도", color: "#B8860B" },
-            { value: sorted.length, unit: "종류", label: "감정 유형", color: "#7A5A9A" },
+            { value: total, unit: locale === "ko" ? "일" : "d", label: t.insights.totalRecords, color: ROSE },
+            { value: avg, unit: "/5", label: t.insights.avgIntensity, color: "#B8860B" },
+            { value: sorted.length, unit: locale === "ko" ? "종류" : "", label: t.insights.emotionTypes, color: "#7A5A9A" },
           ].map((s, i) => (
             <div key={i} style={{
               display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 0",
@@ -111,7 +113,7 @@ export default function InsightsPage() {
         {/* 최근 7일 */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}
           style={{ padding: 20, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
-          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>최근 7일</p>
+          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>{t.insights.last7days}</p>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {last7.map(({ date, entry, day }) => {
               const em = entry ? getEmotion(entry.emotion) : null;
@@ -135,7 +137,7 @@ export default function InsightsPage() {
         {/* 감정 분포 */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
           style={{ padding: 20, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
-          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>감정 분포</p>
+          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>{t.insights.distribution}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {sorted.map(([type, count], i) => {
               const em = getEmotion(type as EmotionType);

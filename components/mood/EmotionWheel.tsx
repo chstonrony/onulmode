@@ -3,19 +3,22 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { EmotionType } from "@/types";
 import { EMOTIONS, EmotionConfig } from "@/lib/emotions";
+import { useLocale } from "@/context/LocaleContext";
 
 interface EmotionWheelProps {
   selected: EmotionType | null;
   onSelect: (e: EmotionType) => void;
 }
 
-function EmotionButton({ emotion, isSelected, isDeselected, onSelect }: {
+function EmotionButton({ emotion, isSelected, isDeselected, onSelect, isKo }: {
   emotion: EmotionConfig;
   isSelected: boolean;
   isDeselected: boolean;
   onSelect: () => void;
+  isKo: boolean;
 }) {
   const Icon = emotion.icon;
+  const label = isKo ? emotion.label : emotion.labelEn;
   return (
     <motion.button
       onClick={onSelect}
@@ -23,7 +26,7 @@ function EmotionButton({ emotion, isSelected, isDeselected, onSelect }: {
       animate={{ opacity: isDeselected ? 0.45 : 1, scale: isSelected ? 1.05 : 1 }}
       transition={{ duration: 0.15, type: "spring", stiffness: 400, damping: 20 }}
       className="flex flex-col items-center gap-2 focus:outline-none"
-      aria-label={emotion.label}
+      aria-label={label}
       aria-pressed={isSelected}
     >
       <div
@@ -65,13 +68,15 @@ function EmotionButton({ emotion, isSelected, isDeselected, onSelect }: {
         fontFamily: "var(--font-display)",
         transition: "color 0.15s",
       }}>
-        {emotion.label}
+        {label}
       </span>
     </motion.button>
   );
 }
 
 export default function EmotionWheel({ selected, onSelect }: EmotionWheelProps) {
+  const { locale } = useLocale();
+  const isKo = locale === "ko";
   const cfg = selected ? EMOTIONS.find((e) => e.type === selected) : null;
   return (
     <div className="w-full">
@@ -83,6 +88,7 @@ export default function EmotionWheel({ selected, onSelect }: EmotionWheelProps) 
             isSelected={selected === e.type}
             isDeselected={selected !== null && selected !== e.type}
             onSelect={() => onSelect(e.type)}
+            isKo={isKo}
           />
         ))}
       </div>
@@ -104,7 +110,7 @@ export default function EmotionWheel({ selected, onSelect }: EmotionWheelProps) 
               fontWeight: 600,
               fontFamily: "var(--font-display)",
             }}>
-              {cfg.quote}
+              {isKo ? cfg.quote : cfg.quoteEn}
             </p>
           </motion.div>
         )}
