@@ -358,54 +358,13 @@ export default function MainPage() {
             </span>
           </h1>
 
-          {/* 서비스 설명 + 세계관 — 심사관이 3초 안에 이해할 수 있어야 함 */}
-          <div style={{ margin: "14px auto 18px", maxWidth: 320, textAlign: "left" }}>
-
-            {/* 서비스 정의 */}
-            <div style={{ background: "rgba(255,255,255,0.6)", border: "1px solid rgba(200,192,178,0.6)", borderRadius: 8, padding: "14px 16px", marginBottom: 8 }}>
-              <p style={{ fontSize: 12, color: "#3A3028", fontFamily: "var(--font-prose)", fontWeight: 400, lineHeight: 1.85, marginBottom: 0 }}>
-                {locale === "ko" ? (
-                  <>
-                    오늘무드는 하루 동안 생긴 감정을 가볍게 꺼내어,<br />
-                    우걱이와 함께 조금 웃기게 정리해보는<br />
-                    <strong style={{ fontWeight: 600, color: "#2A2520" }}>감정 콘텐츠 서비스</strong>입니다.
-                  </>
-                ) : "OnulMood is an emotional content service where you lighten today's feelings with Ugogi."}
-              </p>
-            </div>
-
-            {/* 우걱이 세계관 */}
-            <div style={{ background: "rgba(26,36,26,0.85)", border: "1px solid rgba(106,155,122,0.45)", borderRadius: 8, padding: "14px 16px", marginBottom: 8 }}>
-              <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 10 }}>
-                🌱 우걱이 감정처리소
-              </p>
-              {locale === "ko" ? (
-                <>
-                  <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 8 }}>
-                    우걱이는 감정을 그냥 먹지 않습니다.
-                  </p>
-                  <p style={{ fontSize: 12, color: "#A8CCA0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 8 }}>
-                    오래 씹고,<br />천천히 발효시키고,<br />작은 씨앗으로 남겨둡니다.
-                  </p>
-                  <p style={{ fontSize: 11, color: "#7A9A7A", fontFamily: "var(--font-serif)", lineHeight: 1.8, fontStyle: "italic" }}>
-                    진지한 상담은 아니고,<br />감정을 조금 덜 무겁게 만드는<br />이상한 감정처리소입니다.
-                  </p>
-                </>
-              ) : (
-                <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
-                  Ugogi doesn&apos;t just eat feelings.<br />
-                  It chews slowly, ferments them,<br />
-                  and leaves behind a tiny seed.
-                </p>
-              )}
-            </div>
-
-            {/* 안전 안내 */}
-            <div style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(200,192,178,0.5)", borderRadius: 6, padding: "9px 13px" }}>
-              <p style={{ fontSize: 10, color: "#9A9080", fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.65 }}>
+          {/* 짧은 서비스 설명 — CTA 위에 한 줄만 */}
+          <div style={{ margin: "12px auto 16px", maxWidth: 300 }}>
+            <div style={{ background: "rgba(255,255,255,0.6)", border: "1px solid rgba(200,192,178,0.6)", borderRadius: 6, padding: "10px 14px" }}>
+              <p style={{ fontSize: 11, color: "#3A3028", fontFamily: "var(--font-prose)", fontWeight: 400, lineHeight: 1.75, marginBottom: 0 }}>
                 {locale === "ko"
-                  ? "오늘무드는 의학적 진단이나 심리상담 서비스가 아닙니다. 감정을 가볍게 기록하고 돌아보기 위한 콘텐츠 서비스입니다."
-                  : "OnulMood is not a medical or counseling service. It's a content service for lightly recording and reflecting on emotions."}
+                  ? "오늘무드는 하루 동안 생긴 감정을 가볍게 꺼내어, 우걱이와 함께 조금 웃기게 정리해보는 감정 콘텐츠 서비스입니다."
+                  : "OnulMood — lighten today's feelings with Ugogi."}
               </p>
             </div>
           </div>
@@ -541,6 +500,46 @@ export default function MainPage() {
           </motion.div>
         )}
       </motion.div>
+
+      {/* ── 감정카드 아래 — 세계관 + 면책 안내 ── */}
+      <div style={{ background: "#E2D8C8", borderTop: "1px solid #D0C8BC", padding: "22px 20px 24px" }}>
+        <div style={{ maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", gap: 10 }}>
+
+          {/* 우걱이 세계관 */}
+          <div style={{ background: "rgba(26,36,26,0.82)", border: "1px solid rgba(106,155,122,0.4)", borderRadius: 8, padding: "14px 16px" }}>
+            <p style={{ fontSize: 9, color: "#6A9B7A", fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 10 }}>
+              🌱 우걱이 감정처리소
+            </p>
+            {locale === "ko" ? (
+              <>
+                <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 6 }}>
+                  우걱이는 감정을 그냥 먹지 않습니다.
+                </p>
+                <p style={{ fontSize: 12, color: "#A8CCA0", fontFamily: "var(--font-serif)", lineHeight: 1.9, marginBottom: 6 }}>
+                  오래 씹고, 천천히 발효시키고,<br />작은 씨앗으로 남겨둡니다.
+                </p>
+                <p style={{ fontSize: 11, color: "#7A9A7A", fontFamily: "var(--font-serif)", lineHeight: 1.8, fontStyle: "italic" }}>
+                  진지한 상담은 아니고,<br />감정을 조금 덜 무겁게 만드는 이상한 감정처리소입니다.
+                </p>
+              </>
+            ) : (
+              <p style={{ fontSize: 12, color: "#C8DCC0", fontFamily: "var(--font-serif)", lineHeight: 1.9 }}>
+                Ugogi doesn&apos;t just eat feelings.<br />
+                It chews slowly, ferments them,<br />and leaves behind a tiny seed.
+              </p>
+            )}
+          </div>
+
+          {/* 면책 안내 */}
+          <div style={{ background: "rgba(255,255,255,0.45)", border: "1px solid rgba(200,192,178,0.5)", borderRadius: 6, padding: "9px 13px" }}>
+            <p style={{ fontSize: 10, color: "#9A9080", fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.65 }}>
+              {locale === "ko"
+                ? "오늘무드는 의학적 진단이나 심리상담 서비스가 아닙니다. 감정을 가볍게 기록하고 돌아보기 위한 콘텐츠 서비스입니다."
+                : "OnulMood is not a medical or counseling service."}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* ── 날아가는 카드 ── */}
       <AnimatePresence>
