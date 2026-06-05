@@ -232,7 +232,7 @@ export default async function BlogPage() {
         {/* 푸터 */}
         <div style={{ borderTop: "1px solid #D8CEC0", paddingTop: 24, marginTop: 48 }}>
           <p style={{ fontSize: 11, color: "#B4A890", textAlign: "center", fontFamily: "monospace", letterSpacing: "0.06em" }}>
-            © 2026 오늘무드. 감정 찌꺼기는 책임 안 짐.
+            © 2026 오늘무드. All rights reserved.
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 10 }}>
             <Link href="/" style={{ fontSize: 12, color: "#A89880", textDecoration: "none" }}>우걱이</Link>

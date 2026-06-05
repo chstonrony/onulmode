@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "오늘무드를 만든 사람 | ONULMOOD",
+  title: "오늘무드 소개 | ONULMOOD",
   description: "오늘무드는 하루의 감정을 조금 더 가볍게 바라보고, 말하지 못한 마음을 안전하게 정리할 수 있는 공간이 필요하다는 생각에서 시작되었습니다.",
   keywords: ["오늘무드 소개", "감정 콘텐츠 서비스", "감정 기록", "청소년 성장", "ONULMOOD creator"],
   openGraph: {
     type: "website",
     locale: "ko_KR",
     url: "https://onulmood.com/creator",
-    title: "오늘무드를 만든 사람 | ONULMOOD",
+    title: "오늘무드 소개 | ONULMOOD",
     description: "하루의 감정을 조금 더 가볍게 바라볼 수 있는 공간, 오늘무드를 만든 이유.",
     siteName: "오늘무드",
   },

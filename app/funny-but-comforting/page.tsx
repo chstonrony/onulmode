@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "웃긴 콘텐츠인데 왜 위로가 될까? | 오늘무드",
   description: "밈이 위로가 되는 이유, 병맛 콘텐츠가 공감을 주는 이유. 웃음과 위로는 생각보다 같은 곳에서 시작합니다. 오늘무드 세계관으로 풀어보는 감정 해소 이야기.",
-  keywords: ["병맛 위로", "밈 공감", "웃긴 콘텐츠", "감정 해소", "공감 문화", "MZ 감성", "우울 해소", "웃음 치료", "감정 표현", "공감 밈"],
+  keywords: ["병맛 위로", "밈 공감", "웃긴 콘텐츠", "감정 해소", "공감 문화", "MZ 감성", "우울 해소", "감정 콘텐츠", "감정 표현", "공감 밈"],
   openGraph: { type: "article", locale: "ko_KR", url: "https://onulmood.com/funny-but-comforting", title: "웃긴 콘텐츠인데 왜 위로가 될까?", description: "병맛과 위로는 생각보다 같은 곳에서 시작합니다.", siteName: "오늘무드" },
   twitter: { card: "summary_large_image", title: "웃긴 콘텐츠인데 왜 위로가 될까? | 오늘무드", description: "병맛 콘텐츠가 왜 이상하게 위로되는지 그 이유." },
   alternates: { canonical: "https://onulmood.com/funny-but-comforting" },
