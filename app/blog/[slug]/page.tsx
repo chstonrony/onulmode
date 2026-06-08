@@ -145,6 +145,28 @@ export default async function ArticlePage({ params }: Props) {
               );
             }
 
+            // h3 (### ) / h2 (## ) — 추가형 규칙. 기존 글은 사용하지 않아 영향 없음
+            if (block.startsWith("### ")) {
+              return (
+                <h3 key={i} style={{
+                  fontSize: 15.5, fontWeight: 700, fontFamily: "var(--font-serif)",
+                  color: "#3A3228", margin: "22px 0 8px",
+                }}>
+                  {block.slice(4)}
+                </h3>
+              );
+            }
+            if (block.startsWith("## ")) {
+              return (
+                <h2 key={i} style={{
+                  fontSize: 18, fontWeight: 700, fontFamily: "var(--font-serif)",
+                  color: "#2A2520", margin: "32px 0 12px",
+                }}>
+                  {block.slice(3)}
+                </h2>
+              );
+            }
+
             if (block.startsWith("- ")) {
               const items = block.split("\n").filter((l) => l.startsWith("- "));
               return (
