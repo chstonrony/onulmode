@@ -112,7 +112,16 @@
 - `app/insights/InsightsStats.tsx` 신설 — localStorage 개인 통계만 분리한 클라이언트 컴포넌트 (서버 렌더 시 null → SSR 콘텐츠 노출 방해 안 함). 데이터 3일↑ 통계 카드, 미만 시 안내 배너
 - `app/sitemap.ts` — `/insights` 추가 (priority 0.7, weekly)
 - robots.txt 는 이미 `Allow: /` 라 별도 수정 불필요 (크롤링 허용 확인)
-- ⚠️ 로컬 작업 완료/빌드 검증 통과 상태. **커밋·푸시·Vercel 배포는 아직 안 함** → 라이브 반영하려면 배포 필요
+- 커밋 `3ecd342` 푸시 → Vercel 배포 완료, 라이브 검증 통과 (200/SSR/sitemap/308 리다이렉트/Googlebot)
+
+### 2026-06-08 세션 J — /insights 콘텐츠 확장 + 감정도감 허브 연결 (AdSense)
+- `lib/insightsContent.ts` 확장: 5개 핵심 감정 desc 314~345자로 보강(기존 ~230자) + 각 감정에 `slug`(→/feelings 상세) + `related[]`(관련 감정) 추가
+- `app/insights/page.tsx`:
+  - 각 핵심 감정에 "관련 감정" 칩 링크 + "OO 자세히 보기 →" 상세 링크 추가 (감정 간 내부 링크)
+  - 신규 SECTION 04 "더 많은 감정 인사이트" — `FEELINGS`(감정도감 30개)를 import해 태그라인과 함께 링크 그리드로 노출 (중복 생성 없이 **30개 감정 상세페이지 내부 링크**)
+  - 신규 "함께 보면 좋은 콘텐츠" — /guide·/feelings·/magazine·/emotion-dictionary 링크
+- **콘텐츠 자산 현황 점검**: 감정도감 30 + 블로그 54 + 매거진 20 = sitemap 총 126 URL. /guide·/feelings·/magazine 전부 200·SSR 확인 → 추가 자동생성 불필요
+- 요청 6(콘텐츠 부족 시 자동생성)은 자산 충분으로 불요. 요청 7(sitemap)·8(Googlebot) 이미 충족 확인
 
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)

@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import InsightsStats from "./InsightsStats";
 import { getInsightsContent } from "@/lib/insightsContent";
 import { getLocale } from "@/lib/getLocale";
+import { FEELINGS } from "@/lib/feelings";
 
 const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
@@ -17,10 +18,10 @@ const MUTED = "#A89880";
 export const metadata: Metadata = {
   title: "오늘무드 감정 인사이트 | 자주 느끼는 감정과 감정 기록의 의미",
   description:
-    "서운함, 외로움, 무기력, 불안, 짜증 — 사람들이 자주 기록하는 감정과 감정 기록이 도움이 되는 이유, 오늘무드가 제안하는 감정 관찰법을 소개합니다.",
+    "서운함, 외로움, 무기력, 불안, 짜증 — 사람들이 자주 기록하는 감정 30가지와 감정 기록이 도움이 되는 이유, 오늘무드가 제안하는 감정 관찰법을 소개합니다.",
   keywords: [
     "감정 인사이트", "자주 느끼는 감정", "서운함", "외로움", "무기력", "불안", "짜증",
-    "감정 기록", "감정 일기", "감정에 이름 붙이기", "자기 돌봄", "오늘무드",
+    "감정 기록", "감정 일기", "감정에 이름 붙이기", "자기 돌봄", "감정도감", "오늘무드",
   ],
   openGraph: {
     type: "article",
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://onulmood.com/insights",
     title: "오늘무드 감정 인사이트 | 자주 느끼는 감정과 감정 기록의 의미",
     description:
-      "사람들이 자주 경험하는 감정 패턴과 감정 기록의 의미, 오늘무드의 감정 관찰법을 정리했습니다.",
+      "사람들이 자주 경험하는 감정 패턴과 감정 기록의 의미, 감정 30가지의 인사이트를 정리했습니다.",
     siteName: "오늘무드",
   },
   twitter: {
@@ -64,6 +65,24 @@ export default async function InsightsPage() {
   const locale = await getLocale();
   const c = getInsightsContent(locale);
 
+  // 본문에서 다룬 핵심 감정은 허브 그리드에서 제외해 중복 노출을 줄인다
+  const featuredSlugs = new Set(c.emotions.map((e) => e.slug));
+  const moreFeelings = FEELINGS.filter((f) => !featuredSlugs.has(f.slug));
+
+  const readMoreLinks = locale === "ko"
+    ? [
+        { href: "/guide", label: "감정 기록 가이드", desc: "감정에 이름 붙이기와 오늘무드 5단계 사용법" },
+        { href: "/feelings", label: "우걱이 감정도감", desc: "감정 30가지의 관찰 기록과 정리법" },
+        { href: "/magazine", label: "우걱이 매거진", desc: "감정을 다루는 더 긴 글 모음" },
+        { href: "/emotion-dictionary", label: "우걱이 감정사전", desc: "감정 단어를 쉽게 풀어쓴 사전" },
+      ]
+    : [
+        { href: "/guide", label: "Emotion Journaling Guide", desc: "Naming feelings and the 5-step ONULMOOD method" },
+        { href: "/feelings", label: "Ugogi Emotion Almanac", desc: "Observation notes for 30 emotions" },
+        { href: "/magazine", label: "Ugogi Magazine", desc: "Longer reads on handling emotions" },
+        { href: "/emotion-dictionary", label: "Ugogi Emotion Dictionary", desc: "Emotion words explained simply" },
+      ];
+
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
       <TopBar title={c.pageTitle} />
@@ -86,16 +105,41 @@ export default async function InsightsPage() {
         {/* ── 정보성 콘텐츠 (서버 렌더, 항상 HTML에 포함) ───────────── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 34, marginTop: 36 }}>
 
-          {/* 섹션 1 — 자주 기록하는 감정 */}
+          {/* 섹션 1 — 자주 기록하는 감정 (상세링크 + 관련감정) */}
           <section style={cardStyle}>
             <SectionLabel kicker="SECTION 01" title={c.emotionsTitle} />
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {c.emotions.map((e) => (
-                <div key={e.name} style={{ borderLeft: `2px solid ${LINE}`, paddingLeft: 14 }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "var(--font-serif)", color: ROSE, marginBottom: 6 }}>
+                <div key={e.slug} style={{ borderLeft: `2px solid ${LINE}`, paddingLeft: 14 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: ROSE, marginBottom: 8 }}>
                     {e.name}
                   </h3>
-                  <p style={bodyStyle}>{e.desc}</p>
+                  <p style={{ ...bodyStyle, marginBottom: 12 }}>{e.desc}</p>
+
+                  {/* 관련 감정 (감정 간 내부 링크) */}
+                  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                    <span style={{ fontSize: 11, color: MUTED, fontFamily: "monospace", letterSpacing: "0.06em" }}>
+                      {c.relatedLabel}
+                    </span>
+                    {e.related.map((r) => (
+                      <Link key={r.slug} href={`/feelings/${r.slug}`} style={{
+                        fontSize: 12.5, color: "#7A6A58", textDecoration: "none",
+                        background: "rgba(255,255,255,0.6)", border: `1px solid ${LINE}`,
+                        borderRadius: 999, padding: "3px 11px", fontFamily: "var(--font-prose)", fontWeight: 300,
+                      }}>
+                        {r.name}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* 상세 페이지 링크 */}
+                  <Link href={`/feelings/${e.slug}`} style={{
+                    display: "inline-flex", alignItems: "center", gap: 4,
+                    fontSize: 13, color: ROSE, textDecoration: "none",
+                    fontFamily: "var(--font-serif)", fontWeight: 700,
+                  }}>
+                    {e.name} {c.detailLinkLabel} →
+                  </Link>
                 </div>
               ))}
             </div>
@@ -149,7 +193,36 @@ export default async function InsightsPage() {
             </div>
           </section>
 
-          {/* 섹션 4 — 우걱이 코멘트 */}
+          {/* 섹션 4 — 더 많은 감정 인사이트 (감정도감 30개 허브 — 내부 링크) */}
+          <section style={cardStyle}>
+            <SectionLabel kicker="SECTION 04" title={c.moreTitle} />
+            <p style={{ ...bodyStyle, marginBottom: 18, color: MUTED }}>{c.moreIntro}</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
+              {moreFeelings.map((f) => (
+                <Link key={f.slug} href={`/feelings/${f.slug}`} style={{
+                  display: "flex", flexDirection: "column", gap: 4,
+                  padding: "12px 13px", background: "rgba(255,255,255,0.55)",
+                  border: `1px solid ${LINE}`, borderRadius: 6, textDecoration: "none",
+                }}>
+                  <span style={{ fontSize: 13.5, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK }}>
+                    <span style={{ marginRight: 5 }}>{f.emoji}</span>{f.name}
+                  </span>
+                  <span style={{ fontSize: 11.5, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.45 }}>
+                    {f.tagline}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <Link href="/feelings" style={{
+              display: "inline-flex", alignItems: "center", gap: 4, marginTop: 16,
+              fontSize: 13, color: ROSE, textDecoration: "none",
+              fontFamily: "var(--font-serif)", fontWeight: 700,
+            }}>
+              {locale === "ko" ? "감정도감 전체 보기" : "Browse the full almanac"} →
+            </Link>
+          </section>
+
+          {/* 섹션 5 — 우걱이 코멘트 */}
           <section style={{ ...cardStyle, background: "#2A2520", border: "1px solid #3A332B", textAlign: "center", padding: "30px 24px" }}>
             <p style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 14 }}>
               {c.ugogiTitle.toUpperCase()}
@@ -161,6 +234,23 @@ export default async function InsightsPage() {
               “{c.ugogiComment}”
             </p>
             <p style={{ fontSize: 13, color: "#A89880", marginTop: 14, fontFamily: "var(--font-serif)" }}>— 우걱이</p>
+          </section>
+
+          {/* 이어보기 — 관련 콘텐츠 내부 링크 */}
+          <section style={cardStyle}>
+            <SectionLabel kicker="READ NEXT" title={c.readMoreTitle} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {readMoreLinks.map((l) => (
+                <Link key={l.href} href={l.href} style={{
+                  display: "flex", flexDirection: "column", gap: 3,
+                  padding: "13px 15px", background: "rgba(255,255,255,0.5)",
+                  border: `1px solid ${LINE}`, borderRadius: 6, textDecoration: "none",
+                }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK }}>{l.label} →</span>
+                  <span style={{ fontSize: 12.5, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300 }}>{l.desc}</span>
+                </Link>
+              ))}
+            </div>
           </section>
 
           {/* CTA */}
