@@ -6,6 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { generateResult, parseResultUrl, buildResultUrl } from "@/lib/resultCard";
 import { saveShredRecord, updateUserNote } from "@/lib/shredRecords";
 import { findSeedByEmotions, getCompostStage } from "@/lib/emotionSeeds";
+import { useByproductStore } from "@/hooks/useByproductStore";
+import {
+  selectByproductBySeed, rarityStars, byproductProbability,
+  formatProbability, RARITY_COLORS, ALL_BYPRODUCTS,
+} from "@/lib/byproducts";
 import ResultCard from "@/components/share/ResultCard";
 import ShareCard from "@/components/share/ShareCard";
 import ShareButtons from "@/components/share/ShareButtons";
@@ -14,6 +19,7 @@ import Link from "next/link";
 const ROSE = "#C8607A";
 const INK  = "#2A2520";
 const MUTED = "#A89880";
+const DIM = "#8A8070";
 const LINE = "#D8CEC0";
 const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
@@ -147,6 +153,20 @@ function ResultContent() {
   const shareUrl = buildResultUrl(emotions, data.seed);
   const seed = useMemo(() => findSeedByEmotions(emotions), [emotions]);
   const stage = getCompostStage(seed.growthPct);
+
+  /* ── 감정부산물 발견 (결과지 seed 로 결정적 선택 → 도감 저장) ── */
+  const { collection, loaded: bpLoaded, addByproduct } = useByproductStore();
+  const byproduct = useMemo(() => selectByproductBySeed(data.seed), [data.seed]);
+  const savedBpRef = useRef(false);
+  const [bpWasFirst, setBpWasFirst] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (phase === "result" && bpLoaded && !savedBpRef.current) {
+      savedBpRef.current = true;
+      // 저장 직전 컬렉션 기준 최초 발견 여부
+      setBpWasFirst(!collection.some((c) => c.byproduct.id === byproduct.id));
+      addByproduct(byproduct);
+    }
+  }, [phase, bpLoaded, byproduct, collection, addByproduct]);
 
   useEffect(() => {
     if (phase === "result") {
@@ -300,6 +320,98 @@ function ResultContent() {
           </div>
         )}
       </motion.div>
+
+      {/* ─── 3-B. 감정부산물 발견 → 도감 저장 ─── */}
+      {(() => {
+        const rc = RARITY_COLORS[byproduct.rarity];
+        const prob = formatProbability(byproductProbability(byproduct));
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 14, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, delay: 0.4, type: "spring", stiffness: 120 }}
+            style={{ padding: "18px 14px 4px" }}
+          >
+            <div style={{
+              background: PAPER,
+              backgroundImage: "repeating-linear-gradient(transparent, transparent 23px, rgba(178,162,140,0.06) 23px, rgba(178,162,140,0.06) 24px)",
+              border: `2px solid ${rc.border}`, borderRadius: 4,
+              boxShadow: `4px 4px 0 ${rc.border}55`,
+              padding: "20px 18px 18px", textAlign: "center", position: "relative", overflow: "hidden",
+            }}>
+              {/* 최초 발견 리본 */}
+              {bpWasFirst && (
+                <motion.span
+                  initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}
+                  style={{ position: "absolute", top: 12, right: -2, fontSize: 9, fontFamily: "monospace", fontWeight: 700, color: "#FAF8F2", background: ROSE, padding: "3px 12px 3px 10px", letterSpacing: "0.08em" }}
+                >
+                  ✨ 최초 발견!
+                </motion.span>
+              )}
+
+              <p style={{ fontSize: 11, fontFamily: "monospace", color: ROSE, letterSpacing: "0.14em", marginBottom: 16 }}>
+                🎁 감정부산물 발견!
+              </p>
+
+              {/* 표본 박스 (이미지 슬롯) */}
+              <div style={{
+                width: 96, height: 96, margin: "0 auto 14px",
+                background: rc.bg, border: `1.5px solid ${rc.border}`, borderRadius: 4,
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4,
+              }}>
+                <span style={{ fontSize: 24, letterSpacing: "1px" }}>{rarityStars(byproduct.rarity)}</span>
+                <span style={{ fontSize: 7, fontFamily: "monospace", color: rc.text, letterSpacing: "0.14em" }}>SPECIMEN</span>
+              </div>
+
+              {/* 이름 */}
+              <h2 style={{ fontSize: 20, fontWeight: 700, fontFamily: "var(--font-maru)", color: INK, lineHeight: 1.35, marginBottom: 10 }}>
+                {byproduct.name}
+              </h2>
+
+              {/* 희귀도 + 확률 */}
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 0, flexDirection: "column", marginBottom: 12 }}>
+                <span style={{
+                  fontSize: 9, padding: "2px 10px", background: rc.bg, color: rc.text,
+                  border: `1px solid ${rc.border}`, borderRadius: 2, fontFamily: "monospace",
+                  letterSpacing: "0.08em", fontWeight: 700, marginBottom: 8,
+                }}>
+                  {byproduct.rarity}
+                </span>
+                <div style={{ display: "flex", gap: 18 }}>
+                  <span style={{ fontSize: 11, fontFamily: "monospace", color: DIM }}>
+                    희귀도 <span style={{ color: rc.text }}>{rarityStars(byproduct.rarity)}</span>
+                  </span>
+                  <span style={{ fontSize: 11, fontFamily: "monospace", color: DIM }}>
+                    발견 확률 <span style={{ color: ROSE, fontWeight: 700 }}>{prob}</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* 설명 */}
+              <p style={{ fontSize: 12, color: MUTED, fontFamily: "var(--font-serif)", fontStyle: "italic", lineHeight: 1.7, maxWidth: 260, margin: "0 auto 16px" }}>
+                우걱이가 감정을 씹다가 떨어뜨린 부산물입니다.
+              </p>
+
+              {/* 저장 확인 */}
+              <div style={{ background: "rgba(106,155,122,0.12)", border: "1px dashed #6A9B7A", borderRadius: 3, padding: "9px 12px", marginBottom: 14 }}>
+                <p style={{ fontSize: 12, fontFamily: "var(--font-serif)", color: "#3A6A4A", fontWeight: 600 }}>
+                  ✅ 감정부산물 도감에 저장되었습니다
+                </p>
+              </div>
+
+              <Link href="/collection" style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                background: INK, color: "#F5EFE0", padding: "10px 22px", borderRadius: 3,
+                fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 600, textDecoration: "none", letterSpacing: "-0.01em",
+              }}>
+                도감 보러가기 →
+              </Link>
+              <p style={{ fontSize: 9, fontFamily: "monospace", color: MUTED, marginTop: 10, letterSpacing: "0.04em" }}>
+                지금까지 {collection.length} / {ALL_BYPRODUCTS.length} 종 수집
+              </p>
+            </div>
+          </motion.div>
+        );
+      })()}
 
       {/* ─── 4. 공유용 ShareCard (캡처 대상) ─── */}
       <motion.div

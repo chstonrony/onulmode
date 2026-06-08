@@ -327,3 +327,82 @@ export function selectByproduct(mode?: string): Byproduct {
   const pool = ALL_BYPRODUCTS.filter((b) => b.rarity === chosenRarity);
   return pool[Math.floor(Math.random() * pool.length)];
 }
+
+/* ── 희귀도 별점 (수집 욕구 자극용) ── */
+export const RARITY_STARS: Record<Rarity, number> = {
+  "COMMON":            2,
+  "STRANGE":           3,
+  "SAD":               3,
+  "VERY WET":          4,
+  "FORGOTTEN":         5,
+  "LEGENDARY SADNESS": 6,
+};
+
+export function rarityStars(rarity: Rarity): string {
+  return "⭐".repeat(RARITY_STARS[rarity]);
+}
+
+/* ── 획득 확률 계산 (기본 가중치 기준, 모드 보정 제외) ── */
+const TOTAL_BASE_WEIGHT = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
+
+function countInRarity(rarity: Rarity): number {
+  return ALL_BYPRODUCTS.filter((b) => b.rarity === rarity).length;
+}
+
+/** 해당 희귀도가 뽑힐 기본 확률(%) */
+export function rarityProbability(rarity: Rarity): number {
+  return (RARITY_WEIGHTS[rarity] / TOTAL_BASE_WEIGHT) * 100;
+}
+
+/** 특정 부산물 하나가 나올 기본 확률(%). 소수 1자리 반올림 문자열 */
+export function byproductProbability(bp: Byproduct): number {
+  const n = countInRarity(bp.rarity);
+  if (n === 0) return 0;
+  return rarityProbability(bp.rarity) / n;
+}
+
+export function formatProbability(p: number): string {
+  if (p >= 10) return `${Math.round(p)}%`;
+  if (p >= 1) return `${p.toFixed(1)}%`;
+  return `${p.toFixed(2)}%`;
+}
+
+/* ── 결정적(seed 기반) 부산물 선택 — 같은 결과지는 항상 같은 부산물 ── */
+function hashSeed(seed: string | number): number {
+  const s = String(seed);
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function mulberry32(a: number): () => number {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** seed 와 mode 로 결정적으로 부산물을 고른다 (selectByproduct 의 결정적 버전) */
+export function selectByproductBySeed(seed: string | number, mode?: string): Byproduct {
+  const rand = mulberry32(hashSeed(seed));
+  const weights = { ...RARITY_WEIGHTS };
+  if (mode && MODE_BONUS[mode]) {
+    for (const [rarity, val] of Object.entries(MODE_BONUS[mode])) {
+      weights[rarity as Rarity] = (weights[rarity as Rarity] ?? 0) + (val ?? 0);
+    }
+  }
+  const total = Object.values(weights).reduce((a, b) => a + b, 0);
+  let roll = rand() * total;
+  let chosenRarity: Rarity = "COMMON";
+  for (const [rarity, w] of Object.entries(weights)) {
+    roll -= w;
+    if (roll <= 0) { chosenRarity = rarity as Rarity; break; }
+  }
+  const pool = ALL_BYPRODUCTS.filter((b) => b.rarity === chosenRarity);
+  return pool[Math.floor(rand() * pool.length)];
+}

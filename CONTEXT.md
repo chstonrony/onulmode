@@ -143,6 +143,14 @@
 - 합계 색인 가능 콘텐츠 +10. sitemap 자동 반영: 전체 106→116 (feelings 30→35, magazine 20→23, blog 색인 34→36)
 - 전 항목 SEO title/description 포함, 1200~1396자, 검색 의도형 주제
 
+### 2026-06-08 세션 M — UX 전면 개선: 감정부산물 도감 + 감정처리소 리디자인
+- **문제 진단**: 부산물 시스템(29종)이 플로우에 미연결 → 도감에 아무것도 저장되지 않아 죽어있었음
+- `lib/byproducts.ts`: `RARITY_STARS`/`rarityStars`, `rarityProbability`/`byproductProbability`/`formatProbability`, `selectByproductBySeed`(결정적, mulberry32) 추가. 확률 합 100% 검증
+- `app/result/page.tsx`: 결과지 seed로 부산물 결정적 선택 → `useByproductStore.addByproduct`로 **도감 자동 저장**. "🎁 감정부산물 발견!" 카드(별점 희귀도/발견확률/✨최초발견 리본/✅저장 확인/도감 보러가기/누적 수집 X/29)
+- `app/collection/CollectionClient.tsx` 전면 리디자인: 수집률 X/29 대시보드(진행바·미발견 N개·"우걱이가 씹는 중"), 희귀도 필터(got/total), **29종 전체** 노출(미수집=🔒 잠금 슬롯+별점+확률), 수집 카드 상세(희귀도/확률/냄새/잔여감정/최초발견일). ※ ko 고정(i18n 제거)
+- `app/archive/ArchiveClient.tsx` 전면 리디자인: 카드형 **요약(감정·한줄·날짜)+자세히 아코디언**(긴 스크롤 해소), 의미 통계 4종(총 감정 처리/가장 많이 파쇄한 감정/최근 파쇄일/획득 부산물), 세계관 강화 헤더("완전히 사라지지 않습니다…부산물이 되어 발견")+도감 링크. 명칭 감정퇴비실→감정처리소(Footer와 일치)
+- `app/archive/page.tsx`: 메타 타이틀 "우걱이 감정처리소"로 정합
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)
