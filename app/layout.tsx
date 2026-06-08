@@ -23,6 +23,7 @@ const crimsonText = Crimson_Text({
 export const metadata: Metadata = {
   metadataBase: new URL("https://onulmood.com"),
   verification: { google: "cfO4F7I7CgH-iEUeShOV5RofN4k3vs8ixumUd_-vMIM" },
+  other: { "google-adsense-account": "ca-pub-2116440046629856" },
   title: "오늘무드 | 하루 감정 기록과 우걱이 감정처리소",
   description: "오늘무드는 하루 동안 생긴 감정을 가볍게 기록하고, 우걱이와 함께 감정을 정리해보는 감정 콘텐츠 서비스입니다. 감정 이야기, 감정 기록, 감정도감과 함께 오늘의 마음을 조금 더 가볍게 돌아보세요.",
   keywords: ["감정기록", "감정 콘텐츠", "감정 이야기", "마음정리", "오늘무드", "감정 일기", "자기 돌봄", "감정도감", "우걱이"],
