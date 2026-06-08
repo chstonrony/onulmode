@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      // /insight (단수) → /insights (복수). permanent=true → 308 (검색엔진은 301과 동일 처리)
+      { source: "/insight", destination: "/insights", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

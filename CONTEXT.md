@@ -102,6 +102,18 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-08 세션 I — /insights 콘텐츠형 페이지 + SSR 전환 (AdSense 재심사)
+- `lib/insightsContent.ts` 신설 — 감정 인사이트 정보성 콘텐츠 (ko 전체 / en 번역, 그 외 로케일 en 폴백). 한국어 본문 1890자(공백 제외)
+- **SSR 전환**: `app/insights/page.tsx` 를 `"use client"` → **서버 컴포넌트**로 재작성
+  - `export const metadata` 추가 (title/description/keywords/openGraph/twitter/canonical, 한국어 기준)
+  - `getLocale()`로 서버에서 로케일 결정 → 4개 콘텐츠 섹션을 **서버 렌더링** (빌드 결과 `ƒ /insights` = dynamic SSR). curl/Googlebot UA로 JS 실행 없이 본문 전체 확인됨 (Ctrl+U 노출 OK)
+  - 섹션1 자주 기록하는 감정(서운함/외로움/무기력/불안/짜증) · 섹션2 감정 기록이 도움 되는 이유(4) · 섹션3 감정 관찰법(4단계) · 섹션4 우걱이 코멘트(다크 카드)
+  - 하단 공용 `Footer` (feelings/magazine/guide/privacy/terms 링크 유지), maxWidth 640
+- `app/insights/InsightsStats.tsx` 신설 — localStorage 개인 통계만 분리한 클라이언트 컴포넌트 (서버 렌더 시 null → SSR 콘텐츠 노출 방해 안 함). 데이터 3일↑ 통계 카드, 미만 시 안내 배너
+- `app/sitemap.ts` — `/insights` 추가 (priority 0.7, weekly)
+- robots.txt 는 이미 `Allow: /` 라 별도 수정 불필요 (크롤링 허용 확인)
+- ⚠️ 로컬 작업 완료/빌드 검증 통과 상태. **커밋·푸시·Vercel 배포는 아직 안 함** → 라이브 반영하려면 배포 필요
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)

@@ -1,167 +1,184 @@
-"use client";
-
-import { useMoodStore } from "@/hooks/useMoodStore";
-import TopBar from "@/components/layout/TopBar";
-import { getEmotion } from "@/lib/emotions";
-import { useLocale } from "@/context/LocaleContext";
-import { EmotionType } from "@/types";
-import { motion } from "framer-motion";
-import { format, subDays } from "date-fns";
-import { ko } from "date-fns/locale";
+import type { Metadata } from "next";
 import Link from "next/link";
+import TopBar from "@/components/layout/TopBar";
+import Footer from "@/components/layout/Footer";
+import InsightsStats from "./InsightsStats";
+import { getInsightsContent } from "@/lib/insightsContent";
+import { getLocale } from "@/lib/getLocale";
 
 const BG = "#efe3cf";
 const PAPER = "#F5EFE0";
 const LINE = "#D8CEC0";
 const ROSE = "#C8607A";
+const INK = "#2A2520";
+const MUTED = "#A89880";
 
-export default function InsightsPage() {
-  const { t, locale } = useLocale();
-  const { entries, loaded } = useMoodStore();
+// 정적 메타데이터 (한국어 기준 — SEO/AdSense 크롤러 대응)
+export const metadata: Metadata = {
+  title: "오늘무드 감정 인사이트 | 자주 느끼는 감정과 감정 기록의 의미",
+  description:
+    "서운함, 외로움, 무기력, 불안, 짜증 — 사람들이 자주 기록하는 감정과 감정 기록이 도움이 되는 이유, 오늘무드가 제안하는 감정 관찰법을 소개합니다.",
+  keywords: [
+    "감정 인사이트", "자주 느끼는 감정", "서운함", "외로움", "무기력", "불안", "짜증",
+    "감정 기록", "감정 일기", "감정에 이름 붙이기", "자기 돌봄", "오늘무드",
+  ],
+  openGraph: {
+    type: "article",
+    locale: "ko_KR",
+    url: "https://onulmood.com/insights",
+    title: "오늘무드 감정 인사이트 | 자주 느끼는 감정과 감정 기록의 의미",
+    description:
+      "사람들이 자주 경험하는 감정 패턴과 감정 기록의 의미, 오늘무드의 감정 관찰법을 정리했습니다.",
+    siteName: "오늘무드",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "오늘무드 감정 인사이트",
+    description: "사람들이 자주 기록하는 감정과 감정 기록이 도움이 되는 이유.",
+  },
+  alternates: { canonical: "https://onulmood.com/insights" },
+};
 
-  if (!loaded) return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: BG }}>
-      <div style={{ display: "flex", gap: 6 }}>
-        {[0,1,2].map(i => <div key={i} className="pulse-dot" style={{ width: 8, height: 8, borderRadius: "50%", background: ROSE }} />)}
-      </div>
+const bodyStyle: React.CSSProperties = {
+  fontSize: 14.5, lineHeight: 1.85, color: "#4A4238",
+  fontFamily: "var(--font-prose)", fontWeight: 300,
+};
+const cardStyle: React.CSSProperties = {
+  padding: "22px 20px", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 6,
+};
+
+function SectionLabel({ kicker, title }: { kicker: string; title: string }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <p style={{ fontSize: 10, color: ROSE, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 8, opacity: 0.85 }}>
+        {kicker}
+      </p>
+      <h2 style={{ fontSize: 20, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.4 }}>
+        {title}
+      </h2>
     </div>
   );
+}
 
-  if (entries.length < 3) return (
-    <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title={t.insights.title} />
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "80px 24px", textAlign: "center" }}>
-        <p style={{ fontSize: 32, marginBottom: 16 }}>📊</p>
-        <p style={{ fontSize: 16, fontWeight: 700, fontFamily: "var(--font-serif)", color: "#2A2520", marginBottom: 8 }}>
-          {t.insights.notEnough}
-        </p>
-        <p style={{ fontSize: 13, color: "#A89880", lineHeight: 1.7, marginBottom: 24, fontWeight: 300 }}>
-          {t.insights.notEnoughDesc.split("\n").map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
-        </p>
-        <Link href="/today" style={{
-          display: "inline-flex", alignItems: "center",
-          background: ROSE, color: "#F5EFE0",
-          padding: "10px 24px", borderRadius: 4,
-          fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
-          textDecoration: "none",
-        }}>{t.insights.notEnoughBtn}</Link>
-      </div>
-    </div>
-  );
-
-  const total = entries.length;
-  const counts: Record<string, number> = {};
-  entries.forEach(e => { counts[e.emotion] = (counts[e.emotion] || 0) + 1; });
-  const sorted = Object.entries(counts).sort(([,a],[,b]) => b - a);
-  const top = getEmotion(sorted[0][0] as EmotionType);
-  const avg = (entries.reduce((s, e) => s + e.intensity, 0) / total).toFixed(1);
-  const last7 = Array.from({ length: 7 }, (_, i) => {
-    const d = format(subDays(new Date(), 6 - i), "yyyy-MM-dd");
-    return { date: d, entry: entries.find(e => e.date === d), day: format(subDays(new Date(), 6 - i), "EEE", { locale: ko }) };
-  });
+export default async function InsightsPage() {
+  const locale = await getLocale();
+  const c = getInsightsContent(locale);
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
-      <TopBar title={t.insights.title} />
-      <div style={{ padding: "16px 20px 80px", display: "flex", flexDirection: "column", gap: 14 }}>
+      <TopBar title={c.pageTitle} />
 
-        {/* 대표 감정 */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          style={{ padding: 20, background: top.bg, border: `1px solid ${top.border}`, borderRadius: 4 }}>
-          <p style={{ fontSize: 11, color: top.color, opacity: 0.7, fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 16 }}>
-            {t.insights.topEmotion}
+      <div style={{ maxWidth: 640, margin: "0 auto", padding: "24px 20px 60px" }}>
+
+        {/* 페이지 헤더 (서버 렌더 → Ctrl+U 노출) */}
+        <header style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, lineHeight: 1.35, marginBottom: 14 }}>
+            {c.pageTitle}
+          </h1>
+          <p style={{ ...bodyStyle, color: "#5A5246", whiteSpace: "pre-line" }}>
+            {c.intro}
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            {(() => { const Icon = top.icon; return (
-              <div style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: 52, height: 52, background: "rgba(255,255,255,0.7)", border: `1px solid ${top.border}`, borderRadius: 4,
-              }}>
-                <Icon size={24} strokeWidth={1.5} style={{ color: top.color }} />
-              </div>
-            ); })()}
-            <div>
-              <p style={{ fontSize: 26, fontWeight: 700, color: top.color, lineHeight: 1, fontFamily: "var(--font-serif)" }}>{top.label}</p>
-              <p style={{ fontSize: 12, color: top.color, opacity: 0.6, marginTop: 4 }}>
-                {Math.round((counts[top.type] / total) * 100)}% · {counts[top.type]}회
-              </p>
-            </div>
-          </div>
-        </motion.div>
+        </header>
 
-        {/* 통계 3칸 */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden" }}>
-          {[
-            { value: total, unit: locale === "ko" ? "일" : "d", label: t.insights.totalRecords, color: ROSE },
-            { value: avg, unit: "/5", label: t.insights.avgIntensity, color: "#B8860B" },
-            { value: sorted.length, unit: locale === "ko" ? "종류" : "", label: t.insights.emotionTypes, color: "#7A5A9A" },
-          ].map((s, i) => (
-            <div key={i} style={{
-              display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 0",
-              borderRight: i < 2 ? `1px solid ${LINE}` : "none",
-            }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                <span style={{ fontSize: 24, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: "var(--font-serif)" }}>{s.value}</span>
-                <span style={{ fontSize: 11, color: "#A89880" }}>{s.unit}</span>
-              </div>
-              <span style={{ fontSize: 11, color: "#A89880", marginTop: 5 }}>{s.label}</span>
-            </div>
-          ))}
-        </motion.div>
+        {/* 개인 기록 통계 (클라이언트 전용, localStorage) */}
+        <InsightsStats />
 
-        {/* 최근 7일 */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}
-          style={{ padding: 20, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
-          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>{t.insights.last7days}</p>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {last7.map(({ date, entry, day }) => {
-              const em = entry ? getEmotion(entry.emotion) : null;
-              const Icon = em?.icon;
-              return (
-                <div key={date} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                  <div style={{
+        {/* ── 정보성 콘텐츠 (서버 렌더, 항상 HTML에 포함) ───────────── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 34, marginTop: 36 }}>
+
+          {/* 섹션 1 — 자주 기록하는 감정 */}
+          <section style={cardStyle}>
+            <SectionLabel kicker="SECTION 01" title={c.emotionsTitle} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {c.emotions.map((e) => (
+                <div key={e.name} style={{ borderLeft: `2px solid ${LINE}`, paddingLeft: 14 }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "var(--font-serif)", color: ROSE, marginBottom: 6 }}>
+                    {e.name}
+                  </h3>
+                  <p style={bodyStyle}>{e.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 섹션 2 — 감정 기록이 도움이 되는 이유 */}
+          <section style={cardStyle}>
+            <SectionLabel kicker="SECTION 02" title={c.reasonsTitle} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {c.reasons.map((r, i) => (
+                <div key={r.title} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <span style={{
+                    flexShrink: 0, width: 24, height: 24, borderRadius: "50%",
+                    background: ROSE, color: PAPER, fontSize: 12, fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    width: 36, height: 36, borderRadius: 4,
-                    background: em ? em.bg : "#D8CEC0", border: em ? `1px solid ${em.border}` : `1px solid ${LINE}`,
-                  }}>
-                    {Icon && <Icon size={14} strokeWidth={1.5} style={{ color: em!.color }} />}
+                    fontFamily: "var(--font-serif)", marginTop: 2,
+                  }}>{i + 1}</span>
+                  <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, marginBottom: 6, lineHeight: 1.4 }}>
+                      {r.title}
+                    </h3>
+                    <p style={bodyStyle}>{r.desc}</p>
                   </div>
-                  <span style={{ fontSize: 10, color: "#A89880" }}>{day}</span>
                 </div>
-              );
-            })}
-          </div>
-        </motion.div>
+              ))}
+            </div>
+          </section>
 
-        {/* 감정 분포 */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
-          style={{ padding: 20, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4 }}>
-          <p style={{ fontSize: 11, color: "#A89880", fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 16 }}>{t.insights.distribution}</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {sorted.map(([type, count], i) => {
-              const em = getEmotion(type as EmotionType);
-              const Icon = em.icon;
-              const pct = Math.round((count / total) * 100);
-              return (
-                <div key={type} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <Icon size={14} strokeWidth={1.5} style={{ color: em.color, flexShrink: 0 }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>{em.label}</span>
-                      <span style={{ fontSize: 11, color: "#A89880" }}>{pct}%</span>
-                    </div>
-                    <div style={{ height: 4, borderRadius: 2, background: LINE }}>
-                      <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.5, delay: 0.2 + i * 0.04, ease: "easeOut" }}
-                        style={{ height: "100%", borderRadius: 2, background: em.color, opacity: 0.7 }} />
-                    </div>
+          {/* 섹션 3 — 감정 관찰법 */}
+          <section style={cardStyle}>
+            <SectionLabel kicker="SECTION 03" title={c.methodTitle} />
+            <p style={{ ...bodyStyle, marginBottom: 18, color: MUTED }}>{c.methodIntro}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {c.steps.map((s, i) => (
+                <div key={s.step} style={{
+                  display: "flex", gap: 12, alignItems: "flex-start",
+                  padding: "14px 16px", background: "rgba(255,255,255,0.5)", border: `1px solid ${LINE}`, borderRadius: 5,
+                }}>
+                  <span style={{
+                    flexShrink: 0, fontSize: 18, fontWeight: 700, color: ROSE,
+                    fontFamily: "var(--font-serif)", opacity: 0.6, lineHeight: 1.2, minWidth: 22,
+                  }}>{`0${i + 1}`}</span>
+                  <div>
+                    <h3 style={{ fontSize: 14.5, fontWeight: 700, fontFamily: "var(--font-serif)", color: INK, marginBottom: 4 }}>
+                      {s.step}
+                    </h3>
+                    <p style={{ ...bodyStyle, fontSize: 13.5 }}>{s.desc}</p>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </section>
+
+          {/* 섹션 4 — 우걱이 코멘트 */}
+          <section style={{ ...cardStyle, background: "#2A2520", border: "1px solid #3A332B", textAlign: "center", padding: "30px 24px" }}>
+            <p style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 14 }}>
+              {c.ugogiTitle.toUpperCase()}
+            </p>
+            <p style={{
+              fontSize: 17, lineHeight: 1.8, color: "#F5EFE0",
+              fontFamily: "var(--font-serif)", fontWeight: 400, fontStyle: "italic",
+            }}>
+              “{c.ugogiComment}”
+            </p>
+            <p style={{ fontSize: 13, color: "#A89880", marginTop: 14, fontFamily: "var(--font-serif)" }}>— 우걱이</p>
+          </section>
+
+          {/* CTA */}
+          <div style={{ textAlign: "center", marginTop: 4 }}>
+            <Link href="/today" style={{
+              display: "inline-flex", alignItems: "center",
+              background: ROSE, color: PAPER,
+              padding: "12px 28px", borderRadius: 4,
+              fontSize: 14, fontFamily: "var(--font-serif)", fontWeight: 700,
+              textDecoration: "none",
+            }}>
+              {locale === "ko" ? "오늘 감정 기록하기" : "Log today's emotion"}
+            </Link>
           </div>
-        </motion.div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
