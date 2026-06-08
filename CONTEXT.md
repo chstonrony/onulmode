@@ -161,6 +161,12 @@
 - `app/blog/[slug]/page.tsx`: 본문 렌더러에 **추가형** `## `→h2, `### `→h3 규칙 추가(기존 글은 `**` 사용이라 무영향, 회귀 없음 확인). 구조/URL/디자인/라우팅 변경 없음
 - sitemap 자동 반영: blog 36→39 (색인 39편)
 
+### 2026-06-08 세션 O — AdSense 통제요인 최종 정리 (thin 앱페이지 색인 제거)
+- 심사관 관점 교차검수 결과, 유일한 잔여 리스크 = 클라이언트 렌더 앱 페이지가 크롤러엔 얇게 보임
+- sitemap에서 /release·/archive·/compost·/collection 제외 (119→115 URL)
+- /collection·/archive·/compost 에 robots noindex 부여(서버래퍼). /release 는 클라이언트라 sitemap 제외만
+- /best-results(~5,583자)·/insights(~15,500자) 등 실콘텐츠는 색인 유지. 구조/URL/디자인/기능 불변
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)

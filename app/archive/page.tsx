@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     siteName: "오늘무드",
   },
   alternates: { canonical: "https://onulmood.com/archive" },
+  robots: { index: false, follow: true },
 };
 
 export default function ArchivePage() {
