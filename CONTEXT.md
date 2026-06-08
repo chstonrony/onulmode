@@ -136,6 +136,13 @@
 - `app/blog/[slug]/page.tsx`: 인라인 마크다운 링크 `[라벨](경로)` 렌더 지원(renderInline) → 본문 내부 링크 최적화 + canonical 추가
 - 결과: 블로그 51편(54−3), sitemap 블로그 36개(51−15 noindex). lib/articles.ts 재생성(스크립트)
 
+### 2026-06-08 세션 L — 고품질 감정 콘텐츠 추가 (AdSense 색인 확대 + E-E-A-T)
+- **감정도감 5편 추가** (lib/feelings.ts, UG-031~035, 각 1200자+): 권태(gwontae)·막막함(makmakham)·서러움(seoreoum)·초조함(chojoham)·자괴감(jagoegam). 관찰기록 4문단 + 출몰지역/말/순간/메모/질문 + related 내부링크
+- **매거진 3편 추가** (lib/contentSystem.ts, 각 1200자+): why-emotions-come-in-waves(ugogi-lab)·where-discarded-emotions-go(compost-record)·people-who-let-go-well(ugogi-manual)
+- **가이드형 블로그 2편 추가** (lib/articles.ts, 자기 돌봄, 각 1300자+): emotion-journaling-how-to(감정 일기 쓰는 법)·how-to-organize-emotions(감정 정리하는 법). 본문 내부링크 + authorNote(E-E-A-T)
+- 합계 색인 가능 콘텐츠 +10. sitemap 자동 반영: 전체 106→116 (feelings 30→35, magazine 20→23, blog 색인 34→36)
+- 전 항목 SEO title/description 포함, 1200~1396자, 검색 의도형 주제
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)
