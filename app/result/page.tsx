@@ -338,19 +338,28 @@ function ResultContent() {
               boxShadow: `4px 4px 0 ${rc.border}55`,
               padding: "20px 18px 18px", textAlign: "center", position: "relative", overflow: "hidden",
             }}>
-              {/* 최초 발견 리본 */}
-              {bpWasFirst && (
-                <motion.span
-                  initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}
-                  style={{ position: "absolute", top: 12, right: -2, fontSize: 9, fontFamily: "monospace", fontWeight: 700, color: "#FAF8F2", background: ROSE, padding: "3px 12px 3px 10px", letterSpacing: "0.08em" }}
+              {/* 신규 발견 강조 헤더 */}
+              {bpWasFirst ? (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                  style={{ marginBottom: 14 }}
                 >
-                  ✨ 최초 발견!
-                </motion.span>
+                  <motion.p
+                    animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ fontSize: 20, fontFamily: "var(--font-maru)", fontWeight: 700, color: ROSE, letterSpacing: "-0.01em", marginBottom: 2 }}
+                  >
+                    🎉 신규 발견!
+                  </motion.p>
+                  <p style={{ fontSize: 9, fontFamily: "monospace", color: "#6A9B7A", letterSpacing: "0.1em" }}>
+                    도감에 처음 등록되는 부산물입니다
+                  </p>
+                </motion.div>
+              ) : (
+                <p style={{ fontSize: 11, fontFamily: "monospace", color: ROSE, letterSpacing: "0.14em", marginBottom: 16 }}>
+                  🎁 감정부산물 또 발견 — 이미 도감에 있어요
+                </p>
               )}
-
-              <p style={{ fontSize: 11, fontFamily: "monospace", color: ROSE, letterSpacing: "0.14em", marginBottom: 16 }}>
-                🎁 감정부산물 발견!
-              </p>
 
               {/* 표본 박스 (이미지 슬롯) */}
               <div style={{
@@ -398,15 +407,44 @@ function ResultContent() {
                 </p>
               </div>
 
+              {/* 도감 수집률 강조 */}
+              {(() => {
+                const got = collection.length;
+                const total = ALL_BYPRODUCTS.length;
+                const pct = Math.round((got / total) * 100);
+                const remain = total - got;
+                return (
+                  <div style={{ background: INK, borderRadius: 4, padding: "14px 16px 13px", marginBottom: 14 }}>
+                    <p style={{ fontSize: 9, fontFamily: "monospace", color: "#8A8070", letterSpacing: "0.12em", marginBottom: 8 }}>
+                      도감 수집률
+                    </p>
+                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 9 }}>
+                      <span style={{ fontSize: 30, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#F5EFE0", lineHeight: 1 }}>{got}</span>
+                      <span style={{ fontSize: 16, fontFamily: "var(--font-maru)", color: MUTED }}>/ {total}</span>
+                      <span style={{ fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 700, color: ROSE, marginLeft: 4 }}>{pct}%</span>
+                    </div>
+                    <div style={{ height: 5, background: "#3A332B", borderRadius: 3, overflow: "hidden", marginBottom: 8 }}>
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+                        style={{ height: "100%", background: ROSE, borderRadius: 3 }} />
+                    </div>
+                    <p style={{ fontSize: 10, fontFamily: "monospace", color: "#A8A090" }}>
+                      {remain > 0 ? `아직 ${remain}개의 이상한 물건이 남아 있습니다` : "🏆 도감 완성!"}
+                    </p>
+                  </div>
+                );
+              })()}
+
+              {/* CTA — 도감으로 유도 (순환 강화) */}
               <Link href="/collection" style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: INK, color: "#F5EFE0", padding: "10px 22px", borderRadius: 3,
-                fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 600, textDecoration: "none", letterSpacing: "-0.01em",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                background: ROSE, color: "#FFF", padding: "13px 22px", borderRadius: 3,
+                fontSize: 14, fontFamily: "var(--font-maru)", fontWeight: 700, textDecoration: "none",
+                letterSpacing: "-0.01em", boxShadow: `3px 3px 0 ${rc.border}`,
               }}>
-                도감 보러가기 →
+                🎁 도감에서 확인하기 →
               </Link>
-              <p style={{ fontSize: 9, fontFamily: "monospace", color: MUTED, marginTop: 10, letterSpacing: "0.04em" }}>
-                지금까지 {collection.length} / {ALL_BYPRODUCTS.length} 종 수집
+              <p style={{ fontSize: 9, fontFamily: "monospace", color: MUTED, marginTop: 9, letterSpacing: "0.03em" }}>
+                결과 확인 → 도감 확인 → 다시 감정 파쇄
               </p>
             </div>
           </motion.div>

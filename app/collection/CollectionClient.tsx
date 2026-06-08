@@ -120,6 +120,17 @@ export default function CollectionClient() {
           </div>
         </div>
 
+        {remaining > 0 && (
+          <div style={{ background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, padding: "13px 16px", marginBottom: 10, textAlign: "center" }}>
+            <p style={{ fontSize: 13.5, fontFamily: "var(--font-maru)", fontWeight: 700, color: INK, marginBottom: 4 }}>
+              이번엔 어떤 부산물이 나올까요?
+            </p>
+            <p style={{ fontSize: 12, fontFamily: "var(--font-prose)", fontWeight: 300, color: DIM }}>
+              아직 <span style={{ color: ROSE, fontWeight: 700 }}>{remaining}개</span>의 이상한 물건이 어딘가에 남아 있습니다.
+            </p>
+          </div>
+        )}
+
         {remaining === 0 && (
           <div style={{ background: "#F0D8DC", border: "1.5px solid #D8A8B0", borderRadius: 4, padding: "12px 16px", marginBottom: 10, textAlign: "center" }}>
             <p style={{ fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#803848" }}>
@@ -161,22 +172,23 @@ export default function CollectionClient() {
             const prob = formatProbability(byproductProbability(bp));
 
             if (!got) {
-              // 미발견 — 잠금 슬롯
+              // 미발견 — 이름은 공개, 설명은 잠금
               return (
                 <div key={bp.id} style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   background: "rgba(42,37,32,0.03)", border: `1px dashed ${LINE}`,
                   borderRadius: 3, padding: "13px 18px",
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, opacity: 0.75 }}>
-                    <span style={{ fontSize: 14, filter: "grayscale(1)", opacity: 0.5 }}>{rarityStars(bp.rarity)}</span>
-                    <span style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 14, color: "#B4A890", letterSpacing: "0.04em" }}>
-                      ??? 미발견 표본
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                    <span style={{ fontSize: 12, opacity: 0.55, flexShrink: 0 }}>🔒</span>
+                    <span style={{ fontSize: 13, opacity: 0.4, flexShrink: 0 }}>{rarityStars(bp.rarity)}</span>
+                    <span style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 14, color: "#9A8E7A", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {bp.name}
                     </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-                    <span style={{ fontSize: 9, color: "#B4A890", fontFamily: "monospace" }}>발견 확률 {prob}</span>
-                    <span style={{ fontSize: 11, color: "#C4BAB0" }}>🔒</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                    <span style={{ fontSize: 9, color: "#B4A890", fontFamily: "monospace" }}>확률 {prob}</span>
+                    <span style={{ fontSize: 8, color: "#B4A890", fontFamily: "monospace", border: `1px solid ${LINE}`, borderRadius: 2, padding: "1px 5px" }}>미발견</span>
                   </div>
                 </div>
               );
