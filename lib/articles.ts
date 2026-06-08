@@ -363,6 +363,7 @@ export const ARTICLES: Article[] = [
 },
 {
   "slug": "excitement-vs-anxiety",
+  "noindex": true,
   "title": "설렘과 불안은 왜 비슷하게 느껴질까?",
   "description": "심장이 두근두근, 손이 떨릴 때 이게 설렘인지 불안인지 헷갈린다. 그 이유가 있다.",
   "category": "감정 이야기",
@@ -421,6 +422,7 @@ export const ARTICLES: Article[] = [
 },
 {
   "slug": "rested-but-still-tired",
+  "noindex": true,
   "title": "쉬어도 피곤한 이유",
   "description": "분명히 쉬었는데 왜 피곤할까? 몸의 피로와 감정의 피로는 다르다.",
   "category": "자기 돌봄",
