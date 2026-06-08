@@ -22,7 +22,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${article.localizedTitle} | OnulMood`,
     description: article.localizedDescription,
     authors: [{ name: "Sharon", url: "https://onulmood.com/about" }],
+    alternates: { canonical: `https://onulmood.com/blog/${slug}` },
+    ...(article.noindex ? { robots: { index: false, follow: true } } : {}),
   };
+}
+
+/** 인라인 마크다운 렌더: **굵게** 와 [라벨](경로) 내부 링크 지원 */
+function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
+  return text
+    .split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g)
+    .filter(Boolean)
+    .map((part, j) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={`${keyPrefix}-${j}`} style={{ color: "#2A2520", fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
+      }
+      const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (link) {
+        return (
+          <Link key={`${keyPrefix}-${j}`} href={link[2]} style={{ color: "#C8607A", textDecoration: "underline", textUnderlineOffset: 2 }}>
+            {link[1]}
+          </Link>
+        );
+      }
+      return <span key={`${keyPrefix}-${j}`}>{part}</span>;
+    });
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -43,7 +66,7 @@ export default async function ArticlePage({ params }: Props) {
   const catColor = CATEGORY_COLORS[article.category] ?? "#A89880";
   const localizedArticles = getLocalizedArticles(locale);
   const related = localizedArticles.filter(
-    (a) => a.category === article.category && a.slug !== slug
+    (a) => a.category === article.category && a.slug !== slug && !a.noindex
   ).slice(0, 3);
 
   const paragraphs = article.localizedContent.split("\n\n").filter(Boolean);
@@ -122,27 +145,19 @@ export default async function ArticlePage({ params }: Props) {
               );
             }
 
-            const rendered = block
-              .split(/(\*\*[^*]+\*\*)/)
-              .map((part, j) =>
-                part.startsWith("**") && part.endsWith("**")
-                  ? <strong key={j} style={{ color: "#2A2520", fontWeight: 700 }}>{part.slice(2, -2)}</strong>
-                  : part
-              );
-
             if (block.startsWith("- ")) {
               const items = block.split("\n").filter((l) => l.startsWith("- "));
               return (
                 <ul key={i} style={{ paddingLeft: 20, margin: "12px 0" }}>
                   {items.map((item, j) => (
-                    <li key={j} style={{ marginBottom: 6 }}>{item.slice(2)}</li>
+                    <li key={j} style={{ marginBottom: 6 }}>{renderInline(item.slice(2), `li-${i}-${j}`)}</li>
                   ))}
                 </ul>
               );
             }
 
             return (
-              <p key={i} style={{ marginBottom: 20 }}>{rendered}</p>
+              <p key={i} style={{ marginBottom: 20 }}>{renderInline(block, `p-${i}`)}</p>
             );
           })}
         </article>
@@ -193,7 +208,7 @@ export default async function ArticlePage({ params }: Props) {
           }}>
             <div style={{ position: "absolute", top: -10, left: 16, background: "#FAF8F0", padding: "0 8px" }}>
               <span style={{ fontSize: 10, fontFamily: "monospace", color: "#C8607A", letterSpacing: "0.1em" }}>
-                SHARON'S NOTE
+                SHARON&apos;S NOTE
               </span>
             </div>
             <p style={{ fontSize: 14, color: "#5A5248", lineHeight: 1.85, fontFamily: "var(--font-serif)", fontWeight: 300 }}>

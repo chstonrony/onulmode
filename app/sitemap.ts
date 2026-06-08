@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/terms`,                   lastModified: now, changeFrequency: "monthly", priority: 0.4 },
   ];
 
-  const blogRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
+  const blogRoutes: MetadataRoute.Sitemap = ARTICLES.filter((a) => !a.noindex).map((article) => ({
     url:             `${BASE}/blog/${article.slug}`,
     lastModified:    new Date(article.date),
     changeFrequency: "monthly",

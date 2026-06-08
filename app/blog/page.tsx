@@ -33,7 +33,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default async function BlogPage() {
   const locale = await getLocale();
   const t = translations[locale] ?? translations.ko;
-  const allArticles = getLocalizedArticles(locale);
+  const allArticles = getLocalizedArticles(locale).filter(a => !a.noindex);
   const newArticles    = allArticles.filter(a => a.category === "새벽 감정");
   const otherArticles  = allArticles.filter(a => a.category !== "새벽 감정");
 

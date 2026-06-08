@@ -123,6 +123,19 @@
 - **콘텐츠 자산 현황 점검**: 감정도감 30 + 블로그 54 + 매거진 20 = sitemap 총 126 URL. /guide·/feelings·/magazine 전부 200·SSR 확인 → 추가 자동생성 불필요
 - 요청 6(콘텐츠 부족 시 자동생성)은 자산 충분으로 불요. 요청 7(sitemap)·8(Googlebot) 이미 충족 확인
 
+### 2026-06-08 세션 K — 블로그 품질 정비 (AdSense thin content 대응)
+- 진단: 블로그 54편 중 36편 1000자 미만(중앙값 414자, 공백제외), 템플릿 반복, 주제 중복 3쌍 → thin/scaled content 리스크
+- **중복 병합 3쌍** (제거 slug → next.config 308 리다이렉트):
+  - want-to-cry-but-cant → cant-cry-when-you-want-to
+  - why-wounds-dont-heal → wound-that-doesnt-heal
+  - tired-from-relationships → relationship-fatigue
+- **확장 12편** → 전부 공백포함 1200~1340자. 실제 사례·행동 가이드·실천법 추가, 반복 클리셰("우걱이 메모:" 등) 제거, 본문 내부 링크 삽입
+  - cant-cry-when-you-want-to, wound-that-doesnt-heal, relationship-fatigue, burnout-not-laziness, lethargy-not-laziness, why-record-emotions, silent-grief, lonely-in-crowd, overthinking-at-3am, why-hurt-stays-long, nunchi-fatigue, stop-comparing-yourself
+- **noindex 15편**: `Article.noindex` 플래그 신설 → generateMetadata robots noindex + sitemap 제외 + 블로그 목록/관련글 제외
+  - big-reaction-small-thing, healing-takes-time, crying-is-okay, heavy-heart-heavy-body, regret-worse-at-night, anger-makes-body-hot, when-feel-nothing, comparison-makes-unhappy, emotions-grow-at-night, anger-is-okay, jealousy-not-always-bad, people-who-bottle-up, body-memory-emotion, pretending-is-also-emotion, brain-when-overthinking
+- `app/blog/[slug]/page.tsx`: 인라인 마크다운 링크 `[라벨](경로)` 렌더 지원(renderInline) → 본문 내부 링크 최적화 + canonical 추가
+- 결과: 블로그 51편(54−3), sitemap 블로그 36개(51−15 noindex). lib/articles.ts 재생성(스크립트)
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)
