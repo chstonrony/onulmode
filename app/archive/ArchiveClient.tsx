@@ -278,6 +278,16 @@ export default function ArchiveClient() {
 
       <div style={{ padding: "14px 16px 0" }}>
 
+        {/* 감정파쇄함 설명 */}
+        <div style={{ background: PAPER, border: `1px solid ${LINE}`, borderRadius: 6, padding: "16px 18px", marginBottom: 14 }}>
+          <p style={{ fontSize: 10, fontFamily: "monospace", color: "#6A9B7A", letterSpacing: "0.1em", marginBottom: 8 }}>🗃️ 감정파쇄함이란?</p>
+          <p style={{ fontSize: 13, fontFamily: "var(--font-serif)", color: "#5A5248", lineHeight: 1.9 }}>
+            감정파쇄함은 오늘무드 사용자들이 남긴 감정을 모아두는 공간입니다. 감정을 평가하거나 분석하기보다, 오늘의 마음을 잠시 내려놓고 가만히 바라볼 수 있도록 돕습니다.
+            우걱이에게 던진 감정은 이곳에 기록으로 남고, 시간이 지나면 그날의 내가 무엇을 느꼈는지 다시 돌아볼 수 있어요.
+            사라지는 감정도 있지만, 기록된 감정은 때때로 나를 이해하는 작은 단서가 되기도 합니다. 잘 정리하려 애쓰지 않아도 괜찮아요. 그냥 오늘 하나만 두고 가도 충분합니다.
+          </p>
+        </div>
+
         {records.length > 0 && <StatsBar records={records} byproductCount={byproductCount} />}
 
         <UgogiGarden style={{ marginBottom: 14 }} />

@@ -167,6 +167,14 @@
 - /collection·/archive·/compost 에 robots noindex 부여(서버래퍼). /release 는 클라이언트라 sitemap 제외만
 - /best-results(~5,583자)·/insights(~15,500자) 등 실콘텐츠는 색인 유지. 구조/URL/디자인/기능 불변
 
+### 2026-06-09 세션 P — AdSense 신뢰도/콘텐츠 보강 (5개 우선순위)
+- ① 매거진 5편 추가(lib/contentSystem.ts, 각 1000~1136자, h2/h3, 겹치지 않는 신주제): what-happens-when-angry·do-emotions-expire·mood-not-attitude·emotions-seen-in-hindsight·small-emotions-pile-up. 매거진 렌더러에 추가형 `### `→h3 규칙
+- ② About 강화(app/about/page.tsx): "오늘무드가 추구하는 가치" 섹션 + "운영자 소개"(청소년 회복·성장 디렉터 최샤론 목사) E-E-A-T
+- ③ FAQ 4문항 추가(app/faq/page.tsx): 결과 저장/모바일/누가 만들었나(운영자)/광고 표시 이유
+- ④ 감정파쇄함 설명(app/archive/ArchiveClient.tsx): 상단 300자+ 설명 카드(클라 렌더, /archive는 noindex라 SEO 무관·브라우저 노출)
+- ⑤ 홈 하단 SEO 섹션(app/HomeClient.tsx): 5개 H2 블록(무엇인가/기록 이유/자주 선택 감정/이용 방법/아카이브 바로가기 내부링크), SSR 노출
+- sitemap 자동: magazine 23→28. 구조/URL/디자인/라우팅 불변(렌더러 h3 추가형만)
+
 ### 2026-05-19 세션 A — SEO 콘텐츠 시스템 구축
 - `/emotion-fatigue` 생성 (감정 피로 아티클, 다크 bg)
 - `/best-results` 생성 (인기 감정 결과 8종 카드, 공유/저장 버튼)

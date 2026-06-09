@@ -721,6 +721,40 @@ export default function HomeClient() {
             오늘무드는 모든 기록이 기기에만 저장돼요. 서버에 전송되지 않습니다. 로그인 없이, 개인정보 없이 사용할 수 있어요.
           </p>
         </div>
+
+        {/* ── 하단 정보 섹션 (SEO 콘텐츠) ── */}
+        <section style={{ maxWidth: 680, margin: "0 auto", padding: "8px 22px 36px" }}>
+          {[
+            {
+              h: "오늘무드는 무엇인가요?",
+              p: "오늘무드는 하루 동안 생긴 감정을 가볍게 기록하고 돌아보는 감정 콘텐츠 서비스입니다. 감정을 진단하거나 분석하는 도구가 아니라, 오늘의 마음을 잠시 꺼내 우걱이와 함께 정리해보는 공간이에요. 서운함도, 짜증도, 무기력도 틀린 감정은 없습니다. 그저 오늘 그런 마음이 있었다는 걸 알아주는 것에서 시작합니다.",
+            },
+            {
+              h: "감정을 기록하면 좋은 이유",
+              p: "막연한 기분도 '서운함'이나 '불안'처럼 이름을 붙이는 순간 한결 또렷해집니다. 며칠치 기록이 쌓이면 내가 어떤 상황에서 자주 흔들리는지 패턴도 보이죠. 감정을 머릿속에만 두지 않고 밖으로 꺼내두면, 한 걸음 떨어져 바라볼 수 있어 마음이 가벼워집니다. 오늘무드는 그 과정을 하루 한 줄로 가볍게 돕습니다.",
+            },
+            {
+              h: "사람들이 자주 선택하는 감정",
+              p: "오늘무드에서 사람들이 자주 꺼내는 감정은 서운함, 외로움, 무기력, 불안, 짜증입니다. 대부분 크게 터지지 않지만 조용히 오래 남는 감정들이에요. 누구나 한 번쯤 느끼는 마음이고, 나만 그런 게 아니라는 걸 알게 되는 것만으로도 조금 위로가 됩니다.",
+            },
+            {
+              h: "오늘무드 이용 방법",
+              p: "① 오늘의 감정을 하나 고르거나 적습니다. ② 우걱이에게 던지면 감정을 씹어 파쇄 결과를 보여줘요. ③ 결과와 함께 가끔 이상한 '감정 부산물'이 도감에 모입니다. ④ 기록은 감정파쇄함(아카이브)에 남아 나중에 다시 돌아볼 수 있어요. 로그인도, 설치도 필요 없습니다.",
+            },
+          ].map((s) => (
+            <div key={s.h} style={{ marginBottom: 22 }}>
+              <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 16, color: "#2A2520", marginBottom: 8, letterSpacing: "-0.02em" }}>{s.h}</h2>
+              <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13.5, color: "#5A5248", lineHeight: 1.9, letterSpacing: "-0.01em" }}>{s.p}</p>
+            </div>
+          ))}
+
+          <div>
+            <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 16, color: "#2A2520", marginBottom: 8, letterSpacing: "-0.02em" }}>감정 아카이브 바로가기</h2>
+            <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13.5, color: "#5A5248", lineHeight: 1.9, letterSpacing: "-0.01em", marginBottom: 10 }}>
+              더 깊이 들여다보고 싶다면, <Link href="/insights" style={{ color: "#C8607A", textDecoration: "underline" }}>감정 인사이트</Link>에서 나의 감정 흐름을, <Link href="/blog" style={{ color: "#C8607A", textDecoration: "underline" }}>감정 이야기</Link>에서 마음에 대한 글들을, <Link href="/feelings" style={{ color: "#C8607A", textDecoration: "underline" }}>우걱이 감정도감</Link>에서 다양한 감정의 정체를 만나볼 수 있어요. 처음이라면 <Link href="/guide" style={{ color: "#C8607A", textDecoration: "underline" }}>감정 기록 가이드</Link>부터 시작해보세요.
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );

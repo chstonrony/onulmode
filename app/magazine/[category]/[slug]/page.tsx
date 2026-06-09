@@ -57,7 +57,14 @@ function renderContent(raw: string) {
       key++;
       continue;
     }
-    if (line.startsWith("**") && line.endsWith("**")) {
+    if (line.startsWith("### ")) {
+      // h3 — 추가형 규칙(기존 글은 미사용)
+      elements.push(
+        <h3 key={key++} style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 14.5, color: "#3A3228", letterSpacing: "-0.02em", marginTop: 20, marginBottom: 8 }}>
+          {line.slice(4)}
+        </h3>
+      );
+    } else if (line.startsWith("**") && line.endsWith("**")) {
       elements.push(
         <h2 key={key++} style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 17, color: INK, letterSpacing: "-0.02em", marginTop: 28, marginBottom: 12 }}>
           {line.slice(2, -2)}
