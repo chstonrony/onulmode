@@ -7,9 +7,22 @@ import { useRouter } from "next/navigation";
 import FeedbackToast from "@/components/trash/FeedbackToast";
 import { useLocale } from "@/context/LocaleContext";
 import { buildResultUrl } from "@/lib/resultCard";
+import { CONTENT_ARTICLES } from "@/lib/contentSystem";
 
 const ROSE = "#C8607A";
 const INK  = "#2A2520";
+
+// 홈 하단 노출용 — 최근 매거진 글 (날짜 내림차순)
+const RECENT_MAGAZINE = [...CONTENT_ARTICLES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+// 사람들이 자주 찾는 감정 (감정도감 링크)
+const POPULAR_FEELINGS = [
+  { slug: "seounaham", name: "서운함" },
+  { slug: "oerounm", name: "외로움" },
+  { slug: "mugiryeok", name: "무기력" },
+  { slug: "buran", name: "불안" },
+  { slug: "jjajeung", name: "짜증" },
+  { slug: "gongheeoham", name: "공허함" },
+];
 
 /* ── 감정 칩 — 상태 이상 코드 시스템 ── */
 const EMOTION_CHIPS = [
@@ -747,6 +760,40 @@ export default function HomeClient() {
               <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13.5, color: "#5A5248", lineHeight: 1.9, letterSpacing: "-0.01em" }}>{s.p}</p>
             </div>
           ))}
+
+          {/* 사람들이 자주 찾는 감정 — 감정도감 링크 */}
+          <div style={{ marginBottom: 22 }}>
+            <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 16, color: "#2A2520", marginBottom: 8, letterSpacing: "-0.02em" }}>사람들이 자주 찾는 감정</h2>
+            <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13.5, color: "#5A5248", lineHeight: 1.9, letterSpacing: "-0.01em", marginBottom: 10 }}>
+              오늘무드에서 가장 자주 꺼내지는 감정들이에요. 마음에 닿는 감정을 눌러 우걱이 감정도감에서 자세한 이야기를 만나보세요.
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {POPULAR_FEELINGS.map((f) => (
+                <Link key={f.slug} href={`/feelings/${f.slug}`} style={{ fontSize: 13, color: "#7A6A58", textDecoration: "none", background: "rgba(255,255,255,0.6)", border: "1px solid #D0C8B8", borderRadius: 999, padding: "5px 14px", fontFamily: "var(--font-prose)", fontWeight: 300 }}>
+                  {f.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* 최근 매거진 — 실제 글 노출 */}
+          <div style={{ marginBottom: 22 }}>
+            <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 16, color: "#2A2520", marginBottom: 8, letterSpacing: "-0.02em" }}>최근 매거진</h2>
+            <p style={{ fontFamily: "var(--font-prose)", fontWeight: 300, fontSize: 13.5, color: "#5A5248", lineHeight: 1.9, letterSpacing: "-0.01em", marginBottom: 10 }}>
+              우걱이 매거진에서는 감정과 관계에 대한 이야기를 꾸준히 다루고 있어요. 최근에 올라온 글입니다.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {RECENT_MAGAZINE.map((a) => (
+                <Link key={a.slug} href={`/magazine/${a.category}/${a.slug}`} style={{ textDecoration: "none", display: "block", padding: "11px 14px", background: "rgba(255,255,255,0.55)", border: "1px solid #D0C8B8", borderRadius: 6 }}>
+                  <span style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 13.5, color: "#2A2520", letterSpacing: "-0.01em" }}>{a.title}</span>
+                  <span style={{ display: "block", fontSize: 11.5, color: "#8A8070", fontFamily: "var(--font-prose)", fontWeight: 300, marginTop: 3 }}>{a.subtitle}</span>
+                </Link>
+              ))}
+            </div>
+            <Link href="/magazine" style={{ display: "inline-block", marginTop: 10, fontSize: 12.5, color: "#C8607A", textDecoration: "underline", fontFamily: "var(--font-prose)" }}>
+              우걱이 매거진 전체 보기 →
+            </Link>
+          </div>
 
           <div>
             <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 16, color: "#2A2520", marginBottom: 8, letterSpacing: "-0.02em" }}>감정 아카이브 바로가기</h2>

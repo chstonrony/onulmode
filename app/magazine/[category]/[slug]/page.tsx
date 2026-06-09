@@ -98,9 +98,10 @@ export default async function MagazineArticlePage({ params }: Props) {
   if (!article || article.category !== category) notFound();
 
   const meta = CATEGORY_META[article.category];
-  const related = getContentByCategory(article.category)
-    .filter(a => a.slug !== article.slug)
-    .slice(0, 3);
+  // 함께 읽으면 좋은 글 — 같은 카테고리 우선, 부족분은 다른 카테고리에서 채움(교차 내부링크)
+  const sameCat = getContentByCategory(article.category).filter(a => a.slug !== article.slug);
+  const otherCat = CONTENT_ARTICLES.filter(a => a.category !== article.category && a.slug !== article.slug);
+  const related = [...sameCat.slice(0, 3), ...otherCat.slice(0, 2)].slice(0, 5);
 
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
@@ -131,9 +132,20 @@ export default async function MagazineArticlePage({ params }: Props) {
           <p style={{ ...PROSE, fontSize: 14, color: MUTED, marginBottom: 16 }}>
             {article.subtitle}
           </p>
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
             <span style={{ fontSize: 10, color: MUTED, fontFamily: "monospace" }}>{article.date}</span>
             <span style={{ fontSize: 10, color: MUTED, fontFamily: "monospace" }}>읽기 {article.readingTime}분</span>
+          </div>
+
+          {/* 작성자 신뢰 정보 */}
+          <div style={{ display: "flex", alignItems: "center", gap: 9, paddingTop: 14, borderTop: `1px solid ${LINE}` }}>
+            <div style={{ width: 30, height: 30, borderRadius: "50%", background: ROSE, color: "#F5EFE0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, fontFamily: "var(--font-maru)", flexShrink: 0 }}>오</div>
+            <div style={{ lineHeight: 1.45 }}>
+              <p style={{ fontSize: 12.5, fontFamily: "var(--font-maru)", fontWeight: 600, color: INK }}>오늘무드 편집팀</p>
+              <p style={{ fontSize: 10.5, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300 }}>
+                운영 최샤론 · <Link href="/about" style={{ color: ROSE, textDecoration: "none" }}>오늘무드 소개</Link>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -176,16 +188,19 @@ export default async function MagazineArticlePage({ params }: Props) {
           </Link>
         </div>
 
-        {/* 관련 글 */}
+        {/* 함께 읽으면 좋은 글 */}
         {related.length > 0 && (
           <section style={{ marginBottom: 40 }}>
-            <p style={{ fontSize: 10, color: MUTED, fontFamily: "monospace", letterSpacing: "0.1em", marginBottom: 14, borderBottom: `1px solid ${LINE}`, paddingBottom: 10 }}>
-              {meta.label}의 다른 글
-            </p>
+            <h2 style={{ fontSize: 13, color: INK, fontFamily: "var(--font-maru)", fontWeight: 600, letterSpacing: "-0.01em", marginBottom: 14, borderBottom: `1px solid ${LINE}`, paddingBottom: 10 }}>
+              함께 읽으면 좋은 글
+            </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {related.map(a => (
                 <Link key={a.slug} href={`/magazine/${a.category}/${a.slug}`} style={{ textDecoration: "none" }}>
                   <div style={{ background: PAPER, border: `1px solid ${LINE}`, borderRadius: 4, padding: "14px 16px" }}>
+                    <p style={{ fontSize: 9, color: CATEGORY_META[a.category].color, fontFamily: "monospace", letterSpacing: "0.08em", marginBottom: 5 }}>
+                      {CATEGORY_META[a.category].emoji} {CATEGORY_META[a.category].label}
+                    </p>
                     <p style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 14, color: INK, letterSpacing: "-0.02em", marginBottom: 4 }}>
                       {a.title}
                     </p>

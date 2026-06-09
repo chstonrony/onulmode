@@ -122,7 +122,7 @@ export default async function ArticlePage({ params }: Props) {
               }}>S</div>
               <div>
                 <p style={{ fontSize: 12, color: "#5A5248", fontFamily: "var(--font-serif)", fontWeight: 700 }}>Sharon</p>
-                <p style={{ fontSize: 10, color: "#A89880", fontFamily: "monospace" }}>오늘무드 운영자</p>
+                <p style={{ fontSize: 10, color: "#A89880", fontFamily: "monospace" }}>오늘무드 편집팀 · 운영 최샤론</p>
               </div>
             </Link>
           </div>
@@ -203,7 +203,7 @@ export default async function ArticlePage({ params }: Props) {
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#2A2520", fontFamily: "var(--font-serif)" }}>Sharon</p>
-              <span style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.08em" }}>오늘무드 운영자</span>
+              <span style={{ fontSize: 10, color: "#C8607A", fontFamily: "monospace", letterSpacing: "0.08em" }}>오늘무드 편집팀 · 운영 최샤론</span>
             </div>
             <p style={{ fontSize: 13, color: "#6A6258", lineHeight: 1.8, fontWeight: 300, fontFamily: "var(--font-serif)", marginBottom: 10 }}>
               감정을 이상한 방식으로 처리하는 서비스를 만들었어요. 우걱이가 제일 열심히 일하고 있습니다. 감정 관련 글을 씁니다.
