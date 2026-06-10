@@ -71,8 +71,32 @@ export default async function ArticlePage({ params }: Props) {
 
   const paragraphs = article.localizedContent.split("\n\n").filter(Boolean);
 
+  const articleUrl = `https://onulmood.com/blog/${slug}`;
+  const jsonLd = article.noindex ? null : {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.localizedTitle,
+    description: article.localizedDescription,
+    articleSection: article.category,
+    inLanguage: locale === "ko" ? "ko-KR" : locale,
+    datePublished: article.date,
+    dateModified: article.date,
+    author: { "@type": "Organization", name: "오늘무드 편집팀", url: "https://onulmood.com/about" },
+    publisher: {
+      "@type": "Organization",
+      name: "오늘무드",
+      url: "https://onulmood.com",
+      logo: { "@type": "ImageObject", url: "https://onulmood.com/opengraph-image" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    url: articleUrl,
+  };
+
   return (
     <div style={{ background: "#efe3cf", minHeight: "100vh" }}>
+      {jsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      )}
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
 
         <Link href="/blog" style={{ fontSize: 13, color: "#A89880", textDecoration: "none", fontFamily: "var(--font-serif)" }}>

@@ -118,6 +118,88 @@ function StatsBar({ records, byproductCount }: { records: ShredRecord[]; byprodu
   );
 }
 
+/* ── 오늘의 처리 현황판 — 살아있는 시설 느낌 ── */
+function TodayBoard({ records }: { records: ShredRecord[] }) {
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const todays = records.filter((r) => (r.savedAt || "").slice(0, 10) === todayKey);
+
+  // 오늘 가장 많이 들어온 감정
+  const topToday = (() => {
+    const counts: Record<string, number> = {};
+    todays.forEach((r) => r.emotions.forEach((e) => { counts[e] = (counts[e] || 0) + 1; }));
+    const top = Object.entries(counts).sort(([, a], [, b]) => b - a)[0];
+    return top ? top[0] : null;
+  })();
+
+  // 오늘 생성된 감정 퇴비 (중복 제거)
+  const compostToday = Array.from(new Set(todays.map((r) => getCompostForRecord(r).noun))).slice(0, 4);
+
+  // 우걱이 포만감 — 오늘 처리량 기준 (5건이면 만복)
+  const fullness = Math.min(100, todays.length * 20);
+  const mood =
+    todays.length === 0 ? { face: "😴", text: "우걱이가 조용히 쉬는 중" }
+    : fullness >= 100   ? { face: "🤤", text: "우걱이 배부름 — 오늘 충분히 씹었어요" }
+    : fullness >= 60    ? { face: "😋", text: "우걱이가 신나게 씹는 중" }
+    : { face: "🦷", text: "우걱이가 천천히 씹는 중" };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      style={{ background: "#1A2A1A", border: "2px solid #2A4A2A", borderRadius: 8, overflow: "hidden", marginBottom: 14, boxShadow: "3px 3px 0 #0E1A0E" }}>
+      {/* 타이틀 바 */}
+      <div style={{ background: "#0E1A0E", padding: "7px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 8, fontFamily: "monospace", color: "#6A9B7A", letterSpacing: "0.12em" }}>📊 오늘의 처리 현황판</span>
+        <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }} style={{ fontSize: 8, fontFamily: "monospace", color: "#8A9E78" }}>● 가동 중</motion.span>
+      </div>
+
+      <div style={{ padding: "14px 16px" }}>
+        {/* 상단 3분할 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 14 }}>
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: 22, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#E8F4E4", lineHeight: 1.1 }}>{todays.length}</p>
+            <p style={{ fontSize: 8.5, fontFamily: "monospace", color: "#6A8A6A", marginTop: 3, letterSpacing: "0.02em" }}>오늘 처리</p>
+          </div>
+          <div style={{ textAlign: "center", borderLeft: "1px solid #2A4A2A", borderRight: "1px solid #2A4A2A" }}>
+            <p style={{ fontSize: topToday ? 15 : 22, fontFamily: "var(--font-maru)", fontWeight: 700, color: topToday ? "#F0A0B0" : "#4A6A4A", lineHeight: 1.3, padding: "0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {topToday || "—"}
+            </p>
+            <p style={{ fontSize: 8.5, fontFamily: "monospace", color: "#6A8A6A", marginTop: topToday ? 4 : 3, letterSpacing: "0.02em" }}>오늘 최다 감정</p>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: 22, fontFamily: "var(--font-maru)", fontWeight: 700, color: "#A8CCA0", lineHeight: 1.1 }}>{compostToday.length}</p>
+            <p style={{ fontSize: 8.5, fontFamily: "monospace", color: "#6A8A6A", marginTop: 3, letterSpacing: "0.02em" }}>생성된 퇴비</p>
+          </div>
+        </div>
+
+        {/* 우걱이 포만감 게이지 */}
+        <div style={{ background: "#0E1A0E", borderRadius: 6, padding: "11px 13px", marginBottom: compostToday.length ? 12 : 0 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <span style={{ fontSize: 10, fontFamily: "var(--font-serif)", color: "#A8CCA0" }}>
+              <span style={{ fontSize: 13, marginRight: 5 }}>{mood.face}</span>{mood.text}
+            </span>
+            <span style={{ fontSize: 9, fontFamily: "monospace", color: "#6A9B7A" }}>포만감 {fullness}%</span>
+          </div>
+          <div style={{ height: 6, background: "#2A3A2A", borderRadius: 4, overflow: "hidden" }}>
+            <motion.div initial={{ width: 0 }} animate={{ width: `${fullness}%` }} transition={{ duration: 0.8, ease: "easeOut" }}
+              style={{ height: "100%", background: "linear-gradient(90deg,#6A9B7A,#A8CCA0)", borderRadius: 4 }} />
+          </div>
+        </div>
+
+        {/* 오늘 생성된 퇴비 칩 */}
+        {compostToday.length > 0 && (
+          <div>
+            <p style={{ fontSize: 8.5, fontFamily: "monospace", color: "#4A6A4A", letterSpacing: "0.1em", marginBottom: 7 }}>🌱 오늘 생성된 감정 퇴비</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {compostToday.map((c, i) => (
+                <span key={i} style={{ fontSize: 11, fontFamily: "var(--font-maru)", fontWeight: 600, color: "#A8CCA0", background: "rgba(106,155,122,0.14)", border: "1px solid #2A4A2A", borderRadius: 14, padding: "3px 11px" }}>{c}</span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 /* ── 기록 카드 — 요약 + 자세히 보기 아코디언 ── */
 function RecordCard({ record, index, locale }: { record: ShredRecord; index: number; locale: string }) {
   const [open, setOpen] = useState(false);
@@ -287,6 +369,8 @@ export default function ArchiveClient() {
             사라지는 감정도 있지만, 기록된 감정은 때때로 나를 이해하는 작은 단서가 되기도 합니다. 잘 정리하려 애쓰지 않아도 괜찮아요. 그냥 오늘 하나만 두고 가도 충분합니다.
           </p>
         </div>
+
+        {records.length > 0 && <TodayBoard records={records} />}
 
         {records.length > 0 && <StatsBar records={records} byproductCount={byproductCount} />}
 

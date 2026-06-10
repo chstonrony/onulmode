@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ARTICLES } from "@/lib/articles";
-import { FEELINGS } from "@/lib/feelings";
-import { CONTENT_ARTICLES } from "@/lib/contentSystem";
+import { INDEXED_CONTENT_ARTICLES } from "@/lib/contentSystem";
 
 const BASE = "https://onulmood.com";
 
@@ -38,19 +37,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority:        0.7,
   }));
 
-  const feelingRoutes: MetadataRoute.Sitemap = FEELINGS.map((f) => ({
-    url:             `${BASE}/feelings/${f.slug}`,
-    lastModified:    now,
-    changeFrequency: "monthly",
-    priority:        0.7,
-  }));
-
-  const magazineRoutes: MetadataRoute.Sitemap = CONTENT_ARTICLES.map(a => ({
+  // 감정도감 개별 항목은 사전형 단편이라 색인 제외(허브 /feelings 만 sitemap 유지).
+  // 매거진은 색인 대상(INDEXED_CONTENT_ARTICLES)만 — 얇은 글은 noindex 처리됨.
+  const magazineRoutes: MetadataRoute.Sitemap = INDEXED_CONTENT_ARTICLES.map(a => ({
     url:             `${BASE}/magazine/${a.category}/${a.slug}`,
     lastModified:    new Date(a.date),
     changeFrequency: "monthly",
     priority:        0.8,
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...feelingRoutes, ...magazineRoutes];
+  return [...staticRoutes, ...blogRoutes, ...magazineRoutes];
 }

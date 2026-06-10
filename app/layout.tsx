@@ -63,6 +63,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko" className={`${gowunBatang.variable} ${notoSansKR.variable} ${crimsonText.variable}`}>
       <head>
+        {/* 구조화 데이터 — 사이트/조직 신뢰 신호 (Search Console) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "@id": "https://onulmood.com/#website",
+                url: "https://onulmood.com",
+                name: "오늘무드",
+                description: "하루의 감정을 가볍게 기록하고 우걱이와 함께 돌아보는 감정 콘텐츠 서비스",
+                inLanguage: "ko-KR",
+                publisher: { "@id": "https://onulmood.com/#organization" },
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://onulmood.com/magazine?q={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              },
+              {
+                "@type": "Organization",
+                "@id": "https://onulmood.com/#organization",
+                name: "오늘무드",
+                url: "https://onulmood.com",
+                logo: { "@type": "ImageObject", url: "https://onulmood.com/opengraph-image" },
+                description: "감정을 진단하거나 치료하지 않고, 가볍게 꺼내 기록하도록 돕는 감정 콘텐츠 서비스",
+                foundingDate: "2026",
+                sameAs: [],
+              },
+            ],
+          }) }}
+        />
         {/* 카카오 SDK */}
         <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossOrigin="anonymous" async />
         {kakaoKey && (

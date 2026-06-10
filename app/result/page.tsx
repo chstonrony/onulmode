@@ -858,8 +858,46 @@ function ResultContent() {
         </div>
       </motion.div>
 
+      {/* ─── 11-B. 더 둘러보기 — 내부 탐색 (체류·이동 강화) ─── */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 1.2 }}
+        style={{ padding: "28px 20px 0" }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+          <div style={{ height: 1, flex: 1, background: LINE }} />
+          <p style={{ fontSize: 9, color: MUTED, fontFamily: "monospace", letterSpacing: "0.14em", flexShrink: 0 }}>
+            우걱이 처리소 더 둘러보기
+          </p>
+          <div style={{ height: 1, flex: 1, background: LINE }} />
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          {[
+            { href: "/release",    emoji: "🗑️", title: "다른 감정도 파쇄하기", desc: "오늘 또 다른 마음 던지기" },
+            { href: "/archive",    emoji: "🗃️", title: "감정파쇄함 둘러보기", desc: "처리한 감정 기록 보기" },
+            { href: "/collection", emoji: "🎁", title: "감정부산물 도감",      desc: "수집한 부산물 확인하기" },
+            { href: "/magazine",   emoji: "📖", title: "우걱이 매거진",        desc: "감정 이야기 읽어보기" },
+            { href: "/about",      emoji: "🦷", title: "우걱이 소개 보기",      desc: "우걱이는 누구일까?" },
+            { href: "/feelings",   emoji: "📋", title: "감정도감 탐험",        desc: "감정 하나씩 들여다보기" },
+          ].map((l) => (
+            <Link key={l.href} href={l.href} style={{
+              display: "block", textDecoration: "none",
+              background: PAPER, border: `1px solid ${LINE}`, borderRadius: 6, padding: "13px 14px",
+            }}>
+              <p style={{ fontSize: 18, marginBottom: 6 }}>{l.emoji}</p>
+              <p style={{ fontSize: 13, fontFamily: "var(--font-maru)", fontWeight: 700, color: INK, letterSpacing: "-0.02em", marginBottom: 3 }}>
+                {l.title}
+              </p>
+              <p style={{ fontSize: 11, fontFamily: "var(--font-serif)", color: MUTED, lineHeight: 1.5 }}>
+                {l.desc}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </motion.div>
+
       {/* ─── 애드센스 안전 문구 ─── */}
-      <div style={{ padding: "20px 22px 0" }}>
+      <div style={{ padding: "24px 22px 0" }}>
         <p style={{ fontSize: 10, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.7, textAlign: "center", padding: "10px 12px", background: "rgba(42,37,32,0.04)", border: `1px dashed ${LINE}`, borderRadius: 4 }}>
           오늘무드는 감정을 쉽게 이해하고 기록하기 위한 콘텐츠 서비스입니다. 의학적 진단이나 상담을 대신하지 않습니다.
         </p>

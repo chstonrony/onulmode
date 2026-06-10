@@ -223,6 +223,27 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* 개인정보 / 문의 — AdSense 신뢰 */}
+        <section style={{ marginBottom: 48 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 14 }}>
+            <span style={{ fontSize: 10, color: ROSE, fontFamily: "monospace", letterSpacing: "0.1em", flexShrink: 0 }}>09</span>
+            <h2 style={{ fontFamily: "var(--font-maru)", fontWeight: 600, fontSize: 19, color: INK, letterSpacing: "-0.02em", lineHeight: 1.4 }}>
+              개인정보와 문의
+            </h2>
+          </div>
+          <div style={{ paddingLeft: 24, borderLeft: `2px solid ${LINE}` }}>
+            <p style={{ ...PROSE, fontSize: 14, marginBottom: 14 }}>
+              오늘무드는 회원가입이나 로그인이 없습니다. 감정 기록은 서버로 전송되지 않고, 오직 사용자의 브라우저(로컬 저장소)에만 저장됩니다. 즉 기록은 사용자 본인의 기기에만 남으며, 운영자도 그 내용을 볼 수 없습니다.
+            </p>
+            <p style={{ ...PROSE, fontSize: 14, marginBottom: 14 }}>
+              자세한 처리 방침은 <Link href="/privacy" style={{ color: ROSE, textDecoration: "none" }}>개인정보처리방침</Link>에서 확인할 수 있어요. 광고 게재를 위해 일부 페이지에 Google 등 제3자 광고가 표시될 수 있으며, 이 또한 개인정보처리방침에 안내되어 있습니다.
+            </p>
+            <p style={{ ...PROSE, fontSize: 14, marginBottom: 0 }}>
+              문의·오류 제보·협업 제안은 <Link href="/contact" style={{ color: ROSE, textDecoration: "none" }}>문의하기</Link> 페이지 또는 이메일(<span style={{ color: INK }}>chston0603@gmail.com</span>)로 보내주시면 됩니다.
+            </p>
+          </div>
+        </section>
+
         {/* 법적 고지 */}
         <div style={{ background: "rgba(42,37,32,0.04)", border: `1px dashed ${LINE}`, borderRadius: 4, padding: "16px 18px", marginBottom: 48 }}>
           <p style={{ fontSize: 11, color: MUTED, fontFamily: "var(--font-prose)", fontWeight: 300, lineHeight: 1.85 }}>

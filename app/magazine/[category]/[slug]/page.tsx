@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CONTENT_ARTICLES, CATEGORY_META, getContentBySlug, getContentByCategory } from "@/lib/contentSystem";
+import { CONTENT_ARTICLES, CATEGORY_META, getContentBySlug, getContentByCategory, isMagazineNoindex } from "@/lib/contentSystem";
 
 interface Props {
   params: Promise<{ category: string; slug: string }>;
@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: article.seoTitle,
     description: article.seoDescription,
     keywords: article.tags,
+    robots: isMagazineNoindex(slug) ? { index: false, follow: true } : undefined,
     openGraph: {
       type: "article",
       locale: "ko_KR",
@@ -103,8 +104,34 @@ export default async function MagazineArticlePage({ params }: Props) {
   const otherCat = CONTENT_ARTICLES.filter(a => a.category !== article.category && a.slug !== article.slug);
   const related = [...sameCat.slice(0, 3), ...otherCat.slice(0, 2)].slice(0, 5);
 
+  const articleUrl = `https://onulmood.com/magazine/${article.category}/${article.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.seoDescription,
+    keywords: article.tags.join(", "),
+    articleSection: meta.label,
+    inLanguage: "ko-KR",
+    datePublished: article.date,
+    dateModified: article.date,
+    author: { "@type": "Organization", name: "오늘무드 편집팀", url: "https://onulmood.com/about" },
+    publisher: {
+      "@type": "Organization",
+      name: "오늘무드",
+      url: "https://onulmood.com",
+      logo: { "@type": "ImageObject", url: "https://onulmood.com/opengraph-image" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    url: articleUrl,
+  };
+
   return (
     <div style={{ background: BG, minHeight: "100vh" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "48px 20px 100px" }}>
 
         {/* 뒤로가기 */}

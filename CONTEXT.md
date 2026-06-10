@@ -102,6 +102,29 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-10 세션 R — AdSense 재심사 최종 개선 (콘텐츠·내부링크·현황판·구조화데이터)
+- **매거진 3편 신규**(lib/contentSystem.ts, 각 1200자+ 전체, 겹치지 않는 신주제, H2/H3·결론·SEO메타 포함): why-mood-feels-off(오늘 기분이 이상한 이유·ugogi-lab)·irritation-is-fatigue(짜증은 사실 피곤함일 수도·emotion-guide)·naming-emotions-helps(감정에 이름을 붙이면 생기는 일·ugogi-lab, affect labeling). sitemap 자동 반영(매거진 → 총 34편)
+- **구조화 데이터(JSON-LD) 신설**: app/layout.tsx에 WebSite+Organization @graph, app/magazine/[category]/[slug]에 BlogPosting(author/publisher/datePublished). 빌드 산출물 HTML 삽입 확인 → Search Console 리치 신호 보강
+- **결과 페이지 내부 탐색 블록**(app/result/page.tsx): "우걱이 처리소 더 둘러보기" 6링크 그리드(/release·/archive·/collection·/magazine·/about·/feelings) → 체류·페이지 이동 강화
+- **감정파쇄함 현황판**(app/archive/ArchiveClient.tsx): TodayBoard 신설 — 오늘 처리 수·오늘 최다 감정·생성된 퇴비 수 + 우걱이 포만감 게이지(😴→🤤) + 오늘 생성 퇴비 칩 ("살아있는 처리 시설" 느낌, archive는 noindex라 참여감 강화용)
+- **About 개인정보/문의 섹션**(app/about/page.tsx): 09 섹션 본문에 로컬저장소·서버 미전송·제3자 광고 고지·문의 이메일 명시(심사관 페이지 내 즉시 확인용)
+- 빌드 통과, 신규 3편 SSG 정적 생성·BlogPosting JSON-LD 삽입 검증 완료
+
+### 2026-06-10 세션 R-2 — 얇은 콘텐츠 전수 정리 (심사관 관점 결정적 조치)
+- **진단(프로덕션 전수 크롤링)**: ads.txt/robots/sitemap(123 URL 전부 200)/정책페이지/메타고유성/JSON-LD 전부 정상 → 기술결함 0. **유일 거절원인 = 얇은 콘텐츠 대량 색인**: 매거진 31편 중 24편이 공백제외 800자 미만(최단 414, 중앙값 544)인데 sitemap priority 0.8로 색인 신청. 감정도감 개별 35편도 사전형 단편(중앙값 474자). 색인의 약 48%가 thin
+- **매거진 noindex 인프라**(lib/contentSystem.ts): `MAGAZINE_NOINDEX` Set(19편) + `isMagazineNoindex()` + `INDEXED_CONTENT_ARTICLES`. 매거진 [slug] generateMetadata에 robots noindex(follow) 분기, sitemap은 INDEXED만
+- **핵심 감정 5편 확장**(색인 유지): seonam-manual(서운함 1195자)·loneliness-storage(외로움 1012)·jealousy-dry-manual(질투)·lethargy-first-aid(무기력)·anxiety-temporary-storage(불안) — 각 실용 가이드 2~3섹션+결론 추가. 색인 매거진 12편 전부 852자+(중앙값 933, 800미만 0편)
+- **감정도감 개별 35편 noindex**(app/feelings/[slug] robots noindex + sitemap 제외). 허브 /feelings·/emotion-dictionary는 색인 유지
+- 결과: **sitemap 123→69 URL, 색인 페이지 전부 알찬 콘텐츠.** 라이브 검증: noindex/색인유지/감정도감/sitemap 제외 모두 정상. 페이지는 살아있어 사용자 접근·내부링크 불변
+
+### 2026-06-10 세션 R-3 — 추가 SEO 보강 (구조화데이터 확대 + noindex 글 재색인)
+- **블로그 BlogPosting JSON-LD**(app/blog/[slug]): noindex 글 제외, author/publisher/datePublished/inLanguage(로케일). 라이브 확인
+- **FAQ FAQPage JSON-LD**(app/faq): FAQ_LIST(18문항) → Question/Answer 자동 생성. 리치 결과 후보. 라이브 확인
+- **noindex 매거진 3편 재확장+재색인**(각 933~969자, 검색가치 주제): nunchi-overdose-warning(눈치)·regret-recycling-center(후회)·frustration-disassembly(답답함) — 실용 섹션 2~3+결론 추가 후 MAGAZINE_NOINDEX에서 제거. 색인 매거진 12→15편(전부 852자+, 중앙값 933), noindex 19→16편
+- 결과: **sitemap 69→72 URL.** 빌드·라이브 검증 통과(블로그 BlogPosting·FAQPage·재색인 robots 없음·sitemap 포함)
+- 남은 noindex 16편은 향후 하루 1~2편씩 확장 후 재색인 권장(한꺼번에 ❌ — scaled content 회피)
+
+
 ### 2026-06-08 세션 I — /insights 콘텐츠형 페이지 + SSR 전환 (AdSense 재심사)
 - `lib/insightsContent.ts` 신설 — 감정 인사이트 정보성 콘텐츠 (ko 전체 / en 번역, 그 외 로케일 en 폴백). 한국어 본문 1890자(공백 제외)
 - **SSR 전환**: `app/insights/page.tsx` 를 `"use client"` → **서버 컴포넌트**로 재작성

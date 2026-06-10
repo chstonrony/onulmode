@@ -20,6 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: feeling.seoTitle,
     description: feeling.seoDescription,
     keywords: [feeling.name, "감정도감", "우걱이", "감정 기록", "자기 돌봄", "감정 이름"],
+    // 감정도감 개별 항목은 사전형 단편이라 색인에서 제외(허브 /feelings 만 색인). 사용자 접근은 그대로.
+    robots: { index: false, follow: true },
     openGraph: {
       type: "article",
       locale: "ko_KR",
