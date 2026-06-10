@@ -13,6 +13,7 @@ import {
 } from "@/lib/byproducts";
 import ResultCard from "@/components/share/ResultCard";
 import ShareCard from "@/components/share/ShareCard";
+import StoryCard from "@/components/share/StoryCard";
 import ShareButtons from "@/components/share/ShareButtons";
 import Link from "next/link";
 
@@ -137,6 +138,7 @@ function ResultContent() {
   const params = useSearchParams();
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
+  const storyCardRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<"processing" | "result">("processing");
   const [savedRecordId, setSavedRecordId] = useState<string | null>(null);
   const [userNote, setUserNote] = useState("");
@@ -547,6 +549,7 @@ function ResultContent() {
       >
         <ShareButtons
           cardRef={cardRef}
+          storyRef={storyCardRef}
           shareUrl={shareUrl}
           emotions={emotions}
           productName={data.productName}
@@ -908,6 +911,11 @@ function ResultContent() {
         <p style={{ fontSize: 8, fontFamily: "monospace", color: LINE, letterSpacing: "0.08em" }}>
           UGEGI DISPOSAL CO. · {data.errorCode} · onulmood.com
         </p>
+      </div>
+
+      {/* ─── 캡처 전용 9:16 스토리 카드 (화면 밖) ─── */}
+      <div aria-hidden style={{ position: "absolute", left: -99999, top: 0, pointerEvents: "none" }}>
+        <StoryCard ref={storyCardRef} data={data} emotions={emotions} />
       </div>
     </div>
   );
