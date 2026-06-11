@@ -130,6 +130,7 @@
 - 두 슬러그 MAGAZINE_NOINDEX에서 제거 → noindex 16→14편, 색인 매거진 15→17편, sitemap 72→74 URL
 - 빌드 검증: 두 페이지 SSG 생성·noindex 0건(대조군 what-does-ugogi-eat noindex 유지 확인)·BlogPosting JSON-LD·###→h3 렌더·sitemap 포함 전부 정상
 - 남은 noindex 14편 — 다음 후보: adult-friendship-hard, why-regret-at-dawn (하루 1~2편 페이스 유지)
+- (동일 날짜 추가) OnulSeries 오늘핏 항목을 패션 서비스 컨셉으로 갱신("오늘 뭐 입지? 기분으로 정하는 오늘의 핏", 태그 스타일). 오늘눈치 쪽도 동기화. 오늘눈치 프로젝트에 CONTEXT.md 신설(~/Workspace/Onulnunchi)
 
 
 ### 2026-06-08 세션 I — /insights 콘텐츠형 페이지 + SSR 전환 (AdSense 재심사)
