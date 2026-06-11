@@ -124,6 +124,13 @@
 - 결과: **sitemap 69→72 URL.** 빌드·라이브 검증 통과(블로그 BlogPosting·FAQPage·재색인 robots 없음·sitemap 포함)
 - 남은 noindex 16편은 향후 하루 1~2편씩 확장 후 재색인 권장(한꺼번에 ❌ — scaled content 회피)
 
+### 2026-06-11 세션 S — noindex 매거진 2편 확장+재색인 (일일 루틴 1회차)
+- **why-read-receipt-hurts(읽씹은 왜 서운할까)**: 548→1144자(공백제외). `### ` 실용 섹션 3개(기다리는 동안 마음 다루는 법·서운함 말할지 정하는 기준·내가 읽씹하는 쪽일 때) + 결론. readingTime 4→6
+- **fine-by-day-sad-at-night(밤만 되면 우울한 이유)**: 506→1148자. 실용 섹션 3개(저녁 루틴·새벽 결론 보류 규칙·매일 반복 시 도움 요청) + 결론. readingTime 5→7
+- 두 슬러그 MAGAZINE_NOINDEX에서 제거 → noindex 16→14편, 색인 매거진 15→17편, sitemap 72→74 URL
+- 빌드 검증: 두 페이지 SSG 생성·noindex 0건(대조군 what-does-ugogi-eat noindex 유지 확인)·BlogPosting JSON-LD·###→h3 렌더·sitemap 포함 전부 정상
+- 남은 noindex 14편 — 다음 후보: adult-friendship-hard, why-regret-at-dawn (하루 1~2편 페이스 유지)
+
 
 ### 2026-06-08 세션 I — /insights 콘텐츠형 페이지 + SSR 전환 (AdSense 재심사)
 - `lib/insightsContent.ts` 신설 — 감정 인사이트 정보성 콘텐츠 (ko 전체 / en 번역, 그 외 로케일 en 폴백). 한국어 본문 1890자(공백 제외)
