@@ -124,6 +124,13 @@
 - 결과: **sitemap 69→72 URL.** 빌드·라이브 검증 통과(블로그 BlogPosting·FAQPage·재색인 robots 없음·sitemap 포함)
 - 남은 noindex 16편은 향후 하루 1~2편씩 확장 후 재색인 권장(한꺼번에 ❌ — scaled content 회피)
 
+### 2026-06-13 세션 T — noindex 매거진 2편 확장+재색인 (일일 루틴 2회차, 심사 진행 중)
+- **adult-friendship-hard(어른이 되면 친구 만들기 어려운 이유)**: 509→1215자(공백제외). `### ` 실용 섹션 3개(반복 공간 만들기·모임 친구→진짜 친구 한 마디·멀어진 친구 연락 재개) + 결론. readingTime 5→7
+- **why-regret-at-dawn(새벽에 후회 많이 하는 이유)**: 585→1301자. 실용 섹션 3개(한 줄 메모 보관함·반복 후회는 신호·낮의 예방 습관) + 결론 보강. readingTime 5→7
+- 두 슬러그 MAGAZINE_NOINDEX 제거 → noindex 14→12편, 색인 매거진 17→19편, sitemap 74→76 URL
+- 빌드 검증: noindex 0건(대조군 유지)·BlogPosting·h3 3개씩·sitemap 포함 정상
+- 남은 noindex 12편 — 다음 후보: waiting-psychology(기다림 심리), small-emotions-pile-up (하루 1~2편 페이스 유지)
+
 ### 2026-06-11 세션 S — noindex 매거진 2편 확장+재색인 (일일 루틴 1회차)
 - **why-read-receipt-hurts(읽씹은 왜 서운할까)**: 548→1144자(공백제외). `### ` 실용 섹션 3개(기다리는 동안 마음 다루는 법·서운함 말할지 정하는 기준·내가 읽씹하는 쪽일 때) + 결론. readingTime 4→6
 - **fine-by-day-sad-at-night(밤만 되면 우울한 이유)**: 506→1148자. 실용 섹션 3개(저녁 루틴·새벽 결론 보류 규칙·매일 반복 시 도움 요청) + 결론. readingTime 5→7
