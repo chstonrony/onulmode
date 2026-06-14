@@ -102,6 +102,13 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-14 세션 U — noindex 매거진 2편 확장+재색인 (일일 루틴 3회차)
+- **waiting-psychology(연락 안 오는 사람을 기다리는 심리)**: 511→1246자(공백제외). `### ` 실용 섹션 3개(기다리는 동안 나를 지키는 법·먼저 연락할지 정하는 기준·기다림이 습관이 됐다면)+결론. readingTime 5→7
+- **small-emotions-pile-up(사소한 감정도 쌓이면)**: 743→975자. `### 누구의 감정인지 먼저 구분하기` 섹션 추가(출처 구분). readingTime 5→6
+- 두 슬러그 MAGAZINE_NOINDEX 제거 → noindex 12→10편, 색인 매거진 19→21편, sitemap 매거진 21 URL
+- 빌드·라이브 검증(c8fe561 push 자동배포): 재색인 2편 noindex 없음·확장본문 노출·대조군 what-does-ugogi-eat noindex 유지 정상
+- 남은 noindex 10편 — 다음 후보: do-emotions-expire, emotions-seen-in-hindsight (하루 1~2편 페이스 유지)
+
 ### 2026-06-10 세션 R — AdSense 재심사 최종 개선 (콘텐츠·내부링크·현황판·구조화데이터)
 - **매거진 3편 신규**(lib/contentSystem.ts, 각 1200자+ 전체, 겹치지 않는 신주제, H2/H3·결론·SEO메타 포함): why-mood-feels-off(오늘 기분이 이상한 이유·ugogi-lab)·irritation-is-fatigue(짜증은 사실 피곤함일 수도·emotion-guide)·naming-emotions-helps(감정에 이름을 붙이면 생기는 일·ugogi-lab, affect labeling). sitemap 자동 반영(매거진 → 총 34편)
 - **구조화 데이터(JSON-LD) 신설**: app/layout.tsx에 WebSite+Organization @graph, app/magazine/[category]/[slug]에 BlogPosting(author/publisher/datePublished). 빌드 산출물 HTML 삽입 확인 → Search Console 리치 신호 보강
