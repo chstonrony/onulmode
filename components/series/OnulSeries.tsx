@@ -23,14 +23,13 @@ const SERIES = [
   },
   {
     name: "오늘핏",
-    domain: "coming soon",
-    href: "#",
+    domain: "onulfit.com",
+    href: "https://onulfit.com",
     tag: "스타일",
     desc: "오늘 뭐 입지? 기분으로 정하는 오늘의 핏",
     color: "#A8845A",
     bg: "#F5EFE4",
     current: false,
-    soon: true,
   },
 ];
 
@@ -72,7 +71,7 @@ export default function OnulSeries({ hideCurrentBadge = false, style }: OnulSeri
             href={s.href}
             target={s.current ? "_self" : "_blank"}
             rel={s.current ? undefined : "noopener noreferrer"}
-            style={{ textDecoration: "none", pointerEvents: s.soon ? "none" : "auto" }}
+            style={{ textDecoration: "none" }}
           >
             <div style={{
               display: "flex", alignItems: "center", gap: 14,
@@ -81,7 +80,6 @@ export default function OnulSeries({ hideCurrentBadge = false, style }: OnulSeri
               border: `1px solid ${s.current ? s.color + "40" : "#D8CEC0"}`,
               borderLeft: `3px solid ${s.color}`,
               borderRadius: "0 4px 4px 0",
-              opacity: s.soon ? 0.55 : 1,
               transition: "opacity 0.15s",
             }}>
               {/* 태그 */}
@@ -114,14 +112,6 @@ export default function OnulSeries({ hideCurrentBadge = false, style }: OnulSeri
                       ← 지금 여기
                     </span>
                   )}
-                  {s.soon && (
-                    <span style={{
-                      fontSize: 9, color: "#A89880",
-                      fontFamily: "monospace", letterSpacing: "0.06em",
-                    }}>
-                      COMING SOON
-                    </span>
-                  )}
                 </div>
                 <p style={{
                   fontSize: 12, color: "#7A7260",
@@ -133,15 +123,13 @@ export default function OnulSeries({ hideCurrentBadge = false, style }: OnulSeri
               </div>
 
               {/* 도메인 */}
-              {!s.soon && (
-                <span style={{
-                  fontSize: 9, color: "#B4A890",
-                  fontFamily: "monospace",
-                  flexShrink: 0,
-                }}>
-                  {s.domain}
-                </span>
-              )}
+              <span style={{
+                fontSize: 9, color: "#B4A890",
+                fontFamily: "monospace",
+                flexShrink: 0,
+              }}>
+                {s.domain}
+              </span>
             </div>
           </Link>
         ))}
