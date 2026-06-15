@@ -102,6 +102,13 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-15 세션 V — noindex 매거진 2편 확장+재색인 (일일 루틴 4회차)
+- **do-emotions-expire(감정에도 유통기한이 있을까)**: 759→1185자(공백제외). `### ` 실용 섹션 2개(감정마다 비우는 타이밍이 다르다·곱씹기를 멈추는 작은 장치)+결론. readingTime 5→7
+- **emotions-seen-in-hindsight(지나고 나서야 보이는 감정들)**: 769→1182자. `### ` 실용 섹션 2개(지난 기록을 다시 보는 법·뒤늦게 알아챈 감정 다루기)+결론. readingTime 5→7
+- 두 슬러그 MAGAZINE_NOINDEX 제거 → noindex 10→8편, 색인 매거진 21→23편, sitemap 매거진 23 URL
+- 빌드·검증(5cffdf7 다음 커밋 push 자동배포): 재색인 2편 noindex 없음·sitemap 포함·h3 4개씩, 대조군 mood-not-attitude/what-does-ugogi-eat noindex 유지 정상
+- 남은 noindex 8편 — 다음 후보: unsent-message, sorry-overproduction (하루 1~2편 페이스 유지)
+
 ### 2026-06-14 세션 U — noindex 매거진 2편 확장+재색인 (일일 루틴 3회차)
 - **waiting-psychology(연락 안 오는 사람을 기다리는 심리)**: 511→1246자(공백제외). `### ` 실용 섹션 3개(기다리는 동안 나를 지키는 법·먼저 연락할지 정하는 기준·기다림이 습관이 됐다면)+결론. readingTime 5→7
 - **small-emotions-pile-up(사소한 감정도 쌓이면)**: 743→975자. `### 누구의 감정인지 먼저 구분하기` 섹션 추가(출처 구분). readingTime 5→6
