@@ -102,6 +102,13 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-15 세션 W — noindex 매거진 2편 확장+재색인 (일일 루틴 5회차)
+- **sorry-overproduction(미안함 과잉생성 보고서)**: 약 540→1006자(공백제외). `### ` 실용 섹션 2개(미안함 생성 전 3초 점검·"미안해" 대신 "고마워"로 바꿔보기)+권고 보강. readingTime 4→6
+- **unsent-message(보내지 못한 카톡 한 통)**: 약 590→920자. `### ` 실용 섹션 2개(보낼지 말지 정하는 기준·안 보낼 거라면 다른 데에 적어두기)+"왜 지운 말이 더 오래 남을까" 단락 추가. readingTime 4→6
+- 두 슬러그 MAGAZINE_NOINDEX 제거 → noindex 8→6편, 색인 매거진 23→25편, sitemap 매거진 25 URL
+- 빌드·검증: 재색인 2편 noindex 0·h3 2개씩·sitemap 포함, 대조군 okay-but-hurt noindex 유지·sitemap 제외 정상
+- 남은 noindex 6편 — 다음 후보: okay-but-hurt, smiling-but-not (하루 1~2편 페이스 유지)
+
 ### 2026-06-15 세션 V — noindex 매거진 2편 확장+재색인 (일일 루틴 4회차)
 - **do-emotions-expire(감정에도 유통기한이 있을까)**: 759→1185자(공백제외). `### ` 실용 섹션 2개(감정마다 비우는 타이밍이 다르다·곱씹기를 멈추는 작은 장치)+결론. readingTime 5→7
 - **emotions-seen-in-hindsight(지나고 나서야 보이는 감정들)**: 769→1182자. `### ` 실용 섹션 2개(지난 기록을 다시 보는 법·뒤늦게 알아챈 감정 다루기)+결론. readingTime 5→7
