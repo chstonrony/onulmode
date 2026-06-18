@@ -102,6 +102,14 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-18 세션 Y — noindex 매거진 2편 재색인 (일일 루틴 7회차) + AdSense 재심사 진행 중
+- **pretending-okay-guidelines(괜찮은 척 관리지침)**: 약 590→872자(공백제외). `### ` 실용 섹션 2개(괜찮은 척과 진짜 괜찮음 구분·한 사람에게만이라도 솔직해지기)+마무리. readingTime 5→6
+- **mood-not-attitude(기분이 태도가 되지 않으려면)**: 이미 확장돼 있던 글(858자, ### 2개) → **재색인만**(가까운 사람에게 새어나가는 단락 보강)
+- 두 슬러그 MAGAZINE_NOINDEX 제거 → noindex 4→2편(남음: what-does-ugogi-eat, how-compost-room-works), 색인 매거진 28→30, sitemap 포함
+- 빌드·검증: 재색인 2편 noindex 0·h3 2개·sitemap 포함, 대조군 what-does-ugogi-eat noindex 유지 정상
+- ※ 06-17 대표 코너스톤 가이드 추가(how-to-release-emotions-guide, 1643자) + AdSense "low value content"로 1차 거절 → 전수 점검(얇은 색인 0·홈 충실) 후 **재심사 요청 완료(검토 중)**. 결과 대기
+- 남은 noindex 2편이 마지막 — 다음 후보: what-does-ugogi-eat, how-compost-room-works (세계관 글이라 확장 가치 판단 후)
+
 ### 2026-06-16 세션 X — noindex 매거진 2편 확장+재색인 (일일 루틴 6회차)
 - **okay-but-hurt(괜찮다고 말한 서운함)**: 약 590→895자(공백제외). `### ` 실용 섹션 2개(서운함을 말할지 정하는 기준·말 못 한 서운함 혼자 처리하는 법)+"삼키는 게 늘 나쁜 건 아니다" 단락. readingTime 4→6
 - **smiling-but-not(웃었지만 사실은 아니었던 날)**: 약 590→903자. `### ` 실용 섹션 2개(감정 노동을 줄이는 작은 장치·집에 와서 회복하는 법)+감정노동 설명 단락. readingTime 4→6
