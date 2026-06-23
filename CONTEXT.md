@@ -102,6 +102,15 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-23 세션 AA — 프로덕션 건강 점검 (대기 국면 루틴 1회차)
+- noindex 확장 루틴은 세션 Z(06-19)에 정상 종료(MAGAZINE_NOINDEX **0편** 확인) → 더 이상 일일 확장 대상 없음. 지금은 **AdSense 재심사 검토 중**이라 큰 변경은 의도적으로 보류(배 안 흔들기)
+- **새 루틴 = 매일 가벼운 프로덕션 건강 점검**. 오늘 1회차 전부 초록불:
+  - `npm run build` 통과 / 매거진 37편
+  - 라이브: sitemap.xml 200·89 URL, robots `Allow: /`(+ /api,/_next disallow) 정상
+  - noindex 정합성: 매거진(seonam-manual·what-does-ugogi-eat) 200·noindex 없음(색인 유지), 앱 페이지(archive·collection) noindex 유지 — 모두 정상
+- ※ 점검 중 what-does-ugogi-eat 경로 첫 시도 404는 카테고리 오타(`ugogi-lab`)였고 정상 경로 `ugogi-manual`은 200·색인. 실제 결함 아님
+- 코드 변경 없음(CONTEXT 기록만). 다음 신호 = AdSense 재심사 결과. 결과 나오기 전엔 이 건강 점검만 가볍게 반복
+
 ### 2026-06-19 세션 Z — noindex 매거진 마지막 2편 확장+재색인 (일일 루틴 8회차) → noindex 0편 달성
 - **what-does-ugogi-eat(우걱이는 무엇을 먹고 사나요)**: 535→972자(공백제외). `### ` 실용 섹션 2개(잘 씹히는 감정으로 만들어 던지는 법·우걱이가 못 먹는 감정을 마주했다면)+세계관 톤 유지. readingTime 5→6
 - **how-compost-room-works(감정퇴비실은 어떻게 운영되나요)**: 544→949자. `### ` 실용 섹션 2개(발효가 오래 걸리는 감정을 기다리는 법·퇴비에서 씨앗이 나왔는지 확인하는 법). readingTime 5→6
