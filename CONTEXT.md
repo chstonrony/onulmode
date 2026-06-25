@@ -102,6 +102,14 @@
 
 ## 최근 완료 작업 (세션 로그)
 
+### 2026-06-25 세션 AB — 프로덕션 건강 점검 (대기 국면 루틴 2회차)
+- 대기 국면 루틴 그대로 1회 실행, 전부 초록불:
+  - `npm run build` 통과 / 매거진 **32편**(빌드 HTML 32 = sitemap 색인 32 = noindex 0)
+  - 라이브: sitemap.xml 200·89 URL, robots `Allow: /`(+ /api,/_next disallow) 정상
+  - noindex 정합성: 매거진(seonam-manual·what-does-ugogi-eat) 200·noindex 없음(색인 유지), 앱 페이지(archive·collection) noindex 유지 — 모두 정상
+- **정정**: 세션 AA 기록의 "매거진 37편"은 부정확. 실제는 세션 Z 종료 시점과 동일한 **32편**(전 매거진 색인, noindex 0). 편수 변동 없음
+- 코드 변경 없음(CONTEXT 기록만). 다음 신호 = AdSense 재심사 결과. 결과 나오기 전엔 이 건강 점검만 가볍게 반복
+
 ### 2026-06-24 세션 AA — 프로덕션 건강 점검 (대기 국면 루틴 1회차)
 - noindex 확장 루틴은 세션 Z(06-19)에 정상 종료(MAGAZINE_NOINDEX **0편** 확인) → 더 이상 일일 확장 대상 없음. 지금은 **AdSense 재심사 검토 중**이라 큰 변경은 의도적으로 보류(배 안 흔들기)
 - **새 루틴 = 매일 가벼운 프로덕션 건강 점검**. 오늘 1회차 전부 초록불:
