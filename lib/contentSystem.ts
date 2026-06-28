@@ -965,10 +965,10 @@ export const CONTENT_ARTICLES: ContentArticle[] = [
     slug: "okay-but-hurt",
     category: "compost-record",
     title: "괜찮다고 말한 서운함",
-    subtitle: "말 못 했는데 왜 이렇게 오래 남아 있을까",
-    tags: ["서운함", "말 못 한 감정", "관계", "기록"],
+    subtitle: "괜찮다고 말해버린 뒤, 혼자 남은 마음을 다루는 법",
+    tags: ["괜찮은 척", "삼킨 감정", "서운함", "감정 기록"],
     seoTitle: "괜찮다고 말한 서운함 | 감정퇴비실 기록",
-    seoDescription: "괜찮다고 말했지만 사실 괜찮지 않았던 순간. 삼킨 서운함이 오래 남는 이유와, 말할지 정하는 법·혼자 처리하는 법을 우걱이가 정리했습니다.",
+    seoDescription: "'괜찮아'라고 말해버린 뒤에도 사라지지 않는 서운함. 이미 삼킨 감정을 자책 없이 혼자 정리하는 법을 우걱이가 안내합니다.",
     date: "2026-06-05",
     readingTime: 6,
     content: `
